@@ -1,8 +1,24 @@
-# React + Vite
+# NUS Orbital Project 2024 - MechHub
+Created By **Felicia Hwang** & **Vanessa Lai**
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Key Features
 
-Currently, two official plugins are available:
+## Tech Stack
+Tech stack used in developing our web:
+- HTML, CSS, JavaScript
+- ReactJS
+- BootStrap
+- Firebase
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Software Engineering Practices
+- Version Control 
+    - Branching
+    - Code Review & Pull Request
+    - GitHub Issues with Labels
+- Testing
+    - Unit Testing
+    - Integration Testing
+    - User Testing
+- Weekly Sprints
+    - Sprint Planning
+- Continuous Integration and Continuous Deployment (CI / CD)
