@@ -3,8 +3,7 @@ import {
 } from "react-router-dom";
 
 import HomePage from "./pages/home/HomePage";
-import Login from "./pages/registration/Login";
-import Signup from "./pages/registration/Signup";
+import LoginSignupForm from "./pages/registration/LoginSignupForm"
 import Profile from "./pages/registration/Profile";
 
 const App = () => {
@@ -13,9 +12,8 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/account" element={<LoginSignupForm />} />
         </Routes>
       </Router>
     </div>
