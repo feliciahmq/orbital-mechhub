@@ -1,0 +1,37 @@
+/* banner */
+#banner
+{
+    width: 100%;
+    padding: 120px 0;
+    top: 20px;
+}
+.banner-content h1
+{
+    font-size: 64px;
+    font-weight: bold;
+    color: black;
+    margin-bottom: 32px;
+}
+.banner-content p
+{
+    font-size: 28px;
+    font-weight: 300;
+    color: black;
+    margin-bottom: 32px;
+    line-height: 1.8;
+}
+.link-theme
+{
+    color: rgb(107, 107, 107);
+    font-size: 20px;
+    text-decoration: none;
+}
+.img-fluid
+{
+    max-width: 200px;
+    height: auto;
+}
+.owl-dots
+{
+    display: none;
+}
