@@ -1,0 +1,17 @@
+a
+{
+    text-transform: none;
+}
+body 
+{
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll; /* Ensure the body itself is scrollable */
+}
+.owl-carousel .owl-item img
+{
+    width: auto;
+    height: auto;
+    display: inherit;
+}
