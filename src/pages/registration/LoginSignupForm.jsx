@@ -8,6 +8,7 @@ import './LoginSignupForm.css';
 import { auth, db } from "../../firebase/firebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { query, collection, where, getDocs, doc, setDoc } from "firebase/firestore";
+import { signInWithGoogle } from './GoogleAuth';
 
 function LoginSignUpForm() {
     const [rightPanelActive, setRightPanelActive] = useState(false);
@@ -107,8 +108,9 @@ function LoginSignUpForm() {
                     <form onSubmit={handleSignup}>
                         <h1>Create Account</h1>
                         <div className="social-container">
-                            <a href="#" className="social">
-                                <img src={GoogleLogo} className="social-logo" alt="logo" />
+                            <a onClick={signInWithGoogle} className="google-btn">
+                                <img src={GoogleLogo} alt="google-logo" />
+                                Continue with Google
                             </a>
                         </div>
                         <span>or use your email to register</span>
@@ -127,11 +129,12 @@ function LoginSignUpForm() {
                     <form onSubmit={handleLogin}>
                         <h1>Login</h1>
                         <div className="social-container">
-                            <a href="#" className="social">
-                                <img src={GoogleLogo} className="social-logo" alt="logo" />
+                            <a onClick={signInWithGoogle} className="google-btn">
+                                <img src={GoogleLogo} alt="google-logo" />
+                                Continue with Google
                             </a>
                         </div>
-                        <span>or use your account</span>
+                        <span>or use your email</span>
                         <input type="email" placeholder="Email" 
                             value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
                         <input type="password" placeholder="Password" 
