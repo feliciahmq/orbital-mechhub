@@ -2,20 +2,21 @@ import {
   BrowserRouter as Router, Routes, Route
 } from "react-router-dom";
 
+import { Toaster } from 'react-hot-toast';
+
 import HomePage from "./pages/home/HomePage";
-import Login from "./pages/registration/Login";
-import Signup from "./pages/registration/Signup";
-import Profile from "./pages/registration/Profile";
+import LoginSignupForm from "./pages/registration/LoginSignupForm";
+import UserProfile from "./pages/userprofile/UserProfile";
 
 const App = () => {
   return (
     <div>
+      <Toaster />
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/account" element={<LoginSignupForm />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </Router>
     </div>
