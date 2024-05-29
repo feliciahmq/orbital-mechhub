@@ -3,8 +3,8 @@ import {
 } from "react-router-dom";
 
 import HomePage from "./pages/home/HomePage";
-import LoginSignupForm from "./pages/registration/LoginSignupForm"
-import Profile from "./pages/registration/Profile";
+import LoginSignupForm from "./pages/registration/LoginSignupForm";
+import UserProfile from "./pages/userprofile/UserProfile";
 
 const App = () => {
   return (
@@ -12,8 +12,8 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/profile" element={<Profile />} />
           <Route path="/account" element={<LoginSignupForm />} />
+          <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </Router>
     </div>
