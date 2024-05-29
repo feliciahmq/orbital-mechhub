@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import GoogleLogo from '../../assets/google-logo.png';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
 
 import './LoginSignupForm.css'; 
 
 import { auth, db } from "../../firebase/firebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { query, collection, where, getDocs, doc, setDoc } from "firebase/firestore";
 
 function LoginSignUpForm() {
     const [rightPanelActive, setRightPanelActive] = useState(false);
@@ -22,7 +23,21 @@ function LoginSignUpForm() {
     const handleSignup = async(e) => {
         e.preventDefault(); // prevent page reload
 
+        if (username.trim() === "" || signupEmail.trim() === "" || signupPassword.trim() === "") {
+            toast.error("All fields are required.");
+            return;
+        }
+
         try {
+            const usernamesQuery = query(collection(db, "Users"), where("username", "==", username));
+            const usernamesSnapshot = await getDocs(usernamesQuery);
+
+            if (!usernamesSnapshot.empty) {
+                console.log("Username is already in use.")
+                toast.error("Username is already in use.");
+                return;
+            }
+
             const userCredential = await createUserWithEmailAndPassword(auth, signupEmail, signupPassword);
             const user = userCredential.user;
             console.log("User created: ", user);
@@ -34,10 +49,20 @@ function LoginSignUpForm() {
                     email: user.email
                 });
                 console.log("User ID:", user.uid);
+                toast.success("Account created successfully.");
             }
             navigate('/profile');
         } catch (error) {
+            let errorMessage = 'An error occurred.';
+            if (error.code === 'auth/email-already-in-use') {
+                errorMessage = 'The email address is already in use.';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'Invalid email address.';
+            } else if (error.code === 'auth/weak-password') {
+                errorMessage = 'Password must be at least six characters.';
+            }
             console.log(error.message);
+            toast.error(errorMessage);
         }
     }; 
 
@@ -48,12 +73,28 @@ function LoginSignUpForm() {
     const handleLogin = async (e) => {
         e.preventDefault();
 
+        if (loginEmail.trim() === "" || loginPassword.trim() === "") {
+            toast.error("All fields are required.");
+            return;
+        }
+
         try {
             await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
-            console.log("Logged in successfully!");
+            console.log("Login successfully.");
+            toast.success("Login successfully.");
             navigate('/profile');
         } catch (error) {
-            console.log(error.message);
+            let errorMessage = 'An error occurred.';
+            console.log("Firebase Login Error: ", error.code, error.message);
+
+            if (error.code === 'auth/user-not-found') {
+                errorMessage = 'No user found with this email.';
+            } else if (error.code === 'auth/wrong-password') {
+                errorMessage = 'Incorrect password.';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMessage = 'The email address is invalid.';
+            } 
+            toast.error(errorMessage);
         }
     };
 
@@ -77,7 +118,7 @@ function LoginSignUpForm() {
                             value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required />
                         <input type="password" placeholder="Password" 
                             value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required />
-                        <button type="button" onClick={handleSignup}>Sign up</button>
+                        <button type="submit">Sign up</button>
                     </form>
                 </div>
                 <div className="form-container log-in-container">
@@ -96,7 +137,7 @@ function LoginSignUpForm() {
                         <input type="password" placeholder="Password" 
                             value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
                         {/* <a href="#">Forgot password</a> */}
-                        <button type="button" onClick={handleLogin}>Log in</button>
+                        <button type="submit">Log in</button>
                     </form>
                 </div>
                 <div className="overlay-container">
