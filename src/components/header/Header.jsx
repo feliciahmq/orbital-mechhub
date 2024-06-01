@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../../Auth';
+import { useAuth } from '../../Auth';
 import { Link } from 'react-router-dom';
-import MechHub_Logo from "../../../assets/Logo/MechHub_logo.png";
+import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
 import "./Header.css";
 
 function Header() {

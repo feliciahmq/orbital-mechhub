@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import Header from "./header/Header";
+import Header from '../../components/header/Header';
 import Categories from "./categories/Categories";
 import Data from "./data.json";
 import ProductList from "./ProductList";

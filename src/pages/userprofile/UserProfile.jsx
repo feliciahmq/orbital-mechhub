@@ -3,6 +3,8 @@ import { auth, db } from"../../firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom"; 
 
+import Header from '../../components/header/Header';
+
 function UserProfile() {
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate(); // Initialize navigate hook
@@ -42,6 +44,7 @@ function UserProfile() {
 
   return (
     <div>
+      <Header />
       {userInfo ? (
         <>
           <p>Username: {userInfo.username}</p>
