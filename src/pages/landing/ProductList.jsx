@@ -1,4 +1,4 @@
-import Product from "./featured products/FeaturedProduct";
+import Product from "../../components/product cards/FeaturedProduct";
 
 function ProductList({ heading, products }) {
   return (

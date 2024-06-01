@@ -203,9 +203,16 @@ input {
 	transform: translateX(0);
 }
 
+.container.right-panel-active .overlay-left h1 {
+	color: black;
+}
+
 .overlay-right {
 	right: 0;
 	transform: translateX(0);
+}
+.overlay-right h1 {
+	color: white;
 }
 
 .container.right-panel-active .overlay-right {
