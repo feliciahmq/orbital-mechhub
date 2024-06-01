@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from"../../firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom"; 
 
 function UserProfile() {
   const [userInfo, setUserInfo] = useState(null);
@@ -29,7 +29,7 @@ function UserProfile() {
   async function handleLogout() {
     try {
       await auth.signOut();
-      navigate('/account'); // Redirect to account page after logout
+      navigate('/account'); 
       console.log("User logged out successfully!");
     } catch (error) {
       console.error("Error logging out: ", error.message);
@@ -37,7 +37,7 @@ function UserProfile() {
   }
 
   const goHome = () => {
-    navigate('/'); // Navigate to home page
+    navigate('/'); 
   };
 
   return (
