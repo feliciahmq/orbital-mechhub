@@ -1,0 +1,109 @@
+nav {
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    justify-content: flex-end;
+    position: fixed;
+    top: 0; 
+    left: 0;
+    right: 0; 
+    z-index: 1000; 
+    background-color: white;
+    height: 80px;
+}
+
+.MechHub_Logo {
+    width: 240px;
+    height: 52px;
+    position: absolute;
+    left: 20px;
+    top: 16px;
+}
+
+.hamburger {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    position: absolute;
+    right: 24px;
+    top: 16px;
+}
+
+ul {
+    list-style: none;
+    display: inline-flex;
+    column-gap: 30px;
+    align-items: center;
+    margin: 0;
+    padding: 20px 0; 
+}
+
+a {
+    font-size: 18px;
+    text-decoration: none;
+    color: #000;
+}
+
+a:hover {
+    color: red;
+}
+
+.likes {
+    padding: 5px 10px;
+    border-radius: 10px;
+    background: #FD634C;
+    color: #fff;
+    border: 1px solid rgb(255, 247, 209);
+    display: flex;
+    align-items: center;
+}
+
+.likes:hover {
+    color: #fff;
+    transform: scale(1.05);
+    filter: brightness(0.85);
+}
+
+.likes span {
+    display: inline-block;
+    padding-left: 5px;
+    font-weight: 500;
+}
+
+@media screen and (max-width: 768px) {
+    .hamburger {
+        display: block;
+    }
+
+    ul {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 80px;
+        right: 0;
+        background-color: white;
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    ul.open {
+        display: flex;
+    }
+
+    ul li {
+        text-align: center;
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    ul li a {
+        width: 100%;
+        padding: 10px 0;
+    }
+
+    .likes {
+        border-radius: 0;
+    }
+}

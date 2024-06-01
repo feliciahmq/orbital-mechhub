@@ -1,0 +1,52 @@
+.banner {
+    top: 60px;
+    padding: 24px 12px;
+    margin: 20px auto;
+    width: 100%;
+    display: flex;
+    align-items: center;  /* Center content vertically */
+    justify-content: center;  /* Center content horizontally */
+    justify-content: space-around;
+    background: linear-gradient(180deg, white, #ff9282);
+    position: absolute;
+}
+.banner button {
+    margin-top: 52px;
+}
+.banner p {
+    font-size: 20px;
+}
+@media only screen and (max-width: 992px) {
+.banner img {
+    display: none;
+}
+.faq {
+    display: none;
+}
+}
+button {
+    padding: 10px 30px;
+    border-radius: 15px;
+    outline: none;
+    background: #FD634C;
+    color: #fff;
+    cursor: pointer;
+    margin: auto;
+    align-self: center;
+    transition: 0.2s all ease-in-out;
+}
+button:hover {
+    transform: scale(1.05);
+    filter: brightness(0.85);
+}
+button:active {
+    box-shadow: 20px 20px 50px 10px brown inset, 0 0 2px 0 orange;
+}
+h1 {
+    font-size: 56px;
+    color: #FD634C;
+}
+.banner img {
+    margin-left: 180px;
+    width: 250px;
+}
