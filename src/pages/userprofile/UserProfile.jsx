@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from"../../firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 function UserProfile() {
   const [userInfo, setUserInfo] = useState(null);
+  const navigate = useNavigate(); // Initialize navigate hook
+
   const fetchUserData = async () => {
-    auth.onAuthStateChanged(async (user) => { // checks if user is authenticated
+    auth.onAuthStateChanged(async (user) => {
       console.log(user);
 
       const docRef = doc(db, "Users", user.uid); 
-      const docSnap = await getDoc(docRef); // retrieves doc data
+      const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setUserInfo(docSnap.data()); // updates userInfo with user data
+        setUserInfo(docSnap.data());
         console.log(docSnap.data());
       } else {
         console.log("User not logged in");
@@ -25,13 +28,17 @@ function UserProfile() {
 
   async function handleLogout() {
     try {
-      await auth.signOut;
-      window.location.href = "/account";
+      await auth.signOut();
+      navigate('/account'); // Redirect to account page after logout
       console.log("User logged out successfully!");
     } catch (error) {
       console.error("Error logging out: ", error.message);
     }
   }
+
+  const goHome = () => {
+    navigate('/'); // Navigate to home page
+  };
 
   return (
     <div>
@@ -42,13 +49,13 @@ function UserProfile() {
           <button className="button" onClick={handleLogout}>
             Logout
           </button>
+          <button onClick={goHome}>Home</button>
         </>
       ) : (
         <p>No user found.</p>
       )}
     </div>
   );
-
 }
 
 export default UserProfile;

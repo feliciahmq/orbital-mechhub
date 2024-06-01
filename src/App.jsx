@@ -5,12 +5,13 @@ import {
 import { Toaster } from 'react-hot-toast';
 
 import LandingPage from "./pages/landing/LandingPage";
+import { AuthProvider } from './Auth';
 import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 
 const App = () => {
   return (
-    <div>
+    <AuthProvider>
       <Toaster />
       <Router>
         <Routes>
@@ -19,7 +20,7 @@ const App = () => {
           <Route path="/profile" element={<UserProfile />} />
         </Routes>
       </Router>
-    </div>
+    </AuthProvider>
   );
 }
 

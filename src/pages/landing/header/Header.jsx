@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../../Auth';
+import { Link } from 'react-router-dom';
 import MechHub_Logo from "../../../assets/Logo/MechHub_logo.png";
 import "./Header.css";
 
 function Header() {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { currentUser } = useAuth();
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -16,10 +19,14 @@ function Header() {
                 &#9776;
             </div>
             <ul className={menuOpen ? 'open' : ''}>
-                <li><a href="">Home</a></li>
-                <li><a href="">Search</a></li>
-                <li><a href="/account">Register/ Login</a></li>
-                <li><a href="" className="likes">Liked: <span>0</span></a></li>
+                <li><Link to="/">Home</Link></li>
+                <li><Link to="/search">Search</Link></li>
+                {currentUser ? (
+                    <li><Link to="/profile">Profile</Link></li>
+                ) : (
+                    <li><Link to="/account">Register/ Login</Link></li>
+                )}
+                <li><Link to="/" className="likes">Liked: <span>0</span></Link></li>
             </ul>
         </nav>
     );
