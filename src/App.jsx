@@ -5,7 +5,6 @@ import {
 import { Toaster } from 'react-hot-toast';
 
 import LandingPage from "./pages/landing/LandingPage";
-import HomePage from "./pages/home/HomePage";
 import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 
@@ -16,7 +15,6 @@ const App = () => {
       <Router>
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/" element={<HomePage />} />
           <Route path="/account" element={<LoginSignupForm />} />
           <Route path="/profile" element={<UserProfile />} />
         </Routes>

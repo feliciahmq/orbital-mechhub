@@ -18,8 +18,7 @@ function Header() {
             <ul className={menuOpen ? 'open' : ''}>
                 <li><a href="">Home</a></li>
                 <li><a href="">Search</a></li>
-                <li><a href="">Register</a></li>
-                <li><a href="">Login</a></li>
+                <li><a href="/account">Register/ Login</a></li>
                 <li><a href="" className="likes">Liked: <span>0</span></a></li>
             </ul>
         </nav>

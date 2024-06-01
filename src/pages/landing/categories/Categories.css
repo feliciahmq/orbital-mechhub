@@ -17,8 +17,8 @@ h2 {
   margin: 0 20px;
   padding: 40px;
   border-radius: 100%;
-  width: 100px;
-  height: 100px;
+  width: 200px;
+  height: 200px;
   transition: all 0.2s ease-in;
   border-radius: 10px;
   display: flex;
@@ -26,7 +26,7 @@ h2 {
   align-items: center; 
 }
 .categories img {
-  width: 80px;
+  width: 180px;
   transition: all 0.2s ease-in-out;
 }
 .categories li:hover img {
@@ -54,14 +54,17 @@ h2 {
   }
   .image-container {
     margin-top: 0;
-    margin-right: 10px; /* Space between image and title */
-    width: 80px; /* Adjust size if needed */
-    height: 80px; /* Adjust size if needed */
-    padding: 20px; /* Adjust padding if needed */
+    margin-right: 10px; 
+    width: 80px;
+    height: 80px; 
+    padding: 20px; 
+  }
+  .categories img {
+    width: 76px;
   }
   .title {
     margin-top: 0;
-    font-size: 18px; /* Adjust font size if needed */
-    text-align: left; /* Align text to the left */
+    font-size: 18px; 
+    text-align: left; 
   }
 }

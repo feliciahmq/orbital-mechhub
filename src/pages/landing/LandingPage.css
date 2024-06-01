@@ -5,8 +5,12 @@ html, body {
     margin: 0;
     padding: 0;
 }
+.header-container {
+    display: flex;
+    flex-direction: column;
+}
 @media screen and (max-width: 992px) {
-    header {
-        height: 380px;
+    .header-container {
+        height: auto;
     }
 }

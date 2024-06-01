@@ -24,6 +24,14 @@
         "brand": "switches",
         "in_top_deals": true,
         "thumbnail": "../../assets/Product-Images/ditto_eg.png"
+      },
+      {
+        "_id": "652a9af7cb227bc3cf197641",
+        "title": "Product 4",
+        "price": 60000,
+        "brand": "switches",
+        "in_top_deals": true,
+        "thumbnail": "../../assets/Product-Images/ditto_eg.png"
       }
     ]
   }
