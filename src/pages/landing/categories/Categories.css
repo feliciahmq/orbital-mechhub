@@ -6,11 +6,11 @@
   margin-bottom: 50px;
   cursor: pointer;
   padding: 0;
-
-}
-h2 {
-  font-size: 28px;
-  color: #FD634C;
+  
+  h2 {
+    font-size: 28px;
+    color: #FD634C;
+  }
 }
 .image-container {
   background-color:  #FD634C;

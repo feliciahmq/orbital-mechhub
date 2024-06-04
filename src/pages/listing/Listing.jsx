@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { getDatabase, ref, child, get,set, update, remove } from 'firebase/database';
 import './Listing.css';
 import Header from '../../components/header/Header';
 
 function ListingPage() {
+    const db = getDatabase();
+
     const [formData, setFormData] = useState({
         title: '',
         image: '',
@@ -58,7 +61,7 @@ function ListingPage() {
             <div>
                 <Header />
             </div>
-            <div>
+            <div className='form'>
                 <form onSubmit={handleSubmit} style={{position: 'relative'}}>
                     <h1>Add Image:</h1>
                     <div className="image-upload">

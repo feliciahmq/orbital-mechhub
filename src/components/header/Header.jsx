@@ -18,7 +18,7 @@ function Header() {
             <div className="hamburger" onClick={toggleMenu}>
                 &#9776;
             </div>
-            <ul className={menuOpen ? 'open' : ''}>
+            <ul className={menuOpen ? 'open' : 'closed'}>
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/search">Search</Link></li>
                 {currentUser ? (

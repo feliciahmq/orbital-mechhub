@@ -9,9 +9,7 @@
         border-radius: 20px;
         padding: 10px;
         font-size: 20px;
-        /* display: flex; */
         justify-content: center;
-        /* align-items: center; */
         cursor: pointer;
         transition: transform 0.3s ease;
     }

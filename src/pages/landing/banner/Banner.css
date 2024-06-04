@@ -49,10 +49,10 @@
 }
 
 @media only screen and (max-width: 992px) {
-.banner img {
-    display: none;
-}
-.faq {
-    display: none;
-}
+    .banner img {
+        display: none;
+    }
+    .faq {
+        display: none;
+    }
 }
