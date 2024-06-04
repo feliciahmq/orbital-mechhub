@@ -38,6 +38,17 @@ ul {
     padding: 20px 0; 
 }
 
+.navbar {
+    a {
+    font-size: 18px;
+    text-decoration: none;
+    color: #000;
+    }
+
+    a:hover {
+        color: red;
+    }}
+
 .likes {
     padding: 5px 10px;
     border-radius: 10px;

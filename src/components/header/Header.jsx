@@ -13,7 +13,7 @@ function Header() {
     };
 
     return (
-        <nav>
+        <nav className='navbar'>
             <img src={MechHub_Logo} className="MechHub_Logo" />
             <div className="hamburger" onClick={toggleMenu}>
                 &#9776;
