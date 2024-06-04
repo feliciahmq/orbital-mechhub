@@ -4,11 +4,14 @@ import Categories from "./categories/Categories";
 import Data from "./data.json";
 import ProductList from "./ProductList";
 import Banner from "./banner/Banner";
+import { useAuth } from '../../Auth'; 
+import ListingButton from '../../components/listingpopup/Button';
 import './LandingPage.css';
 
 function LandingPage() {
     const headerContainerRef = useRef(null);
     const [totalHeight, setTotalHeight] = useState('auto');
+    const { currentUser } = useAuth();
 
     useEffect(() => {
         const calculateHeight = () => {
@@ -41,9 +44,10 @@ function LandingPage() {
                 <div>
                     <ProductList heading="Featured Products" products={Data.featured} />
                 </div>
+                {currentUser && <ListingButton />}
             </section>
         </div>
     );
 }
 
-export default LandingPage;
+export default LandingPage

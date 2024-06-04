@@ -9,6 +9,7 @@ import { AuthProvider } from './Auth';
 import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import ProductPage from "./pages/product/ProductPage";
+import ListingPage from "./pages/listing/Listing";
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
           <Route path="/account" element={<LoginSignupForm />} />
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/product" element={<ProductPage />} />
+          <Route path="/listing" element={<ListingPage />} />
         </Routes>
       </Router>
     </AuthProvider>

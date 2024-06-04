@@ -1,0 +1,22 @@
+.listing-button {
+    bottom: 32px; 
+    left: 32px; 
+    position: fixed;
+
+    > button {
+        width: 200px;
+        height: 44px;
+        border-radius: 20px;
+        padding: 10px;
+        font-size: 20px;
+        /* display: flex; */
+        justify-content: center;
+        /* align-items: center; */
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    > button:hover {
+        transform: translateY(-5px);
+    };
+}
