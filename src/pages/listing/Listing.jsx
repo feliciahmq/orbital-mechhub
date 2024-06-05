@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
-import { getDatabase, ref, child, get,set, update, remove } from 'firebase/database';
+import { db } from '../../firebase/firebaseConfig';
+import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
+import { useAuth } from '../../Auth';
+import { useNavigate } from 'react-router-dom';
 import './Listing.css';
 import Header from '../../components/header/Header';
 
 function ListingPage() {
-    const db = getDatabase();
+    const { currentUser } = useAuth();
+
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         title: '',
         image: '',
         productType: '',
         price: '',
-        description: ''
+        description: '',
+        status: 'available'
     });
 
     const handleChange = (e) => {
@@ -22,24 +28,47 @@ function ListingPage() {
         });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        onSubmit(formData);
-        setFormData({
-            title: '',
-            image: '',
-            productType: '',
-            price: '',
-            description: ''
-        });
+
+        try {
+            const userDocRef = doc(db, 'Users', currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
+
+            if (!userDoc.exists()) {
+                throw new Error('User not found');
+            }
+
+            const userData = userDoc.data();
+            const dataToSubmit = {
+                ...formData,
+                username: userData.username
+            };
+
+            await addDoc(collection(db, 'listings'), dataToSubmit);
+            alert('Listing Successfully Listed!');
+            setFormData({
+                title: '',
+                image: '',
+                productType: '',
+                price: '',
+                description: '',
+                status: 'available'
+            });
+            navigate('/');
+        } catch (err) {
+            alert('Error: ' + err.message);
+        }
     };
 
     const uploadImage = (e) => {
         const file = e.target.files[0];
         if (file && file.type.includes('image')) {
             const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
+            const uploadedImage = fileReader.readAsDataURL(file);
             fileReader.onload = (fileReaderEvent) => {
+                const setImage = document.querySelector('.image-upload');
+                setImage.style.backgroundImage = `url(${fileReaderEvent.target.result})`;
                 setFormData({
                     ...formData,
                     image: fileReaderEvent.target.result
@@ -50,23 +79,16 @@ function ListingPage() {
         }
     };
 
-    const adjustTextAreaHeight = (e) => {
-        const textarea = e.target;
-        textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
-    };
-
     return (
         <>
             <div>
                 <Header />
             </div>
             <div className='form'>
-                <form onSubmit={handleSubmit} style={{position: 'relative'}}>
+                <form onSubmit={handleSubmit} style={{ position: 'relative' }}>
                     <h1>Add Image:</h1>
                     <div className="image-upload">
-                        <input required
-                            className='file-input'
+                        <input required className='file-input'
                             type="file"
                             accept="image/*"
                             name="image"
@@ -90,12 +112,20 @@ function ListingPage() {
                     </div>
                     <div className="form-group">
                         <label>Product Type:</label>
-                        <input required
-                            type="text"
+                        <select required
                             name="productType"
                             value={formData.productType}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value='fullBuilds'>Full Builds</option>
+                            <option value='keycaps'>Keycaps</option>
+                            <option value='switches'>Switches</option>
+                            <option value='stabilisers'>Stabilisers</option>
+                            <option value='deskmats'>Deskmats</option>
+                            <option value='cables'>Cables</option>
+                            <option value='groupOrders'>Group Orders</option>
+                            <option value='others'>Others</option>
+                        </select>
                     </div>
                     <div className="form-group">
                         <label>Price:</label>
@@ -111,13 +141,10 @@ function ListingPage() {
                         <textarea required
                             name="description"
                             value={formData.description}
-                            onChange={(e) => {
-                                handleChange(e);
-                                adjustTextAreaHeight(e);
-                            }}
+                            onChange={handleChange}
                         />
                     </div>
-                    <button type="submit">Submit</button>
+                    <button className='submit' type="submit">Submit</button>
                 </form>
             </div>
         </>
