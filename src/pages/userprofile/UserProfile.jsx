@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from"../../firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from 'react-router-dom';
 
+import EditPopup from "./editUser/EditPopup";
+import './UserProfile.css';
 import Header from '../../components/header/Header';
 
 function UserProfile() {
+  const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
-  const navigate = useNavigate(); // Initialize navigate hook
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+
+  const handleOpenPopup = () => {
+      setIsPopupOpen(true);
+  };
+
+  const handleClosePopup = () => {
+      setIsPopupOpen(false);
+  };
 
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
@@ -33,26 +44,28 @@ function UserProfile() {
       await auth.signOut();
       navigate('/account'); 
       console.log("User logged out successfully!");
+      navigate("/");
     } catch (error) {
       console.error("Error logging out: ", error.message);
     }
   }
-
-  const goHome = () => {
-    navigate('/'); 
-  };
 
   return (
     <div>
       <Header />
       {userInfo ? (
         <>
-          <p>Username: {userInfo.username}</p>
-          <p>Email: {userInfo.email}</p>
-          <button className="button" onClick={handleLogout}>
-            Logout
-          </button>
-          <button onClick={goHome}>Home</button>
+          <div className="profile-container">
+            <img src={userInfo.profilePic} alt="Profile" className="profile-pic" />
+            <p>@{userInfo.username}</p>
+            <button className="edit-profile" onClick={handleOpenPopup}>
+              Edit Profile
+            </button>
+            {isPopupOpen && <EditPopup onClose={handleClosePopup} />}
+            <button className="logout" onClick={handleLogout}>
+              Logout
+            </button>
+          </div>
         </>
       ) : (
         <p>No user found.</p>

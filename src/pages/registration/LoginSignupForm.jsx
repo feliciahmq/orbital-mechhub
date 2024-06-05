@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GoogleLogo from '../../assets/google-logo.png';
+import defaultProfile from '../../assets/defaultProfile.jpg';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -47,7 +48,8 @@ function LoginSignUpForm() {
                 const userDocRef = doc(db, "Users", user.uid);
                 await setDoc(userDocRef, {
                     username: username,
-                    email: user.email
+                    email: user.email,
+                    profilePic: defaultProfile 
                 });
                 console.log("User ID:", user.uid);
                 toast.success("Account created successfully.");

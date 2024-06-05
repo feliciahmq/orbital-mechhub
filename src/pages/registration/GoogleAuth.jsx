@@ -4,6 +4,8 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 
 import { toast } from 'react-hot-toast';
 
+import defaultProfile from '../../assets/defaultProfile.jpg';
+
 // Google Auth
 const provider = new GoogleAuthProvider();
 
@@ -28,6 +30,7 @@ export const signInWithGoogle = async () => {
                 await setDoc(userDocRef, {
                     email: user.email,
                     username: username,
+                    profilePic: defaultProfile
                 });
                 toast.success("Account created successfully.");
             } else {
