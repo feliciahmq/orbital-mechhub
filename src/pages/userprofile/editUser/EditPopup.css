@@ -27,6 +27,7 @@
 
 .close-button {
     position: absolute;
+    z-index: 10000;
     top: 10px;
     right: 10px;
     background: none;
@@ -53,6 +54,8 @@
         width: 100%;
         padding: 10px;
         font-size: 16px;
+        background: #eeee;
+        border: #eeee;
     }
 }
 
@@ -75,14 +78,35 @@
     margin-top: 10px;
 }
 
+.updateProfile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-submit {
+    border-radius: 20px;
+    border: 1px solid #FF4B2B;
+    background-color: #FF4B2B;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    cursor: pointer;
+}
+
 .input-container {
-    padding-bottom: 8px;
+    padding-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     .image-upload {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
         opacity: 0.75;
         width: 360px;
         height: 360px;
