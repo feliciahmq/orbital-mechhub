@@ -32,7 +32,7 @@ function LandingPage() {
     }, []);
 
     return (
-        <div>
+        <div className='landing-page'>
             <div className='header-section'>
                 <header style={{ height: totalHeight }} ref={headerContainerRef} className="header-container">
                     <Header />

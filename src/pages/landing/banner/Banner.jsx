@@ -18,7 +18,7 @@ function Banner() {
           <br />
           whee test test 123
         </p>
-        <button onClick={viewProducts}>View Now</button>
+        <button onClick={viewProducts} className='button-go-brr'>View Now</button>
       </div>
       <img src={ProductImg} alt="ProductImg" />
     </div>
