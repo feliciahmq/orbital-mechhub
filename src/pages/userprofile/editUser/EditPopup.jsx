@@ -1,48 +1,101 @@
 import React, { useEffect, useState } from "react";
-import { auth, db } from"../../../firebase/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../../firebase/firebaseConfig";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+
 import './EditPopup.css';
 
 function EditPopup({ onClose, onSubmit }) {
-    const [inputValue, setInputValue] = useState('');
+    const [formData, setFormData] = useState({
+        image: "",
+        username: "",
+        email: ""
+    });
 
-    const handleSubmit = (e) => {
+    const uploadImage = (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.includes('image')) {
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = (fileReaderEvent) => {
+                setFormData({
+                    ...formData,
+                    image: fileReaderEvent.target.result
+                });
+            };
+        } else {
+            alert('Only Images Allowed');
+        }
+    };
+
+    const handleUpdate = async (e) => {
         e.preventDefault();
-        onSubmit(inputValue);
-        setInputValue('');
+        const user = auth.currentUser;
+        const userDocRef = doc(db, 'Users', user.uid);
+        try {
+            await updateDoc(userDocRef, {
+                profilePic: formData.image,
+                username: formData.username,
+                email: formData.email
+            });
+            onSubmit(); 
+        } catch (err) {
+            alert(err);
+        }
     };
 
     const fetchUserData = async () => {
         auth.onAuthStateChanged(async (user) => {
-        console.log(user);
-
-        const docRef = doc(db, "Users", user.uid); 
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            setUserInfo(docSnap.data());
-            console.log(docSnap.data());
-        } else {
-            console.log("User not logged in");
+            if (user) {
+                const docRef = doc(db, "Users", user.uid);
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    setFormData({
+                        image: docSnap.data().profilePic || "",
+                        username: docSnap.data().username || "",
+                        email: docSnap.data().email || ""
+                    });
+                } else {
+                    console.log("User not logged in");
+                }
             }
         });
-    }
-      useEffect(() => {
+    };
+
+    useEffect(() => {
         fetchUserData();
-      }, []);
+    }, []);
 
     return (
         <div className="popup-overlay">
             <div className="popup">
                 <button className="close-button" onClick={onClose}>X</button>
-                <form onSubmit={handleSubmit}>
-                    <label>
-                        Username:
+                <form onSubmit={handleUpdate} className='updateProfile'>
+                <div className="input-container"> 
+                    <div className="image-upload" style={{ backgroundImage: `url(${formData.image || "../../../assets/noImage.jpg"})` }}> 
+                        <input className='file-input' 
+                            type="file" 
+                            accept="image/*" 
+                            name="image" 
+                            onChange={uploadImage} /> 
+                        </div> 
+                        <label>Profile Picture:</label> 
+                    </div>
+                    <div className="popup-group">
+                        <label>Username:</label>
                         <input 
                             type="text" 
-                            value={inputValue} 
-                            onChange={(e) => setInputValue(e.target.value)} 
+                            value={formData.username} 
+                            onChange={(e) => setFormData({ ...formData, username: e.target.value })} 
                         />
-                    </label>
+                    </div>
+                    <div className="popup-group">
+                        <label>Email:</label>
+                        <input 
+                            type="text" 
+                            value={formData.email} 
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+                        />
+                    </div>
                     <button type="submit">Submit</button>
                 </form>
             </div>

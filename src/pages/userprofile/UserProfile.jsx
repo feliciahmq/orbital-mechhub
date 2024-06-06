@@ -20,6 +20,11 @@ function UserProfile() {
       setIsPopupOpen(false);
   };
 
+  const handleSubmit = () => {
+    setIsPopupOpen(false);
+    fetchUserData();
+  };
+
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
       console.log(user);
@@ -61,7 +66,7 @@ function UserProfile() {
             <button className="edit-profile" onClick={handleOpenPopup}>
               Edit Profile
             </button>
-            {isPopupOpen && <EditPopup onClose={handleClosePopup} />}
+            {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
             <button className="logout" onClick={handleLogout}>
               Logout
             </button>
