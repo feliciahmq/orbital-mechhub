@@ -107,7 +107,6 @@
     justify-content: center;
 
     .image-upload {
-        opacity: 0.75;
         width: 360px;
         height: 360px;
         border-radius: 100%;

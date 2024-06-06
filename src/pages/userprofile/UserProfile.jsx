@@ -65,7 +65,7 @@ function UserProfile() {
       {userInfo ? (
         <>
           <div className="profile-container">
-            <img src={userInfo.profilePic} alt="Profile" className="profile-pic" />
+            <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic || "../../../assets/noImage.jpg"})` }} />
             <p>@{userInfo.username}</p>
             <button className="edit-profile" onClick={handleOpenPopup}>
               Edit Profile
