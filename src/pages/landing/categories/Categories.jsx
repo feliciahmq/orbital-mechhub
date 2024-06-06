@@ -4,32 +4,32 @@ import MH_sample from "../../../assets/Logo/MH_logo.png";
 const categories = [
   {
     id: 1,
-    name: "Switches",
+    name: "Full Builds",
     image: MH_sample,
   },
   {
     id: 2,
-    name: "Cat 2",
+    name: "Switches",
     image: MH_sample,
   },
   {
     id: 3,
-    name: "Cat 3",
+    name: "Keycaps",
     image: MH_sample,
   },
   {
     id: 4,
-    name: "Cat 4",
+    name: "Cables",
     image: MH_sample,
   },
   {
     id: 5,
-    name: "Cat 5",
+    name: "Deskmats",
     image: MH_sample,
   },
   {
     id: 6,
-    name: "Cat 6",
+    name: "Others",
     image: MH_sample,
   },
 ];

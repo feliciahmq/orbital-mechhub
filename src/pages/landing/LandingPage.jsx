@@ -33,20 +33,24 @@ function LandingPage() {
 
     return (
         <div>
-            <header style={{ height: totalHeight }} ref={headerContainerRef} className="header-container">
-                <Header />
-                <Banner />
-            </header>
-            <section className='main'>
-                <div>
-                    <Categories />
-                </div>
-                <div>
-                    <ProductList heading="Featured Products" products={Data.featured} />
-                </div>
-                {currentUser && <ListingButton />}
+            <div className='header-section'>
+                <header style={{ height: totalHeight }} ref={headerContainerRef} className="header-container">
+                    <Header />
+                    <Banner />
+                </header>
+            </div>
+            <div className='main'>
+                <section >
+                    <div>
+                        <Categories />
+                    </div>
+                    <div>
+                        <ProductList heading="Featured Products" products={Data.featured} />
+                    </div>
+                    {currentUser && <ListingButton />}
             </section>
         </div>
+    </div>
     );
 }
 
