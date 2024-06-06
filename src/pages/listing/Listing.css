@@ -1,12 +1,18 @@
-.form {    
+.form {
+    top: 0;
+    left: 0;
+    right: 0;
+    position: absolute;
+
     form {
-        top: 100px;
         display: flex;
         flex-direction: column;
         align-items: flex-start;
         width: 100vw;
         height: calc(100vh + 168px);
         padding: 20px;
+        top: 0;
+        position: absolute;
     }
     form h1 {
         font-size: 28px;
@@ -20,9 +26,8 @@
         flex-direction: column;
         align-items: flex-start;
         opacity: 0.75;
-        height: calc(100vh - 500px);
-        width: 800px;
-        max-height: 1000px;
+        height: 600px;
+        width: 600px;
         position: relative;
         overflow: hidden;
         background: url("../../assets/noImage.jpg");

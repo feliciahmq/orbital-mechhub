@@ -7,7 +7,7 @@
     padding: 100px 24px 0 24px;
     background-color: white;
 
-    img {
+    > img {
         width: 300px;
         height: 300px;
         border-radius: 100%;

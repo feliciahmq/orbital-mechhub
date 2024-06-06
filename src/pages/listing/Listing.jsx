@@ -85,7 +85,7 @@ function ListingPage() {
                 <Header />
             </div>
             <div className='form'>
-                <form onSubmit={handleSubmit} style={{ position: 'relative' }}>
+                <form onSubmit={handleSubmit} >
                     <h1>Add Image:</h1>
                     <div className="image-upload">
                         <input required className='file-input'

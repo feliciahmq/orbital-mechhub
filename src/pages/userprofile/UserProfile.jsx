@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { auth, db } from"../../firebase/firebaseConfig";
+import { auth, db } from "../../firebase/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
 import EditPopup from "./editUser/EditPopup";
 import './UserProfile.css';
 import Header from '../../components/header/Header';
+import ListingButton from "../../components/listingpopup/Button";
 
 function UserProfile() {
   const navigate = useNavigate();
@@ -44,16 +45,19 @@ function UserProfile() {
     fetchUserData();
   }, []);
 
-  async function handleLogout() {
+  const handleLogout = async () => {
     try {
       await auth.signOut();
-      navigate('/account'); 
       console.log("User logged out successfully!");
       navigate("/");
     } catch (error) {
       console.error("Error logging out: ", error.message);
     }
-  }
+  };
+
+  const handleLoginNavigation = () => {
+    navigate("/account");
+  };
 
   return (
     <div>
@@ -70,10 +74,14 @@ function UserProfile() {
             <button className="logout" onClick={handleLogout}>
               Logout
             </button>
+            <ListingButton />
           </div>
         </>
       ) : (
-        <p>No user found.</p>
+        <div>
+          <p>No user found.</p>
+          <button onClick={handleLoginNavigation}>Login</button>
+        </div>
       )}
     </div>
   );
