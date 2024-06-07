@@ -8,7 +8,7 @@ import LandingPage from "./pages/landing/LandingPage";
 import { AuthProvider } from './Auth';
 import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
-import ProductPage from "./pages/product/ProductPage";
+import SearchPage from "./pages/search/SearchPage";
 import ListingPage from "./pages/listing/Listing";
 
 const App = () => {
@@ -20,7 +20,7 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/account" element={<LoginSignupForm />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/product" element={<ProductPage />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/listing" element={<ListingPage />} />
         </Routes>
       </Router>

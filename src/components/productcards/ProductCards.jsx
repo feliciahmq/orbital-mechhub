@@ -1,4 +1,4 @@
-import "./FeaturedProduct.css";
+import "./ProductCards.css";
 
 
 function Product({ productDetail = productDetail1 }) {

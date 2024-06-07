@@ -2,6 +2,7 @@
     bottom: 32px; 
     left: 32px; 
     position: fixed;
+    z-index: 100000;
 
     > button {
 		border: 1px solid #FF4B2B;

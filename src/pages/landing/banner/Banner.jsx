@@ -6,7 +6,7 @@ function Banner() {
   const navigate = useNavigate(); 
 
   const viewProducts = () => {
-    navigate('/product'); 
+    navigate('/search'); 
   };
 
   return (
