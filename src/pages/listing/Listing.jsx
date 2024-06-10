@@ -42,7 +42,8 @@ function ListingPage() {
             const userData = userDoc.data();
             const dataToSubmit = {
                 ...formData,
-                username: userData.username
+                username: userData.username,
+                userID: currentUser.uid
             };
 
             await addDoc(collection(db, 'listings'), dataToSubmit);

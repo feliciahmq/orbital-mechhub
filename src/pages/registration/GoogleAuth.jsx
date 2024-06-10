@@ -1,7 +1,6 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { auth, db } from "../../firebase/firebaseConfig";
 import { doc, setDoc, getDoc } from "firebase/firestore";
-
 import { toast } from 'react-hot-toast';
 
 import defaultProfile from '../../assets/defaultProfile.jpg';
@@ -36,7 +35,7 @@ export const signInWithGoogle = async () => {
             } else {
                 toast.success("Login successfully.");
             }
-            window.location.href = "/profile";
+            window.location.href = `/profile/${user.uid}`;
         }
     } catch (error) {
         console.log("Google Sign-In Error: ", error);

@@ -10,6 +10,7 @@ import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import SearchPage from "./pages/search/SearchPage";
 import ListingPage from "./pages/listing/Listing";
+import ProductPage from "./pages/product/Product";
 
 const App = () => {
   return (
@@ -20,8 +21,10 @@ const App = () => {
           <Route path="/" element={<LandingPage />} />
           <Route path="/account" element={<LoginSignupForm />} />
           <Route path="/profile" element={<UserProfile />} />
+          <Route path="/profile/:userID" element={<UserProfile />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/listing" element={<ListingPage />} />
+          <Route path="/product/:listingID" element={<ProductPage />} />
         </Routes>
       </Router>
     </AuthProvider>

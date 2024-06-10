@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../../firebase/firebaseConfig";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, collection, query, where, getDocs, writeBatch } from "firebase/firestore";
+
 
 import './EditPopup.css';
 
@@ -31,17 +32,31 @@ function EditPopup({ onClose, onSubmit }) {
         e.preventDefault();
         const user = auth.currentUser;
         const userDocRef = doc(db, 'Users', user.uid);
+        
         try {
             await updateDoc(userDocRef, {
                 profilePic: formData.image,
                 username: formData.username,
                 email: formData.email
             });
-            onSubmit(); 
+    
+            const listingsQuery = query(collection(db, 'listings'), where('userId', '==', user.uid));
+            const querySnapshot = await getDocs(listingsQuery);
+    
+            const batch = writeBatch(db);
+    
+            querySnapshot.forEach((listingDoc) => {
+                batch.update(listingDoc.ref, { username: formData.username });
+            });
+    
+            await batch.commit();
+            
+            onSubmit();
         } catch (err) {
             alert(err);
         }
     };
+    
 
     const fetchUserData = async () => {
         auth.onAuthStateChanged(async (user) => {
