@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { auth, db } from "../../../firebase/firebaseConfig";
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, writeBatch } from "firebase/firestore";
 
-
 import './EditPopup.css';
 
 function EditPopup({ onClose, onSubmit }) {

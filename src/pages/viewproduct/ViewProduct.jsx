@@ -3,8 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth';
-import './Product.css';
+
 import Header from '../../components/header/Header';
+import './ViewProduct.css';
 
 function ProductPage() {
   const { listingID } = useParams();

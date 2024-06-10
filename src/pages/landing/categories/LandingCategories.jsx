@@ -1,4 +1,4 @@
-import "./Categories.css";
+import "./LandingCategories.css";
 import MH_sample from "../../../assets/Logo/MH_logo.png";
 
 const categories = [

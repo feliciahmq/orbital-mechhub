@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import './SearchPage.css';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
+import { useAuth } from '../../Auth';
+
 import Header from '../../components/header/Header';
 import ProductList from '../../components/productcards/ProductList';
 import SearchBar from './searchbar/Searchbar';
 import ListingButton from '../../components/listingpopup/Button';
-import { useAuth } from '../../Auth';
 import ProductFilter from './filter/productFilter';
+import './SearchPage.css';
 
 function SearchPage() {
     const { currentUser } = useAuth();

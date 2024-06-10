@@ -3,8 +3,9 @@ import { db } from '../../firebase/firebaseConfig';
 import { collection, addDoc, doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
 import { useNavigate } from 'react-router-dom';
-import './Listing.css';
+
 import Header from '../../components/header/Header';
+import './CreateListing.css';
 
 function ListingPage() {
     const { currentUser } = useAuth();

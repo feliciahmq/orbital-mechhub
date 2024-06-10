@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../Auth';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+
 import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
 import "./Header.css";
 
 function Header() {
+    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const { currentUser } = useAuth();
 
@@ -12,9 +14,17 @@ function Header() {
         setMenuOpen(!menuOpen);
     };
 
+    const handleLogoClick = () => {
+        navigate(`/`)
+    };
+
     return (
         <nav className='navbar'>
-            <img src={MechHub_Logo} className="MechHub_Logo" />
+            <img 
+                src={MechHub_Logo} 
+                className="MechHub_Logo"
+                onClick={handleLogoClick} 
+            />
             <div className="hamburger" onClick={toggleMenu}>
                 &#9776;
             </div>

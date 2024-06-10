@@ -5,10 +5,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../Auth';
 
 import EditPopup from "./editUser/EditPopup";
-import './UserProfile.css';
 import Header from '../../components/header/Header';
 import ListingButton from "../../components/listingpopup/Button";
 import ProductList from '../../components/productcards/ProductList'; 
+import './UserProfile.css';
 
 function UserProfile() {
   const { userID } = useParams();
@@ -106,7 +106,7 @@ function UserProfile() {
             {userListings.length > 0 ? (
               <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
             ) : (
-              <p>This user has not listed anything yet</p>
+              <h2>This user has not listed anything yet ( ˘･з･) </h2>
             )}
           </div>
         </>

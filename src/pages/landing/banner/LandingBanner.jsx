@@ -1,6 +1,8 @@
-import ProductImg from "../../../assets/Product-Images/ditto_eg.png";
-import "./Banner.css";
 import { useNavigate } from "react-router-dom"; 
+
+import ProductImg from "../../../assets/Product-Images/ditto_eg.png";
+import "./LandingBanner.css";
+
 
 function Banner() {
   const navigate = useNavigate(); 

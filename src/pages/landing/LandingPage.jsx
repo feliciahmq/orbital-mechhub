@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
-import Header from '../../components/header/Header';
-import Categories from "./categories/Categories";
-import ProductList from '../../components/productcards/ProductList';
-import Banner from "./banner/Banner";
 import { useAuth } from '../../Auth'; 
+
+import Header from '../../components/header/Header';
+import Categories from "./categories/LandingCategories";
+import ProductList from '../../components/productcards/ProductList';
+import Banner from "./banner/LandingBanner";
 import ListingButton from '../../components/listingpopup/Button';
 import './LandingPage.css';
 

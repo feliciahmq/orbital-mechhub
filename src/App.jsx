@@ -9,8 +9,8 @@ import { AuthProvider } from './Auth';
 import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import SearchPage from "./pages/search/SearchPage";
-import ListingPage from "./pages/listing/Listing";
-import ProductPage from "./pages/product/Product";
+import ListingPage from "./pages/createlisting/CreateListing";
+import ProductPage from "./pages/viewproduct/ViewProduct";
 
 const App = () => {
   return (
