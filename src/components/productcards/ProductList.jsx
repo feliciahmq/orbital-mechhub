@@ -1,4 +1,5 @@
-import Product from "./ProductCards";
+import React from 'react';
+import Product from './ProductCards';
 
 function ProductList({ heading, products }) {
   return (

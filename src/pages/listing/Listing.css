@@ -47,12 +47,9 @@
         left: 0;
     }
     .uploaded-picture {
-        max-width: 800px;
-        max-height: calc(100vh - 500px);
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: cover;
-        margin-top: 10px;
+        height: 600px;
+        width: 600px;
+        opacity: 1;
     }
     .form-group {
         display: flex;

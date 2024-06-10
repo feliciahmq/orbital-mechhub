@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { useNavigate } from 'react-router-dom';
 
 import EditPopup from "./editUser/EditPopup";
 import './UserProfile.css';
 import Header from '../../components/header/Header';
 import ListingButton from "../../components/listingpopup/Button";
+import ProductList from '../../components/productcards/ProductList'; // Assuming you have this component
 
 function UserProfile() {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   const handleOpenPopup = () => {
       setIsPopupOpen(true);
@@ -26,24 +28,44 @@ function UserProfile() {
     fetchUserData();
   };
 
+  const fetchUsersListings = async (username) => {
+    try {
+        const listingsCollection = collection(db, "listings");
+        const data = await getDocs(listingsCollection);
+        const listingsData = data.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+
+        const userSpecificListings = listingsData.filter(listing => listing.username === username);
+        setUserListings(userSpecificListings);
+    } catch (error) {
+        console.log(`Firebase: ${error}`);
+    }
+  };
+
+  useEffect(() => {
+      fetchUserData();
+  }, []);
+
   const fetchUserData = async () => {
     auth.onAuthStateChanged(async (user) => {
-      console.log(user);
-
-      const docRef = doc(db, "Users", user.uid); 
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setUserInfo(docSnap.data());
-        console.log(docSnap.data());
+      if (user) {
+        const docRef = doc(db, "Users", user.uid); 
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserInfo(userData);
+          console.log(userData);
+          fetchUsersListings(userData.username); // Fetch user listings after getting the username
+        } else {
+          console.log("No user data found");
+        }
       } else {
         console.log("User not logged in");
       }
     });
-  }
-
-  useEffect(() => {
-    fetchUserData();
-  }, []);
+  };
 
   const handleLogout = async () => {
     try {
@@ -75,6 +97,13 @@ function UserProfile() {
               Logout
             </button>
             <ListingButton />
+          </div>
+          <div className="users-listings">
+            {userListings.length > 0 ? (
+              <ProductList heading="Your Listings" products={userListings} />
+            ) : (
+              <p>This user has not listed anything yet</p>
+            )}
           </div>
         </>
       ) : (

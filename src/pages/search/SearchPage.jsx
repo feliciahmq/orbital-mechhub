@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './SearchPage.css';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseConfig';
 import Header from '../../components/header/Header';
-import Data from "../landing/data.json";
 import ProductList from '../../components/productcards/ProductList';
 import SearchBar from './searchbar/Searchbar';
 import ListingButton from '../../components/listingpopup/Button';
@@ -10,15 +11,34 @@ import ProductFilter from './filter/productFilter';
 
 function SearchPage() {
     const { currentUser } = useAuth();
-    const [products, setProducts] = useState(Data.featured);
-    const [filteredProducts, setFilteredProducts] = useState(Data.featured);
+    const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortOrder, setSortOrder] = useState('');
 
+    const fetchListings = async () => {
+        try {
+            const listingsCollection = collection(db, "listings");
+            const data = await getDocs(listingsCollection);
+            const listingsData = data.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setProducts(listingsData);
+            setFilteredProducts(listingsData);
+        } catch (error) {
+            console.log(`Firebase: ${error}`);
+        }
+    };
+
+    useEffect(() => {
+        fetchListings();
+    }, []);
+
     const filterProducts = (type, priceRange) => {
-        let filtered = Data.featured;
+        let filtered = products;
 
         if (type) {
-            filtered = filtered.filter(product => product.type === type);
+            filtered = filtered.filter(product => product.productType === type);
         }
 
         if (priceRange) {
@@ -33,9 +53,9 @@ function SearchPage() {
         let sorted = [...productsToSort];
 
         if (order === 'low-to-high') {
-            sorted = sorted.sort((a, b) => a.price - b.price);
+            sorted.sort((a, b) => a.price - b.price);
         } else if (order === 'high-to-low') {
-            sorted = sorted.sort((a, b) => b.price - a.price);
+            sorted.sort((a, b) => b.price - a.price);
         }
 
         return sorted;
@@ -43,7 +63,7 @@ function SearchPage() {
 
     useEffect(() => {
         setFilteredProducts(sortProducts(filteredProducts, sortOrder));
-    }, [sortOrder, filteredProducts]);
+    }, [sortOrder]);
 
     return (
         <>

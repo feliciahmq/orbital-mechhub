@@ -113,6 +113,7 @@ function ListingPage() {
                     <div className="form-group">
                         <label>Product Type:</label>
                         <select required
+                            type="text"
                             name="productType"
                             value={formData.productType}
                             onChange={handleChange}
@@ -130,7 +131,7 @@ function ListingPage() {
                     <div className="form-group">
                         <label>Price:</label>
                         <input required
-                            type="text"
+                            type="number"
                             name="price"
                             value={formData.price}
                             onChange={handleChange}

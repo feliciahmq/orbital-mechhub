@@ -15,6 +15,7 @@
 
   img {
     height: 200px;
+    max-width: 200px;
     justify-self: center;
   }
 
@@ -28,6 +29,7 @@
   }
 
   button {
+    width: 200px;
     border-radius: 20px;
 		border: 1px solid #FF4B2B;
 		background-color: #FF4B2B;
