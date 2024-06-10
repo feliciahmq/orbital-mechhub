@@ -4,21 +4,20 @@
     left: 0;
     width: 100%;
     background-color: white;
-    height: 512px;
-
+    height: 540px;
     justify-content: center;
     align-items: center;
-    padding: 88px 44px;
+    padding: 92px 44px;
 
     .listing-details {
         display: flex;
         align-items: flex-start; 
-        gap: 20px;
+        gap: 32px;
     
         img {
             width: 400px; 
             height: auto;
-            border: 1px solid rgb(221, 221, 221);
+            border: 1px solid rgb(240, 240, 240);
         }
     }
     
@@ -28,36 +27,69 @@
         justify-content: flex-start;
         align-items: flex-start;
     
-        h1, h2, p {
-            margin: 10px 0; 
+        h1, h2, h3, h4 {
+            margin: 8px 0; 
+        } 
+        p {
+            margin: 4px 0;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 500;
         }
         
+        h2 , h4 {
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        p {
+            font-size: 20px;
+            font-weight: 300;
+            border: 1px solid rgb(240, 240, 240);
+            width: 520px;
+            height: 153px;
+            padding: 4px;
+        }
     }
 }
 
 .user-container {
     position: absolute;
-    top: 512px;
+    top: 540px;
     left: 0;
+    height: 100px;
     width: 100%;
     background-color: white;
-
+    border-top: 1px solid rgb(240, 240, 240);
     display: flex;
     align-items: center;
     gap: 10px;
     padding: 10px 44px;
 
-    .userpic {
-        cursor: pointer;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-    }
-
     .user-details {
         display: flex;
         align-items: center;
         gap: 10px;
+
+        .userpic {
+            cursor: pointer;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+        }
+
+        h4 {
+            cursor: pointer;
+            font-size: 24px;
+            font-weight: 300;
+        }
     }
 
     button {

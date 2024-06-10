@@ -1,7 +1,4 @@
-import {
-  BrowserRouter as Router, Routes, Route
-} from "react-router-dom";
-
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
 
 import LandingPage from "./pages/landing/LandingPage";
@@ -9,7 +6,7 @@ import { AuthProvider } from './Auth';
 import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import SearchPage from "./pages/search/SearchPage";
-import ListingPage from "./pages/createlisting/CreateListing";
+import ListingPage from "./pages/listing/Listing";
 import ProductPage from "./pages/viewproduct/ViewProduct";
 
 const App = () => {
@@ -24,6 +21,7 @@ const App = () => {
           <Route path="/profile/:userID" element={<UserProfile />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/listing" element={<ListingPage />} />
+          <Route path="/listing/:listingID" element={<ListingPage />} />
           <Route path="/product/:listingID" element={<ProductPage />} />
         </Routes>
       </Router>

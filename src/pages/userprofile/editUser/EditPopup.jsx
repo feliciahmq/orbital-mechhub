@@ -56,7 +56,6 @@ function EditPopup({ onClose, onSubmit }) {
         }
     };
     
-
     const fetchUserData = async () => {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -72,6 +71,14 @@ function EditPopup({ onClose, onSubmit }) {
                     console.log("User not logged in");
                 }
             }
+        });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
         });
     };
 
@@ -98,16 +105,18 @@ function EditPopup({ onClose, onSubmit }) {
                         <label>Username:</label>
                         <input 
                             type="text" 
+                            name="username"
                             value={formData.username} 
-                            onChange={(e) => setFormData({ ...formData, username: e.target.value })} 
+                            onChange={handleChange} 
                         />
                     </div>
                     <div className="popup-group">
                         <label>Email:</label>
                         <input 
                             type="text" 
+                            name="email"
                             value={formData.email} 
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+                            onChange={handleChange} 
                         />
                     </div>
                     <button type="submit" className='profile-submit'>Submit</button>

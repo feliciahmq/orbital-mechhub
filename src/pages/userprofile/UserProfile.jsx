@@ -87,7 +87,7 @@ function UserProfile() {
       {userInfo ? (
         <>
           <div className="profile-container">
-            <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic || "../../../assets/noImage.jpg"})` }} />
+            <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
             <p>@{userInfo.username}</p>
             {currentUser?.uid === userID && (
               <>
@@ -106,7 +106,7 @@ function UserProfile() {
             {userListings.length > 0 ? (
               <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
             ) : (
-              <h2>This user has not listed anything yet ( ˘･з･) </h2>
+              <h2>This user has no listings ( ˘･з･) </h2>
             )}
           </div>
         </>

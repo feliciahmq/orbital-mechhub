@@ -45,7 +45,7 @@ function ProductPage() {
   };
 
   const handleEditClick = () => {
-    navigate(`/edit-listing/${listingID}`);
+    navigate(`/listing/${listingID}`);
   };
 
   return (
@@ -58,9 +58,8 @@ function ProductPage() {
             <h1>{listing.title}</h1>
             <h2>${listing.price}</h2>
             <h3>{listing.productType}</h3>
-            <p>Details:
-              <br/>
-              {listing.description}</p>
+            <h4>Details:</h4>
+            <p>{listing.description}</p>
           </div>
         </div>
       </div>
@@ -71,7 +70,7 @@ function ProductPage() {
             alt={user.username}
             onClick={handleUsernameClick}
           />
-          <h4 onClick={handleUsernameClick} style={{ cursor: 'pointer' }}>{user.username}</h4>
+          <h4 onClick={handleUsernameClick}>{user.username}</h4>
         </div>
         {currentUser?.uid === listing.userID && (
           <button onClick={handleEditClick}>Edit Listing</button>
