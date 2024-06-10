@@ -10,6 +10,7 @@ import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import ProductPage from "./pages/product/ProductPage";
 import ListingPage from "./pages/listing/Listing";
+import Chat from "./pages/chatapp/ChatApp";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/profile" element={<UserProfile />} />
           <Route path="/product" element={<ProductPage />} />
           <Route path="/listing" element={<ListingPage />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </Router>
     </AuthProvider>
