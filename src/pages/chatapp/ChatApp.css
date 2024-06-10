@@ -4,7 +4,7 @@
     justify-content: center;
     height: 100vh;
     color: white;
-    background-image: url(../../../public/chat-bg.jpg);
+    background-color: #FFF;
 }
 
 .chat-container {
@@ -24,10 +24,10 @@
 .inner-container {
     width: 90vw;
     height: 90vh;
-    background-color: #8a150323;
+    background-color: #aeadad74;
     backdrop-filter: blur(19px) saturate(180%);
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.176);
+    border: 1px solid rgba(255, 255, 255, 0.076);
     display: flex;
 }
 
