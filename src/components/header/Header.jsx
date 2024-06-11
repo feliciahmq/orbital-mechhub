@@ -15,7 +15,7 @@ function Header() {
     };
 
     const handleLogoClick = () => {
-        navigate(`/`)
+        navigate(`/`);
     };
 
     return (
@@ -32,11 +32,13 @@ function Header() {
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/search">Search</Link></li>
                 {currentUser ? (
-                    <li><Link to={`/profile/${currentUser.uid}`}>Profile</Link></li>
+                    <>
+                        <li><Link to={`/profile/${currentUser.uid}`}>Profile</Link></li>
+                        <li><Link to={`/likes/${currentUser.uid}`} className="likes">Liked: <span>0</span></Link></li>
+                    </>
                 ) : (
                     <li><Link to="/account">Register/ Login</Link></li>
                 )}
-                <li><Link to="/" className="likes">Liked: <span>0</span></Link></li>
             </ul>
         </nav>
     );

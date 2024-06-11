@@ -8,6 +8,7 @@ import UserProfile from "./pages/userprofile/UserProfile";
 import SearchPage from "./pages/search/SearchPage";
 import ListingPage from "./pages/listing/Listing";
 import ProductPage from "./pages/viewproduct/ViewProduct";
+import LikesPage from "./pages/likes/Likes";
 
 const App = () => {
   return (
@@ -23,6 +24,7 @@ const App = () => {
           <Route path="/listing" element={<ListingPage />} />
           <Route path="/listing/:listingID" element={<ListingPage />} />
           <Route path="/product/:listingID" element={<ProductPage />} />
+          <Route path="/likes/:userID" element={<LikesPage />} />
         </Routes>
       </Router>
     </AuthProvider>

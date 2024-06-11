@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { FaRegHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import { doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, deleteDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
+import { useAuth } from '../../Auth'; 
 
 import './ProductCards.css';
-
 
 function ProductCards({ productDetail }) {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
+  const { currentUser } = useAuth();
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeID, setLikeID] = useState(null); 
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -21,8 +24,24 @@ function ProductCards({ productDetail }) {
       }
     };
 
+    const checkIfLiked = async () => {
+      if (currentUser) {
+        const likesQuery = query(
+          collection(db, 'Likes'),
+          where('userID', '==', currentUser.uid),
+          where('listingID', '==', productDetail.id)
+        );
+        const likesSnapshot = await getDocs(likesQuery);
+        if (!likesSnapshot.empty) {
+          setIsLiked(true);
+          setLikeID(likesSnapshot.docs[0].id); 
+        }
+      }
+    };
+
     fetchUser();
-  }, [productDetail.userID]);
+    checkIfLiked();
+  }, [productDetail.userID, productDetail.id, currentUser]);
 
   const handleViewClick = () => {
     navigate(`/product/${productDetail.id}`);
@@ -33,8 +52,37 @@ function ProductCards({ productDetail }) {
     navigate(`/profile/${productDetail.userID}`);
   };
 
-  const handleLike = (e) => {
+  const handleLike = async (e) => {
+    e.stopPropagation();
 
+    if (!currentUser) {
+      alert("Please log in to like the product.");
+      return;
+    }
+
+    try {
+      const docRef = await addDoc(collection(db, 'Likes'), {
+        userID: currentUser.uid,
+        listingID: productDetail.id 
+      });
+
+      setIsLiked(true); 
+      setLikeID(docRef.id);
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
+  const handleUnLike = async (e) => {
+    e.stopPropagation(); 
+
+    try {
+      await deleteDoc(doc(db, 'Likes', likeID));
+      setIsLiked(false);
+      setLikeID(null); 
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
   };
 
   if (!user) {
@@ -57,7 +105,11 @@ function ProductCards({ productDetail }) {
         <p onClick={handleUsernameClick}>{user.username}</p>
       </div>
       <div className="productcard-like-button">
-        <FaRegHeart onClick={handleLike}/>
+        {isLiked ? (
+          <FaHeart onClick={handleUnLike} color="red" /> 
+        ) : (
+          <FaRegHeart onClick={handleLike} /> 
+        )}
       </div>
     </div>
   );
