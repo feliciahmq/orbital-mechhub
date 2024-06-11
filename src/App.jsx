@@ -3,6 +3,7 @@ import { Toaster } from 'react-hot-toast';
 
 import LandingPage from "./pages/landing/LandingPage";
 import { AuthProvider } from './Auth';
+import { LikeCountProvider } from "./components/header/likecounter/LikeCounter";
 import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import SearchPage from "./pages/search/SearchPage";
@@ -12,6 +13,7 @@ import LikesPage from "./pages/likes/Likes";
 
 const App = () => {
   return (
+    <LikeCountProvider>
     <AuthProvider>
       <Toaster />
       <Router>
@@ -28,6 +30,7 @@ const App = () => {
         </Routes>
       </Router>
     </AuthProvider>
+    </LikeCountProvider>
   );
 }
 

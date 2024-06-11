@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../Auth';
 import { Link, useNavigate } from 'react-router-dom';
+import { useLikes } from './likecounter/LikeCounter';
 
 import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
 import "./Header.css";
@@ -9,6 +10,7 @@ function Header() {
     const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const { currentUser } = useAuth();
+    const { likeCount } = useLikes();
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -34,7 +36,7 @@ function Header() {
                 {currentUser ? (
                     <>
                         <li><Link to={`/profile/${currentUser.uid}`}>Profile</Link></li>
-                        <li><Link to={`/likes/${currentUser.uid}`} className="likes">Liked: <span>0</span></Link></li>
+                        <li><Link to={`/likes/${currentUser.uid}`} className="likes">Liked: <span>{likeCount}</span></Link></li>
                     </>
                 ) : (
                     <li><Link to="/account">Register/ Login</Link></li>

@@ -1,25 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase/firebaseConfig';
+import React from 'react';
 import ProductCards from './ProductCards';
 import './ProductCards.css';
 
-function ProductList({heading}) {
-  const [products, setProducts] = useState([]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const querySnapshot = await getDocs(collection(db, 'listings'));
-      const productsList = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
-      setProducts(productsList);
-    };
-
-    fetchProducts();
-  }, []);
-
+function ProductList({ heading, products }) {
   return (
     <>
       <h2>{heading}</h2>

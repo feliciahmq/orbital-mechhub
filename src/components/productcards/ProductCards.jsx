@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { addDoc, collection, doc, getDoc, deleteDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth'; 
+import { useLikes } from '../header/likecounter/LikeCounter';
 
 import './ProductCards.css';
 
@@ -13,6 +14,7 @@ function ProductCards({ productDetail }) {
   const { currentUser } = useAuth();
   const [isLiked, setIsLiked] = useState(false);
   const [likeID, setLikeID] = useState(null); 
+  const { likesCount, increaseLikeCount, decreaseLikeCount } = useLikes();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -68,6 +70,7 @@ function ProductCards({ productDetail }) {
 
       setIsLiked(true); 
       setLikeID(docRef.id);
+      increaseLikeCount();
     } catch (err) {
       alert('Error: ' + err.message);
     }
@@ -80,6 +83,7 @@ function ProductCards({ productDetail }) {
       await deleteDoc(doc(db, 'Likes', likeID));
       setIsLiked(false);
       setLikeID(null); 
+      decreaseLikeCount();
     } catch (err) {
       alert('Error: ' + err.message);
     }
