@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth';
+import { FaRegHeart } from "react-icons/fa";
 
 import Header from '../../components/header/Header';
 import './ViewProduct.css';
@@ -36,16 +37,16 @@ function ProductPage() {
     fetchListing();
   }, [listingID]);
 
-  if (!listing || !user) {
-    return <div>Loading...</div>;
-  }
-
   const handleUsernameClick = () => {
     navigate(`/profile/${listing.userID}`);
   };
 
   const handleEditClick = () => {
     navigate(`/listing/${listingID}`);
+  };
+
+  const handleLike = () => {
+
   };
 
   return (
@@ -60,6 +61,9 @@ function ProductPage() {
             <h3>{listing.productType}</h3>
             <h4>Details:</h4>
             <p>{listing.description}</p>
+          </div>
+          <div className='like-button'>
+            <FaRegHeart onClick={handleLike}/>
           </div>
         </div>
       </div>

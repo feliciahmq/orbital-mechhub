@@ -9,17 +9,17 @@ const categories = [
   },
   {
     id: 2,
-    name: "Switches",
-    image: MH_sample,
-  },
-  {
-    id: 3,
     name: "Keycaps",
     image: MH_sample,
   },
   {
+    id: 3,
+    name: "Switches",
+    image: MH_sample,
+  },
+  {
     id: 4,
-    name: "Cables",
+    name: "Stabilisers",
     image: MH_sample,
   },
   {
@@ -29,6 +29,16 @@ const categories = [
   },
   {
     id: 6,
+    name: "Cables",
+    image: MH_sample,
+  },
+  {
+    id: 7,
+    name: "Group Orders",
+    image: MH_sample,
+  },
+  {
+    id: 8,
     name: "Others",
     image: MH_sample,
   },

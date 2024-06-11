@@ -6,6 +6,12 @@
   margin-bottom: 50px;
   cursor: pointer;
   padding: 0;
+  list-style: none;
+  display: inline-flex;
+  column-gap: 30px;
+  align-items: center;
+  margin: 0;
+  padding: 20px 0; 
 
   h2 {
     font-size: 28px;
@@ -17,8 +23,8 @@
   margin: 0 20px;
   padding: 40px;
   border-radius: 100%;
-  width: 180px;
-  height: 180px;
+  width: 120px;
+  height: 120px;
   transition: all 0.2s ease-in;
   border-radius: 10px;
   display: flex;
@@ -26,7 +32,7 @@
   align-items: center; 
 }
 .categories img {
-  width: 180px;
+  width: 120px;
   transition: all 0.2s ease-in-out;
 }
 .categories li:hover img {
