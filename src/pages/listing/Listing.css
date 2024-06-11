@@ -1,0 +1,198 @@
+.listing-form {
+    top: 80px;
+    left: 0;
+    right: 0;
+    padding-top: 8px;
+    position: absolute;
+
+    p {
+        font-size: 28px;
+        font-weight: 300;
+    }
+
+    h2 {
+        color:black;
+        font-size: 32px;
+        font-weight: 300;
+        z-index: 10;
+        position: absolute;
+        left: 20px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100vw;
+        height: calc(100vh + 100px);
+        padding: 20px;
+        top: 0;
+        position: absolute;
+        background-color: white;
+
+        h1 {
+            font-size: 28px;
+            font-weight: 300;
+            top: 200px;
+            position: relative;
+        }
+        h2 {
+            top: 40px;
+            position: relative;
+            font-size: 40px;
+            font-weight: 400;
+        }
+        .image-upload {
+            left: 176px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            opacity: 1;
+            height: 400px;
+            width: 400px;
+            position: relative;
+            overflow: hidden;
+            background: url("../../assets/noImage.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin-bottom: 20px;
+        }
+        .file-input {
+            opacity: 0;
+            height: 100%;
+            width: 100%;
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .uploaded-listing-picture {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 400px;
+            width: 400px;
+            border-radius: 0;
+            opacity: 1;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .form-group label {
+            width: 150px;
+            margin-right: 20px;
+            font-size: 28px;
+            text-align: right;
+        }
+        .form-group input, .form-group textarea {
+            font-size: 20px;
+            width: 1000px;
+            height: 40px;
+            padding: 8px;
+            box-sizing: border-box;
+            background: #eeee;
+            border: #eeee;
+        }
+        .form-group select {
+            font-size: 20px;
+            height: 40px;
+            background: #eeee;
+            border: #eeee;
+        }
+        textarea {
+            min-height: 100px;
+            resize: none;
+            overflow: hidden;
+        }
+        .submit {
+            right: 24px;
+            bottom: 24px;
+            position: fixed;
+            z-index: 10000000;
+            border: 4px solid #FF4B2B;
+            background-color: white;
+            color:#FF4B2B;
+            font-weight: bold;
+            letter-spacing: 1px;
+            width: 200px;
+            height: 44px;
+            border-radius: 20px;
+            padding: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .delete {
+            position: absolute;
+            right:24px;
+            font-weight: 200;
+            font-size: 13px;
+            letter-spacing: 1px;
+            width: 140px;
+            height: 32px;
+            border-radius: 20px;
+            padding: 10px;
+            cursor: pointer;
+            border: 1px solid #FF4B2B;
+            background-color:#FF4B2B;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    @media screen and (max-width: 992px) {
+        .image-upload {
+            width: calc(100vw - 40px);
+        }
+        .uploaded-picture {
+            width: calc(100vw - 40px);
+        }
+        .form-group {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .form-group label {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+        }
+        button {
+            margin: auto;
+            bottom: 24px;
+            position: fixed;
+        }
+    }
+
+    .product-type {
+        position: relative;
+        select {
+            height: 40px;
+            width: 200px;
+        }
+        select, option {
+            background-color: #EEEEEE;
+            color: black;
+            font-size: 20px;
+        }
+    }
+    .title {
+        text-align: left;
+    }
+}

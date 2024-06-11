@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import GoogleLogo from '../../assets/google-logo.png';
+import defaultProfile from '../../assets/defaultProfile.jpg';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
@@ -47,12 +48,13 @@ function LoginSignUpForm() {
                 const userDocRef = doc(db, "Users", user.uid);
                 await setDoc(userDocRef, {
                     username: username,
-                    email: user.email
+                    email: user.email,
+                    profilePic: defaultProfile 
                 });
                 console.log("User ID:", user.uid);
                 toast.success("Account created successfully.");
+                navigate(`/profile/${user.uid}`);
             }
-            navigate('/profile');
         } catch (error) {
             let errorMessage = 'An error occurred.';
             if (error.code === 'auth/email-already-in-use') {
@@ -80,10 +82,11 @@ function LoginSignUpForm() {
         }
 
         try {
-            await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+            const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+            const user = userCredential.user;
             console.log("Login successfully.");
             toast.success("Login successfully.");
-            navigate('/profile');
+            navigate(`/profile/${user.uid}`);
         } catch (error) {
             let errorMessage = 'An error occurred.';
             console.log("Firebase Login Error: ", error.code, error.message);
@@ -100,7 +103,7 @@ function LoginSignUpForm() {
     };
 
     return (
-        <div>
+        <div className='login-signup-container'>
             <div className={`container ${rightPanelActive ? 'right-panel-active' : ''}`} id="container">
                 <div className="form-container sign-up-container">
 

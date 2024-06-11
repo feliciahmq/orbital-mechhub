@@ -1,0 +1,64 @@
+.banner {
+    left: 0;
+    top: 12px;
+    padding: 24px 12px;
+    margin: 40px auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background: linear-gradient(180deg, white, #ff9282);
+    position: absolute;
+
+    .button-go-brr {
+        border-radius: 20px;
+		border: 1px solid #FF4B2B;
+		background-color: #FF4B2B;
+		color: #FFFFFF;
+		font-size: 12px;
+		font-weight: bold;
+		padding: 12px 45px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		transition: transform 80ms ease-in;
+		cursor: pointer;
+        margin-top: 52px;
+        border-radius: 15px;
+        margin: auto;
+        align-self: center;
+        transition: 0.2s all ease-in-out;
+    }
+
+    > button:hover {
+        transform: scale(1.05);
+        filter: brightness(0.85);
+    }
+
+    > button:active {
+        box-shadow: 20px 20px 50px 10px brown inset, 0 0 2px 0 orange;
+    }
+
+    p {
+        font-size: 20px;
+    }
+
+    h1 {
+        font-size: 56px;
+        color: #FD634C;
+    }
+
+    img {
+        margin-left: 180px;
+        width: 250px;
+    }
+    
+}
+
+@media only screen and (max-width: 992px) {
+    .banner img {
+        display: none;
+    }
+    .faq {
+        display: none;
+    }
+}
