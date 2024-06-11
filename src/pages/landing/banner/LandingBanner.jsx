@@ -1,12 +1,14 @@
-import ProductImg from "../../../assets/Product-Images/ditto_eg.png";
-import "./Banner.css";
 import { useNavigate } from "react-router-dom"; 
+
+import ProductImg from "../../../assets/Product-Images/ditto_eg.png";
+import "./LandingBanner.css";
+
 
 function Banner() {
   const navigate = useNavigate(); 
 
   const viewProducts = () => {
-    navigate('/product'); 
+    navigate('/search'); 
   };
 
   return (
@@ -18,7 +20,7 @@ function Banner() {
           <br />
           whee test test 123
         </p>
-        <button onClick={viewProducts}>View Now</button>
+        <button onClick={viewProducts} className='button-go-brr'>View Now</button>
       </div>
       <img src={ProductImg} alt="ProductImg" />
     </div>

@@ -1,57 +1,58 @@
-import React, { useRef, useEffect, useState } from 'react';
-import Header from '../../components/header/Header';
-import Categories from "./categories/Categories";
-import Data from "./data.json";
-import ProductList from "./ProductList";
-import Banner from "./banner/Banner";
+import React, { useState, useEffect } from 'react';
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase/firebaseConfig";
 import { useAuth } from '../../Auth'; 
+
+import Header from '../../components/header/Header';
+import Categories from "./categories/LandingCategories";
+import ProductList from '../../components/productcards/ProductList';
+import Banner from "./banner/LandingBanner";
 import ListingButton from '../../components/listingpopup/Button';
 import './LandingPage.css';
 
 function LandingPage() {
-    const headerContainerRef = useRef(null);
-    const [totalHeight, setTotalHeight] = useState('auto');
     const { currentUser } = useAuth();
+    const [listings, setListings] = useState([]);
+
+    const fetchListings = async () => {
+        try {
+            const listingsCollection = collection(db, "listings");
+            const data = await getDocs(listingsCollection);
+            const listingsData = data.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            }));
+            setListings(listingsData);
+        } catch (error) {
+            console.log(`Firebase: ${error}`);
+        }
+    };
 
     useEffect(() => {
-        const calculateHeight = () => {
-            if (headerContainerRef.current) {
-                const headerElements = headerContainerRef.current.children;
-                const combinedHeight = Array.from(headerElements).reduce((acc, element) => {
-                    return acc + element.offsetHeight + 102;
-                }, 0);
-                setTotalHeight(combinedHeight);
-            }
-        };
-
-        calculateHeight();
-
-        window.addEventListener('resize', calculateHeight);
-
-        return () => window.removeEventListener('resize', calculateHeight);
+        fetchListings();
     }, []);
 
     return (
-        <div>
+        <div className='landing-page'>
             <div className='header-section'>
-                <header style={{ height: totalHeight }} ref={headerContainerRef} className="header-container">
+                <header className="header-container">
                     <Header />
                     <Banner />
                 </header>
             </div>
             <div className='main'>
-                <section >
+                <section>
                     <div>
                         <Categories />
                     </div>
                     <div>
-                        <ProductList heading="Featured Products" products={Data.featured} />
+                        <ProductList heading="Featured Products" products={listings} />
                     </div>
                     {currentUser && <ListingButton />}
-            </section>
+                </section>
+            </div>
         </div>
-    </div>
     );
 }
 
-export default LandingPage
+export default LandingPage;

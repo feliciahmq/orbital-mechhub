@@ -1,28 +1,48 @@
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
 
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-.header-container {
-    display: flex;
-    flex-direction: column;
-}
-@media screen and (max-width: 992px) {
-    .header-container {
-        height: auto;
+.landing-page {    
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
     }
-}
-.header-section {
-    position: absolute;
-    left: 0;
-    top:0;
-    right:0;
-}
-.main {
-    position: absolute;
-    top: 318.94px;
-    left: 0; 
-    right: 0;
+    .header-container {
+        display: flex;
+        flex-direction: column;
+    }
+    @media screen and (max-width: 992px) {
+        .header-container {
+            height: auto;
+        }
+    }
+    .header-section {
+        position: absolute;
+        left: 0;
+        top:0;
+        right:0;
+    }
+    .main {
+        position: absolute;
+        top: 328.94px;
+        left: 0; 
+        right: 0;
+    }
+    h2 {
+        text-align: center;
+        color: rgb(232, 139, 45);
+        margin: 20px 40px;
+        position: relative;
+        line-height: 60px;
+      }
+      
+    h2::after {
+        content: " ";
+        background: #d55200;
+        width: 80px;
+        height: 5px;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+      }
 }

@@ -53,8 +53,8 @@ function LoginSignUpForm() {
                 });
                 console.log("User ID:", user.uid);
                 toast.success("Account created successfully.");
+                navigate(`/profile/${user.uid}`);
             }
-            navigate('/profile');
         } catch (error) {
             let errorMessage = 'An error occurred.';
             if (error.code === 'auth/email-already-in-use') {
@@ -82,10 +82,11 @@ function LoginSignUpForm() {
         }
 
         try {
-            await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+            const userCredential = await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+            const user = userCredential.user;
             console.log("Login successfully.");
             toast.success("Login successfully.");
-            navigate('/profile');
+            navigate(`/profile/${user.uid}`);
         } catch (error) {
             let errorMessage = 'An error occurred.';
             console.log("Firebase Login Error: ", error.code, error.message);

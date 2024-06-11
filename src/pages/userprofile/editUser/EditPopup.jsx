@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../../firebase/firebaseConfig";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc, collection, query, where, getDocs, writeBatch } from "firebase/firestore";
 
 import './EditPopup.css';
 
@@ -31,18 +31,31 @@ function EditPopup({ onClose, onSubmit }) {
         e.preventDefault();
         const user = auth.currentUser;
         const userDocRef = doc(db, 'Users', user.uid);
+        
         try {
             await updateDoc(userDocRef, {
                 profilePic: formData.image,
                 username: formData.username,
                 email: formData.email
             });
-            onSubmit(); 
+    
+            const listingsQuery = query(collection(db, 'listings'), where('userId', '==', user.uid));
+            const querySnapshot = await getDocs(listingsQuery);
+    
+            const batch = writeBatch(db);
+    
+            querySnapshot.forEach((listingDoc) => {
+                batch.update(listingDoc.ref, { username: formData.username });
+            });
+    
+            await batch.commit();
+            
+            onSubmit();
         } catch (err) {
             alert(err);
         }
     };
-
+    
     const fetchUserData = async () => {
         auth.onAuthStateChanged(async (user) => {
             if (user) {
@@ -58,6 +71,14 @@ function EditPopup({ onClose, onSubmit }) {
                     console.log("User not logged in");
                 }
             }
+        });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
+            [name]: value
         });
     };
 
@@ -84,19 +105,21 @@ function EditPopup({ onClose, onSubmit }) {
                         <label>Username:</label>
                         <input 
                             type="text" 
+                            name="username"
                             value={formData.username} 
-                            onChange={(e) => setFormData({ ...formData, username: e.target.value })} 
+                            onChange={handleChange} 
                         />
                     </div>
                     <div className="popup-group">
                         <label>Email:</label>
                         <input 
                             type="text" 
+                            name="email"
                             value={formData.email} 
-                            onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
+                            onChange={handleChange} 
                         />
                     </div>
-                    <button type="submit">Submit</button>
+                    <button type="submit" className='profile-submit'>Submit</button>
                 </form>
             </div>
         </div>

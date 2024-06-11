@@ -1,24 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
-import { useNavigate } from 'react-router-dom';
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../../Auth';
 
 import EditPopup from "./editUser/EditPopup";
-import './UserProfile.css';
 import Header from '../../components/header/Header';
 import ListingButton from "../../components/listingpopup/Button";
+import ProductList from '../../components/productcards/ProductList'; 
+import './UserProfile.css';
 
 function UserProfile() {
+  const { userID } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useAuth(); 
   const [userInfo, setUserInfo] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [userListings, setUserListings] = useState([]);
 
   const handleOpenPopup = () => {
-      setIsPopupOpen(true);
+    setIsPopupOpen(true);
   };
 
   const handleClosePopup = () => {
-      setIsPopupOpen(false);
+    setIsPopupOpen(false);
   };
 
   const handleSubmit = () => {
@@ -26,24 +31,41 @@ function UserProfile() {
     fetchUserData();
   };
 
-  const fetchUserData = async () => {
-    auth.onAuthStateChanged(async (user) => {
-      console.log(user);
+  const fetchUsersListings = async (username) => {
+    try {
+      const listingsCollection = collection(db, "listings");
+      const data = await getDocs(listingsCollection);
+      const listingsData = data.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
 
-      const docRef = doc(db, "Users", user.uid); 
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setUserInfo(docSnap.data());
-        console.log(docSnap.data());
-      } else {
-        console.log("User not logged in");
-      }
-    });
-  }
+      const userSpecificListings = listingsData.filter(listing => listing.username === username);
+      setUserListings(userSpecificListings);
+    } catch (error) {
+      console.log(`Firebase: ${error}`);
+    }
+  };
 
   useEffect(() => {
     fetchUserData();
-  }, []);
+  }, [userID]);
+
+  const fetchUserData = async () => {
+    try {
+      const docRef = doc(db, "Users", userID);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const userData = docSnap.data();
+        setUserInfo(userData);
+        fetchUsersListings(userData.username); 
+      } else {
+        console.log("No user data found");
+      }
+    } catch (error) {
+      console.log(`Firebase: ${error}`);
+    }
+  };
 
   const handleLogout = async () => {
     try {
@@ -65,16 +87,27 @@ function UserProfile() {
       {userInfo ? (
         <>
           <div className="profile-container">
-            <img src={userInfo.profilePic} alt="Profile" className="profile-pic" />
+            <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
             <p>@{userInfo.username}</p>
-            <button className="edit-profile" onClick={handleOpenPopup}>
-              Edit Profile
-            </button>
-            {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
-            <button className="logout" onClick={handleLogout}>
-              Logout
-            </button>
+            {currentUser?.uid === userID && (
+              <>
+                <button className="edit-profile" onClick={handleOpenPopup}>
+                  Edit Profile
+                </button>
+                {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
+                <button className="logout" onClick={handleLogout}>
+                  Logout
+                </button>
+              </>
+            )}
             <ListingButton />
+          </div>
+          <div className="users-listings">
+            {userListings.length > 0 ? (
+              <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
+            ) : (
+              <h2>This user has no listings ( ˘･з･) </h2>
+            )}
           </div>
         </>
       ) : (
