@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 
 import './LoginSignupForm.css'; 
+import Header from '../../components/header/Header';
 
 import { auth, db } from "../../firebase/firebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
@@ -104,6 +105,7 @@ function LoginSignUpForm() {
 
     return (
         <div className='login-signup-container'>
+            <Header />
             <div className={`container ${rightPanelActive ? 'right-panel-active' : ''}`} id="container">
                 <div className="form-container sign-up-container">
 
