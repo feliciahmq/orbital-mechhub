@@ -8,6 +8,7 @@ import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import SearchPage from "./pages/search/SearchPage";
 import ListingPage from "./pages/listing/Listing";
+import Chat from "./pages/chatapp/ChatApp";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/profile/:userID" element={<UserProfile />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/listing" element={<ListingPage />} />
+          <Route path="/chat" element={<Chat />} />
         </Routes>
       </Router>
     </AuthProvider>

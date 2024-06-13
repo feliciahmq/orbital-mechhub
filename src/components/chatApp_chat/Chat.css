@@ -57,6 +57,57 @@
     .center {
         padding: 20px;
         flex: 1;
+        overflow: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        .message {
+            max-width: 70%;
+            display: flex;
+            gap: 20px;
+
+            &.own {
+                align-self: flex-end;
+                
+                .texts {
+                    p {
+                        background-color: rgba(30, 83, 241, 0.45);
+                    }
+                }
+            }
+
+            img {
+                width: 30px;
+                height: 30px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+
+            .texts {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 5px;
+
+                img {
+                    width: 100%;
+                    height: 300px;
+                    border-radius: 10px;
+                    object-fit: cover;
+                }
+
+                p {
+                    padding: 20px;
+                    background-color: rgba(19, 32, 68, 0.45);
+                    border-radius: 10px;
+                }
+
+                span {
+                    font-size: 13px;
+                }
+            }
+        }
     }
 
     .bottom {

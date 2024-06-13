@@ -1,5 +1,8 @@
 .chat-page {
     display:flex; 
+    flex: 1;
+    margin-top: 20px;
+    position: f;
     align-items: center;
     justify-content: center;
     height: 100vh;
@@ -30,5 +33,3 @@
     border: 1px solid rgba(255, 255, 255, 0.076);
     display: flex;
 }
-
-

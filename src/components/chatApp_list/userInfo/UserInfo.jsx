@@ -4,13 +4,13 @@ const UserInfo = () => {
   return (
     <div className='userInfo'>
         <div className='user'>
-            <img src='../../avatar.png' alt='' />
-            <h2>Felicia Hwang</h2>
+            <img src='src/assets/chat-icons/avatar.png' alt='' />
+            <h2>Felicia</h2>
         </div>
         <div className='icons'>
-            <img src='../../more.png' alt='' />
-            <img src='../../video.png' alt='' />
-            <img src='../../edit.png' alt='' />
+            <img src='src/assets/chat-icons/more.png' alt='' />
+            <img src='src/assets/chat-icons/video.png' alt='' />
+            <img src='src/assets/chat-icons/edit.png' alt='' />
         </div>
     </div>
   )
