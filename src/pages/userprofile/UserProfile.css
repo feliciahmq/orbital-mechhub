@@ -39,12 +39,12 @@
 		cursor: pointer;
     }
 
-    .logout, .edit-profile {
+    .logout, .edit-profile, .toggle-listing-reviews {
         width: 240px;
         margin: 12px 0;
     }
 }
-.users-listings {
+.user-content {
     position: absolute;
     right: 0;
     left: 300px;

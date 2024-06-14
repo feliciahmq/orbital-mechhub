@@ -134,8 +134,12 @@ function ProductPage() {
             />
             <h4 onClick={handleUsernameClick}>{user.username}</h4>
           </div>
-          {currentUser?.uid === listing?.userID && (
+          {currentUser?.uid === listing?.userID ? (
             <button onClick={handleEditClick}>Edit Listing</button>
+          ) : (
+            <button className="review" onClick={() => navigate(`/review/${listingID}`)}>
+              Review User
+            </button>
           )}
         </div>
       )}

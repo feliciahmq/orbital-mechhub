@@ -27,18 +27,26 @@ function ProductFilter({ onFilterChange, onSortChange }) {
                 <label>Product Type:</label>
                 <select value={type} onChange={handleTypeChange}>
                     <option value="">All</option>
-                    <option value="type1">Type 1</option>
-                    <option value="type2">Type 2</option>
-                    <option value="type3">Type 3</option>
+                    <option value='fullBuilds'>Full Builds</option>
+                    <option value='keycaps'>Keycaps</option>
+                    <option value='switches'>Switches</option>
+                    <option value='stabilisers'>Stabilisers</option>
+                    <option value='deskmats'>Deskmats</option>
+                    <option value='cables'>Cables</option>
+                    <option value='groupOrders'>Group Orders</option>
+                    <option value='others'>Others</option>
                 </select>
             </div>
             <div className="filter-group">
                 <label>Price Range:</label>
                 <select value={priceRange} onChange={handlePriceChange}>
                     <option value="">All</option>
-                    <option value="0-50">0 - 50</option>
-                    <option value="51-100">51 - 100</option>
+                    <option value="0-50">0 - 20</option>
+                    <option value="21-40">21 - 40</option>
+                    <option value="41-100">21 - 40</option>
                     <option value="101-150">101 - 150</option>
+                    <option value=">150">150 +</option> 
+                    {/* I am unsure of how to filter for the upper bound */}
                 </select>
             </div>
             <div className="filter-group">

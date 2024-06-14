@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { auth, db } from "../../firebase/firebaseConfig";
-import { doc, getDoc, collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../Auth';
 
@@ -17,6 +17,8 @@ function UserProfile() {
   const [userInfo, setUserInfo] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userListings, setUserListings] = useState([]);
+  const [userReviews, setUserReviews] = useState([]);
+  const [viewReviews, setViewReviews] = useState(false);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -29,6 +31,10 @@ function UserProfile() {
   const handleSubmit = () => {
     setIsPopupOpen(false);
     fetchUserData();
+  };
+
+  const handleToggleReview = () => {
+    setViewReviews(!viewReviews);
   };
 
   const fetchUsersListings = async (username) => {
@@ -47,6 +53,18 @@ function UserProfile() {
     }
   };
 
+  const fetchUserReviews = async () => {
+    try {
+      const reviewsCollection = collection(db, "reviews");
+      const reviewsQuery = query(reviewsCollection, where("userID", "==", userID));
+      const data = await getDocs(reviewsQuery);
+      const reviewsData = data.docs.map(doc => doc.data());
+      setUserReviews(reviewsData);
+    } catch (error) {
+      console.log(`Firebase: ${error}`);
+    }
+  };
+
   useEffect(() => {
     fetchUserData();
   }, [userID]);
@@ -59,6 +77,7 @@ function UserProfile() {
         const userData = docSnap.data();
         setUserInfo(userData);
         fetchUsersListings(userData.username); 
+        fetchUserReviews();
       } else {
         console.log("No user data found");
       }
@@ -89,6 +108,9 @@ function UserProfile() {
           <div className="profile-container">
             <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
             <p>@{userInfo.username}</p>
+            <button className="toggle-listing-reviews" onClick={handleToggleReview}>
+              {viewReviews ? "View Listings" : "View Reviews"}
+            </button>
             {currentUser?.uid === userID && (
               <>
                 <button className="edit-profile" onClick={handleOpenPopup}>
@@ -102,11 +124,23 @@ function UserProfile() {
             )}
             <ListingButton />
           </div>
-          <div className="users-listings">
-            {userListings.length > 0 ? (
-              <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
+          <div className="user-content">
+            {viewReviews ? (
+              <div className="user-reviews">
+                {userReviews.length > 0 ? (
+                  <h2>reviews go here</h2>
+                ) : (
+                  <h2>This user has no reviews ( ˘･з･) </h2>
+                )}
+              </div>
             ) : (
-              <h2>This user has no listings ( ˘･з･) </h2>
+              <div className="users-listings">
+                {userListings.length > 0 ? (
+                  <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
+                ) : (
+                  <h2>This user has no listings ( ˘･з･) </h2>
+                )}
+              </div>
             )}
           </div>
         </>
