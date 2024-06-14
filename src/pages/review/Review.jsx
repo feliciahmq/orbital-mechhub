@@ -17,65 +17,72 @@ function ReviewPage() {
         image: "",
         score: 0,
         details: "",
-        userID: userID,
-        listerID: currentUser ? currentUser.uid : "",
+        userID: currentUser ? currentUser.uid : "",
+        listingID: userID,
+        listerID: "",
     });
 
     useEffect(() => {
-        const fetchUserData = async () => {
-        try {
-            const docRef = doc(db, "Users", userID);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-            const userData = docSnap.data();
-            } else {
-            console.log("No user data found");
+        const fetchListingData = async () => {
+            try {
+                const listingDocRef = doc(db, 'listings', userID);
+                const listingDocSnap = await getDoc(listingDocRef);
+
+                if (listingDocSnap.exists()) {
+                    const listingData = listingDocSnap.data();
+                    setFormData(prevState => ({
+                        ...prevState,
+                        listerID: listingData.userID 
+                    }));
+                } else {
+                    console.log("No listing data found");
+                }
+            } catch (error) {
+                console.log(`Firebase: ${error}`);
             }
-        } catch (error) {
-            console.log(`Firebase: ${error}`);
-        }
         };
 
-        fetchUserData();
+        fetchListingData();
     }, [userID]);
 
     const handleReview = async (e) => {
         e.preventDefault();
 
         if (currentValue === 0) {
-        alert('Please provide a rating.');
-        return;
+            alert('Please provide a rating.');
+            return;
         }
         if (formData.details.trim() === "") {
-        alert('Please provide your review details.');
-        return;
+            alert('Please provide your review details.');
+            return;
         }
 
         try {
-        const DocRef = doc(db, 'Users', currentUser.uid);
-        const Doc = await getDoc(DocRef);
+            const userDocRef = doc(db, 'Users', currentUser.uid);
+            const userDoc = await getDoc(userDocRef);
 
-        if (!Doc.exists()) {
-            throw new Error('User not found');
-        }
+            if (!userDoc.exists()) {
+                throw new Error('User not found');
+            }
 
-        const dataToSubmit = {
-            ...formData,
-            score: currentValue,
-        };
+            const dataToSubmit = {
+                ...formData,
+                score: currentValue,
+            };
 
-        await addDoc(collection(db, 'Reviews'), dataToSubmit);
-        alert('Review Successfully Submitted!');
-        setFormData({
-            image: "",
-            score: 0,
-            details: "",
-            userID: userID,
-            listerID: currentUser.uid,
-        });
-        navigate('/');
+            await addDoc(collection(db, 'Reviews'), dataToSubmit);
+            alert('Review Successfully Submitted!');
+            setFormData({
+                image: "",
+                score: 0,
+                details: "",
+                userID: currentUser.uid,
+                listingID: userID,
+                listerID: ""
+            });
+            navigate('/');
         } catch (err) {
-        alert('Error :' + err.message);
+            alert('Error :' + err.message);
         }
     };
 

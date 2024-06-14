@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase/firebaseConfig';
 import { collection, addDoc, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
-import { useNavigate, useParams, useHistory } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { FaAngleLeft } from 'react-icons/fa6';
 
@@ -12,7 +12,6 @@ import './Listing.css';
 function ListingPage() {
     const { currentUser } = useAuth();
     const navigate = useNavigate();
-    const history = useHistory();
     const { listingID } = useParams();
 
     const [formData, setFormData] = useState({
@@ -122,7 +121,7 @@ function ListingPage() {
     };
 
     const handleCancel = () => {
-        history.goBack();
+        navigate(-1);
     }
 
     return (

@@ -1,0 +1,32 @@
+.review-card {
+    border-bottom: 8px solid #f1f1f1;
+
+    h4 {
+        padding-left: 20px;
+        gap: 4px;
+        margin: 0;
+    }
+    .star-icon {
+        color: #FF4B2B;
+    }
+    .star-empty {
+        color: #a9a9a9;
+    }
+
+    p {
+        padding-left: 20px;
+    }
+
+    .reviewer-details {
+        padding-left: 20px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+
+        .profile-pic {
+            height: 20px;
+            width:20px;
+            border-radius: 50%;
+        }
+    }
+}

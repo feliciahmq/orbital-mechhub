@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { auth, db } from "../../firebase/firebaseConfig";
-import { doc, getDoc, collection, getDocs, query, where } from "firebase/firestore";
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { db } from '../../firebase/firebaseConfig';
+import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
 
-import EditPopup from "./editUser/EditPopup";
+import ReviewList from './userReviews/ReviewList';
+import EditPopup from './editUser/EditPopup';
 import Header from '../../components/header/Header';
-import ListingButton from "../../components/listingpopup/Button";
-import ProductList from '../../components/productcards/ProductList'; 
+import ListingButton from '../../components/listingpopup/Button';
+import ProductList from '../../components/productcards/ProductList';
 import './UserProfile.css';
 
 function UserProfile() {
   const { userID } = useParams();
   const navigate = useNavigate();
-  const { currentUser } = useAuth(); 
+  const { currentUser } = useAuth();
   const [userInfo, setUserInfo] = useState(null);
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [userListings, setUserListings] = useState([]);
   const [userReviews, setUserReviews] = useState([]);
   const [viewReviews, setViewReviews] = useState(false);
+  const [averageScore, setAverageScore] = useState(0);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -39,14 +41,14 @@ function UserProfile() {
 
   const fetchUsersListings = async (username) => {
     try {
-      const listingsCollection = collection(db, "listings");
+      const listingsCollection = collection(db, 'listings');
       const data = await getDocs(listingsCollection);
-      const listingsData = data.docs.map(doc => ({
+      const listingsData = data.docs.map((doc) => ({
         id: doc.id,
-        ...doc.data()
+        ...doc.data(),
       }));
 
-      const userSpecificListings = listingsData.filter(listing => listing.username === username);
+      const userSpecificListings = listingsData.filter((listing) => listing.username === username);
       setUserListings(userSpecificListings);
     } catch (error) {
       console.log(`Firebase: ${error}`);
@@ -55,11 +57,18 @@ function UserProfile() {
 
   const fetchUserReviews = async () => {
     try {
-      const reviewsCollection = collection(db, "reviews");
-      const reviewsQuery = query(reviewsCollection, where("userID", "==", userID));
+      const reviewsCollection = collection(db, 'Reviews');
+      const reviewsQuery = query(reviewsCollection, where('listerID', '==', userID));
       const data = await getDocs(reviewsQuery);
-      const reviewsData = data.docs.map(doc => doc.data());
+      const reviewsData = data.docs.map((doc) => doc.data());
       setUserReviews(reviewsData);
+      if (reviewsData.length > 0) {
+        const totalScore = reviewsData.reduce((accumulator, review) => accumulator + review.score, 0);
+        const avgScore = totalScore / reviewsData.length;
+        setAverageScore(avgScore);
+      } else {
+        setAverageScore(0);
+      }
     } catch (error) {
       console.log(`Firebase: ${error}`);
     }
@@ -71,15 +80,15 @@ function UserProfile() {
 
   const fetchUserData = async () => {
     try {
-      const docRef = doc(db, "Users", userID);
+      const docRef = doc(db, 'Users', userID);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const userData = docSnap.data();
         setUserInfo(userData);
-        fetchUsersListings(userData.username); 
+        fetchUsersListings(userData.username);
         fetchUserReviews();
       } else {
-        console.log("No user data found");
+        console.log('No user data found');
       }
     } catch (error) {
       console.log(`Firebase: ${error}`);
@@ -89,15 +98,15 @@ function UserProfile() {
   const handleLogout = async () => {
     try {
       await auth.signOut();
-      console.log("User logged out successfully!");
-      navigate("/");
+      console.log('User logged out successfully!');
+      navigate('/');
     } catch (error) {
-      console.error("Error logging out: ", error.message);
+      console.error('Error logging out: ', error.message);
     }
   };
 
   const handleLoginNavigation = () => {
-    navigate("/account");
+    navigate('/account');
   };
 
   return (
@@ -109,7 +118,7 @@ function UserProfile() {
             <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
             <p>@{userInfo.username}</p>
             <button className="toggle-listing-reviews" onClick={handleToggleReview}>
-              {viewReviews ? "View Listings" : "View Reviews"}
+              {viewReviews ? 'View Listings' : 'View Reviews'}
             </button>
             {currentUser?.uid === userID && (
               <>
@@ -128,17 +137,17 @@ function UserProfile() {
             {viewReviews ? (
               <div className="user-reviews">
                 {userReviews.length > 0 ? (
-                  <h2>reviews go here</h2>
+                  <ReviewList heading={`${userInfo.username}'s Reviews`} reviews={userReviews} averageScore={averageScore} />
                 ) : (
-                  <h2>This user has no reviews ( ˘･з･) </h2>
+                  <h2>This user has no reviews ( ˘･з･)</h2>
                 )}
               </div>
             ) : (
               <div className="users-listings">
                 {userListings.length > 0 ? (
-                  <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
+                  <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} averageScore={averageScore} />
                 ) : (
-                  <h2>This user has no listings ( ˘･з･) </h2>
+                  <h2>This user has no listings ( ˘･з･)</h2>
                 )}
               </div>
             )}
