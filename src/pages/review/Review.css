@@ -4,16 +4,85 @@
     align-items: center;
     justify-content: center;
 
+    h2 {
+        top: 10px;
+        text-align: center;
+        color: rgb(232, 139, 45);
+        margin: 20px 40px;
+        position: relative;
+        line-height: 60px;
+      }
+      
+    h2::after {
+        content: " ";
+        background: #d55200;
+        width: 80px;
+        height: 5px;
+        border-radius: 5px;
+        position: absolute;
+        left: 50%;
+        transform: translate(-50%);
+    }
+    h5 {
+        margin:4px;
+        font-size: 12px;
+        font-weight: 300;
+    }
+
     .review-form {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
+
+        .review-image {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            opacity: 1;
+            height: 200px;
+            width: 400px;
+            position: relative;
+            overflow: hidden;
+            background: url("../../assets/noImage.jpg");
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            margin-bottom: 20px;
+        }
+        .file-input {
+            opacity: 0;
+            height: 100%;
+            width: 100%;
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .uploaded-listing-picture {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 400px;
+            width: 400px;
+            border-radius: 0;
+            opacity: 1;
+        }
     }
 
     .review-stars {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+        align-items: center;
+        h5 {
+            margin:4px;
+            font-size: 12px;
+            font-weight: 300;
+        }
+        .stars {
+            display: flex;
+            flex-direction: row;
+        }
     }
 
     .details {
@@ -42,6 +111,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+    .review-submit:hover {
+        border: 4px solid #FF4B2B;
+        background-color: #FF4B2B;
+        color:white;
     }
 }
 

@@ -25,5 +25,8 @@
 
     > button:hover {
         transform: translateY(-5px);
+        border: 4px solid #FF4B2B;
+        background-color: #FF4B2B;
+        color:white;
     };
 }

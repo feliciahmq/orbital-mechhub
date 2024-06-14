@@ -17,6 +17,11 @@
         padding-left: 20px;
     }
 
+    .review-pic {
+        padding-left: 20px;
+        max-height: 100px;
+    }
+
     .reviewer-details {
         padding-left: 20px;
         display: flex;

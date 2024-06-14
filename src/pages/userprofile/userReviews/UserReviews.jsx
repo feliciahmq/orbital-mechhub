@@ -9,7 +9,7 @@ import './UserReviews.css';
 function UserReviews({ reviewDetails }) {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
-    
+
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -37,8 +37,7 @@ function UserReviews({ reviewDetails }) {
 
     const shownStars = (averageScore) => {
         const stars = [];
-        let i;
-            for (i = 1; i <= 5; i++) {
+        for (let i = 1; i <= 5; i++) {
             if (i <= averageScore) {
                 stars.push(<FaStar key={i} className="star-icon" />);
             } else {
@@ -47,7 +46,7 @@ function UserReviews({ reviewDetails }) {
         }
         return stars;
     };
-    
+
     return (
         <div className="review-card">
             <div className='reviewer-details' onClick={handleUsernameClick}>
@@ -60,7 +59,13 @@ function UserReviews({ reviewDetails }) {
             </div>
             <h4>{shownStars(reviewDetails.score)}</h4>
             <p>{reviewDetails.details}</p>
-
+            {reviewDetails.image && (
+                <img
+                    className="review-pic"
+                    src={reviewDetails.image}
+                    alt="Review"
+                />
+            )}
         </div>
     );
 }
