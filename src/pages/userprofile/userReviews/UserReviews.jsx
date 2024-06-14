@@ -49,13 +49,14 @@ function UserReviews({ reviewDetails }) {
 
     return (
         <div className="review-card">
-            <div className='reviewer-details' onClick={handleUsernameClick}>
+            <div className='reviewer-details'>
                 <img
                     className="profile-pic"
                     src={user.profilePic}
                     alt={user.username}
+                    onClick={handleUsernameClick}
                 />
-                <p>{user.username}</p>
+                <p onClick={handleUsernameClick}>{user.username}</p>
             </div>
             <h4>{shownStars(reviewDetails.score)}</h4>
             <p>{reviewDetails.details}</p>
