@@ -21,6 +21,7 @@ function UserProfile() {
   const [userReviews, setUserReviews] = useState([]);
   const [viewReviews, setViewReviews] = useState(false);
   const [averageScore, setAverageScore] = useState(0);
+  const [numberOfReviews, setNumberOfReviews] = useState(0);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -62,9 +63,13 @@ function UserProfile() {
       const data = await getDocs(reviewsQuery);
       const reviewsData = data.docs.map((doc) => doc.data());
       setUserReviews(reviewsData);
-      if (reviewsData.length > 0) {
+
+      const numberOfReviews = reviewsData.length;
+      setNumberOfReviews(numberOfReviews);
+
+      if (numberOfReviews > 0) {
         const totalScore = reviewsData.reduce((accumulator, review) => accumulator + review.score, 0);
-        const avgScore = totalScore / reviewsData.length;
+        const avgScore = totalScore / numberOfReviews;
         setAverageScore(avgScore);
       } else {
         setAverageScore(0);
@@ -137,7 +142,10 @@ function UserProfile() {
             {viewReviews ? (
               <div className="user-reviews">
                 {userReviews.length > 0 ? (
-                  <ReviewList heading={`${userInfo.username}'s Reviews`} reviews={userReviews} averageScore={averageScore} />
+                  <ReviewList
+                    heading={`${userInfo.username}'s Reviews`}
+                    reviews={userReviews} averageScore={averageScore} numberOfReviews={numberOfReviews}
+                  />
                 ) : (
                   <h2>This user has no reviews ( ˘･з･)</h2>
                 )}
@@ -145,7 +153,7 @@ function UserProfile() {
             ) : (
               <div className="users-listings">
                 {userListings.length > 0 ? (
-                  <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} averageScore={averageScore} />
+                  <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
                 ) : (
                   <h2>This user has no listings ( ˘･з･)</h2>
                 )}

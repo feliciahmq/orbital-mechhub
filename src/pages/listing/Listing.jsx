@@ -20,6 +20,7 @@ function ListingPage() {
         productType: '',
         price: '',
         description: '',
+        postDate: '',
         status: 'available'
     });
 
@@ -33,7 +34,9 @@ function ListingPage() {
                         image: listingDoc.data().image || "",
                         productType: listingDoc.data().productType || "",
                         price: listingDoc.data().price || "",
-                        description: listingDoc.data().description || ""
+                        description: listingDoc.data().description || "",
+                        postDate: listingDoc.data().postDate || "", 
+                        status: listingDoc.data().status || 'available'
                     });
                 } else {
                     toast.error('Listing not found');
@@ -64,18 +67,22 @@ function ListingPage() {
             }
 
             const userData = userDoc.data();
-            const dataToSubmit = {
+            let dataToSubmit = {
                 ...formData,
                 username: userData.username,
                 userID: currentUser.uid
             };
 
-            if (listingID) {
-                await updateDoc(doc(db, 'listings', listingID), dataToSubmit);
-                toast.success('Listing Successfully Updated!');
-            } else {
+            if (!listingID) {
+                dataToSubmit = {
+                    ...dataToSubmit,
+                    postDate: new Date().toISOString()
+                };
                 await addDoc(collection(db, 'listings'), dataToSubmit);
                 toast.success('Listing Successfully Created!');
+            } else {
+                await updateDoc(doc(db, 'listings', listingID), dataToSubmit);
+                toast.success('Listing Successfully Updated!');
             }
 
             setFormData({
@@ -84,6 +91,7 @@ function ListingPage() {
                 productType: '',
                 price: '',
                 description: '',
+                postDate: '',
                 status: 'available'
             });
             navigate('/');
@@ -164,14 +172,14 @@ function ListingPage() {
                             value={formData.productType}
                             onChange={handleChange}
                         >
-                            <option value='fullBuilds'>Full Builds</option>
-                            <option value='keycaps'>Keycaps</option>
-                            <option value='switches'>Switches</option>
-                            <option value='stabilisers'>Stabilisers</option>
-                            <option value='deskmats'>Deskmats</option>
-                            <option value='cables'>Cables</option>
-                            <option value='groupOrders'>Group Orders</option>
-                            <option value='others'>Others</option>
+                            <option value='Full Builds'>Full Builds</option>
+                            <option value='Keycaps'>Keycaps</option>
+                            <option value='Switches'>Switches</option>
+                            <option value='Stabilisers'>Stabilisers</option>
+                            <option value='Deskmats'>Deskmats</option>
+                            <option value='Cables'>Cables</option>
+                            <option value='Group Orders'>Group Orders</option>
+                            <option value='Others'>Others</option>
                         </select>
                     </div>
                     <div className="form-group">

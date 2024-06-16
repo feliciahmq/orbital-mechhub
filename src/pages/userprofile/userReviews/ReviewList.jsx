@@ -3,7 +3,7 @@ import { FaStar, FaStarHalf } from 'react-icons/fa';
 import UserReviews from './UserReviews';
 import './ReviewList.css';
 
-function ReviewList({ heading, reviews, averageScore }) {
+function ReviewList({ heading, reviews, averageScore, numberOfReviews }) {
   const roundedScore = Math.round(averageScore * 2) / 2;
 
   const shownStars = () => {
@@ -25,7 +25,8 @@ function ReviewList({ heading, reviews, averageScore }) {
     <div className='reviews'>
       <h2>{heading}</h2>
       <div className="average-stars">
-        <p>Average Score: {averageScore.toFixed(1)} / 5</p>
+        <p>Average Score: {averageScore.toFixed(1)} / 5 </p>
+        <p>({numberOfReviews} review{numberOfReviews !== 1 ? 's' : ''})</p>
         <div className="stars">
           {shownStars()}
         </div>

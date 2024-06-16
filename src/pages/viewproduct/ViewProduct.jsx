@@ -3,11 +3,36 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth';
-import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
 import { useLikes } from '../../components/header/likecounter/LikeCounter';
 
 import Header from '../../components/header/Header';
 import './ViewProduct.css';
+
+function timeSincePost(postDate) {
+  const now = new Date();
+  const posted = new Date(postDate);
+  const diffInSeconds = Math.floor((now - posted) / 1000);
+
+  if (diffInSeconds < 3600) { 
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes} minute${minutes !== 1 ? 's' : ''} ago`;
+  } else if (diffInSeconds < 86400) { 
+    const hours = Math.floor(diffInSeconds / 3600);
+    return `${hours} hour${hours !== 1 ? 's' : ''} ago`;
+  } else if (diffInSeconds < 604800) { 
+    const days = Math.floor(diffInSeconds / 86400);
+    return `${days} day${days !== 1 ? 's' : ''} ago`;
+  } else if (diffInSeconds < 2592000) { 
+    const weeks = Math.floor(diffInSeconds / 604800);
+    return `${weeks} week${weeks !== 1 ? 's' : ''} ago`;
+  } else if (diffInSeconds < 7776000) { 
+    const months = Math.floor(diffInSeconds / 2592000);
+    return `${months} month${months !== 1 ? 's' : ''} ago`;
+  } else {
+    return 'More than 3 months ago';
+  }
+}
 
 function ProductPage() {
   const { listingID } = useParams();
@@ -18,6 +43,8 @@ function ProductPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [likeID, setLikeID] = useState(null);
   const { likesCount, increaseLikeCount, decreaseLikeCount } = useLikes();
+  const [averageScore, setAverageScore] = useState(0);
+  const [numberOfReviews, setNumberOfReviews] = useState(0);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -32,6 +59,7 @@ function ProductPage() {
         const userDocSnap = await getDoc(userDocRef);
         if (userDocSnap.exists()) {
           setUser(userDocSnap.data());
+          fetchUserReviews(userDocSnap.id);
         }
       } else {
         console.log('There is Such No Listing');
@@ -50,6 +78,27 @@ function ProductPage() {
           setIsLiked(true);
           setLikeID(likesSnapshot.docs[0].id);
         }
+      }
+    };
+
+    const fetchUserReviews = async (userID) => {
+      try {
+        const reviewsCollection = collection(db, 'Reviews');
+        const reviewsQuery = query(reviewsCollection, where('listerID', '==', userID));
+        const data = await getDocs(reviewsQuery);
+        const reviewsData = data.docs.map((doc) => doc.data());
+        const numberOfReviews = reviewsData.length;
+        setNumberOfReviews(numberOfReviews);
+
+        if (numberOfReviews > 0) {
+          const totalScore = reviewsData.reduce((accumulator, review) => accumulator + review.score, 0);
+          const avgScore = totalScore / numberOfReviews;
+          setAverageScore(avgScore);
+        } else {
+          setAverageScore(0);
+        }
+      } catch (error) {
+        console.log(`Firebase: ${error}`);
       }
     };
 
@@ -100,6 +149,21 @@ function ProductPage() {
     }
   };
 
+  const shownStars = (score) => {
+    const stars = [];
+    let i;
+    for (i = 1; i <= 5; i++) {
+      if (i <= score) {
+        stars.push(<FaStar key={i} className="star-icon" />);
+      } else if (i === Math.ceil(score) && score % 1 !== 0) {
+        stars.push(<FaStarHalf key={i} className="star-icon" />);
+      } else {
+        stars.push(<FaStar key={i} className="star-empty" />);
+      }
+    }
+    return stars;
+  };
+
   return (
     <>
       <Header />
@@ -111,6 +175,7 @@ function ProductPage() {
               <h1>{listing.title}</h1>
               <h2>${listing.price}</h2>
               <h3>{listing.productType}</h3>
+              <h3>Posted: {timeSincePost(listing.postDate)}</h3>
               <h4>Details:</h4>
               <p>{listing.description}</p>
             </div>
@@ -133,6 +198,12 @@ function ProductPage() {
               onClick={handleUsernameClick}
             />
             <h4 onClick={handleUsernameClick}>{user.username}</h4>
+          </div>
+          <div className="user-reviews">
+            <div className="stars" onClick={handleUsernameClick}> 
+              {shownStars(averageScore)}             
+              <p>{averageScore.toFixed(1)} ({numberOfReviews} review{numberOfReviews !== 1 ? 's' : ''})</p>
+            </div>
           </div>
           {currentUser?.uid === listing?.userID ? (
             <button onClick={handleEditClick}>Edit Listing</button>
