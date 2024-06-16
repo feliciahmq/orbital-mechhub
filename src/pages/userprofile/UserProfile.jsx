@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { db } from '../../firebase/firebaseConfig';
+import { auth, db } from '../../firebase/firebaseConfig';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
@@ -115,7 +115,7 @@ function UserProfile() {
   };
 
   return (
-    <div>
+    <div className='content'>
       <Header />
       {userInfo ? (
         <>

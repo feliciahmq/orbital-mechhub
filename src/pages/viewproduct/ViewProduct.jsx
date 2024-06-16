@@ -165,7 +165,7 @@ function ProductPage() {
   };
 
   return (
-    <>
+    <div className='content'>
       <Header />
       {listing && (
         <div className="listing-container">
@@ -173,18 +173,18 @@ function ProductPage() {
             <img src={listing.image} alt={listing.title} />
             <div className="listing-text">
               <h1>{listing.title}</h1>
+              <div className='like-button'>
+                {isLiked ? (
+                  <FaHeart onClick={handleUnLike} color="red" />
+                ) : (
+                  <FaRegHeart onClick={handleLike} />
+                )}
+              </div>
               <h2>${listing.price}</h2>
               <h3>{listing.productType}</h3>
-              <h3>Posted: {timeSincePost(listing.postDate)}</h3>
+              <h3>{timeSincePost(listing.postDate)}</h3>
               <h4>Details:</h4>
               <p>{listing.description}</p>
-            </div>
-            <div className='like-button'>
-              {isLiked ? (
-                <FaHeart onClick={handleUnLike} color="red" />
-              ) : (
-                <FaRegHeart onClick={handleLike} />
-              )}
             </div>
           </div>
         </div>
@@ -214,7 +214,7 @@ function ProductPage() {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 }
 

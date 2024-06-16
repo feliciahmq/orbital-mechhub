@@ -72,3 +72,25 @@
         transform: translate(-50%);
     }
 }
+
+@media screen and (max-width: 768px) {
+    .profile-container {
+        position: static;
+        width: 100%; 
+        height: auto; 
+        margin-top: 60px; 
+        padding-top: 12px; 
+        border-top: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .user-content {
+        position: static;
+
+        h2::after {
+            display: none;
+        }
+    }
+}
