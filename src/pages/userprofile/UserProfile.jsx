@@ -103,7 +103,7 @@ function UserProfile() {
         setUserInfo(userData);
         fetchUsersListings(userData.username);
         fetchUserReviews();
-        const isFollowing = await fetchFollowStatus(userID);
+        const isFollowing = await fetchFollowStatus();
         setFollowUser(isFollowing);
         const followCount = userData.followCount || 0; 
         const followingCount = userData.followingCount || 0; 
@@ -214,33 +214,56 @@ function UserProfile() {
       {userInfo ? (
         <>
           <div className="profile-container">
-            <div className='profile-info'>
-              <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
-              <p>@{userInfo.username}</p>
-              <p>Followers: {followCount}</p>
-              <p>Following: {followingCount}</p>
-            </div>
-            <div className='profile-buttons'>
-              <button className="toggle-listing-reviews" onClick={handleToggleReview}>
-                {viewReviews ? 'View Listings' : 'View Reviews'}
-              </button>
-              {currentUser?.uid === userID ? (
-                <>
-                  <button className="edit-profile" onClick={handleOpenPopup}>
-                    Edit Profile
-                  </button>
-                  {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
-                  <button className="logout" onClick={handleLogout}>
-                    Logout
-                  </button>
-                </>
-              ) : (
-                followUser ? (
-                  <button className='unfollow' onClick={handleUserUnFollow}>Unfollow</button>
+            <div className='profile-info-container'>
+              <div className='profile-info'>
+                <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
+                <p>@{userInfo.username}</p>
+              </div>
+              <div className='profile-follow'>
+                <div className='follow-info'>
+                  <div className='follow-count'>
+                    <h5>{followCount}</h5>
+                    <p>Followers</p>
+                  </div>
+                  <div className='follow-count'>
+                    <h5>{followingCount}</h5>
+                    <p>Following</p>
+                  </div>
+                </div>
+                <div className='profile-buttons'>
+                  {currentUser?.uid === userID ? (
+                  <>
+                    <button className="edit-profile" onClick={handleOpenPopup}>
+                      Edit Profile
+                    </button>
+                    {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
+                    <button className="logout" onClick={handleLogout}>
+                      Logout
+                    </button>
+                  </>
                 ) : (
-                  <button className='follow' onClick={handleUserFollow}>Follow</button>
-                )
-              )}
+                  followUser ? (
+                    <button className='unfollow' onClick={handleUserUnFollow}>Unfollow</button>
+                  ) : (
+                    <button className='follow' onClick={handleUserFollow}>Follow</button>
+                  )
+                )}
+              </div>
+            </div>
+          </div>
+          <div className="profile-toggle">
+              <div
+                className={`toggle ${!viewReviews ? 'active' : ''}`}
+                onClick={() => setViewReviews(false)}
+              >
+                Listings
+              </div>
+              <div
+                className={`toggle ${viewReviews ? 'active' : ''}`}
+                onClick={() => setViewReviews(true)}
+              >
+                Reviews
+              </div>
             </div>
             <ListingButton />
           </div>
