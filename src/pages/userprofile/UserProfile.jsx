@@ -41,10 +41,6 @@ function UserProfile() {
     fetchUserData();
   };
 
-  const handleToggleReview = () => {
-    setViewReviews(!viewReviews);
-  };
-
   const fetchUsersListings = async (username) => {
     try {
       const listingsCollection = collection(db, 'listings');

@@ -9,7 +9,8 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
-  width: 600px;
+  width: 400px;
+  min-width: 100px;
 }
   
 .search-bar-button {
@@ -27,7 +28,5 @@
 }
 
 @media only screen and (max-width: 992px) {
-  .search-bar-input {
-      width: calc(100vw - 24px);
-  }
+
 }

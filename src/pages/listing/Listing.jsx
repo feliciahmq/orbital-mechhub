@@ -100,18 +100,6 @@ function ListingPage() {
         }
     };
 
-    const handleDelete = async (e) => {
-        e.preventDefault();
-
-        try {
-            await deleteDoc(doc(db, 'listings', listingID));
-            toast.success('Listing Successfully Deleted!');
-            navigate('/');
-        } catch (err) {
-            toast.error('Error: ' + err.message);
-        }
-    };
-
     const uploadImage = (e) => {
         const file = e.target.files[0];
         if (file && file.type.includes('image')) {
@@ -200,9 +188,6 @@ function ListingPage() {
                         />
                     </div>
                     <button className='submit' type="submit">{listingID ? 'Update' : 'Submit'}</button>
-                    {listingID && (
-                        <button className='delete' onClick={handleDelete}>Delete Listing</button>
-                    )}
                 </form>
             </div>
         </>

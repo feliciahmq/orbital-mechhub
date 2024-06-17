@@ -1,17 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
+
 import './Searchbar.css'; 
 
-const SearchBar = ({ onChange, placeholder }) => {
+const SearchBar = ({ onSearch }) => {
+  const [query, setQuery] = useState('');
+
+  const handleInputChange = (e) => {
+      const value = e.target.value;
+      setQuery(value);
+      onSearch(value);
+  };
+
   return (
     <div className="search-bar-container">
       <input
         type="text"
         className="search-bar-input"
-        onChange={onChange}
-        placeholder={placeholder}
+        value={query} 
+        onChange={handleInputChange} 
+        placeholder='Search Products'
       />
       <button className="search-bar-button">
-        <i className="fas fa-search"></i>
+        <FaSearch />
       </button>
     </div>
   );

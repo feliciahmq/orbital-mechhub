@@ -15,6 +15,7 @@ function ProductCards({ productDetail }) {
   const [isLiked, setIsLiked] = useState(false);
   const [likeID, setLikeID] = useState(null); 
   const { likesCount, increaseLikeCount, decreaseLikeCount } = useLikes();
+  const [soldStatus, setSoldStatus] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -118,6 +119,8 @@ function ProductCards({ productDetail }) {
   if (!user) {
     return <div>Loading...</div>;
   }
+
+  
 
   return (
     <div className="product" onClick={handleViewClick}>

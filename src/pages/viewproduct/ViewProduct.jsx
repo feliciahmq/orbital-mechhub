@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth';
 import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
+import { FaEllipsisVertical } from 'react-icons/fa6';
 import { useLikes } from '../../components/header/likecounter/LikeCounter';
 
 import Header from '../../components/header/Header';
@@ -45,6 +46,8 @@ function ProductPage() {
   const { likesCount, increaseLikeCount, decreaseLikeCount } = useLikes();
   const [averageScore, setAverageScore] = useState(0);
   const [numberOfReviews, setNumberOfReviews] = useState(0);
+  const [dropdownOpen, setDropdownOpen] = useState(false); 
+  const [listingSold, setListingSold] = useState(false);
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -61,8 +64,9 @@ function ProductPage() {
           setUser(userDocSnap.data());
           fetchUserReviews(userDocSnap.id);
         }
+      setListingSold(listingData.status === 'sold');
       } else {
-        console.log('There is Such No Listing');
+        console.log('There is no such listing');
       }
     };
 
@@ -149,6 +153,36 @@ function ProductPage() {
     }
   };
 
+  const handleOptionsClick = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleListingSold = async () => {
+    e.preventDefault();
+
+    try {
+      await updateDoc(doc(db, 'listings', listingID), {
+        status: 'sold'
+      });
+      setListingSold(true);
+      console.log('Listing marked as sold successfully');
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+
+    try {
+        await deleteDoc(doc(db, 'listings', listingID));
+        toast.success('Listing Successfully Deleted!');
+        navigate('/');
+    } catch (err) {
+        toast.error('Error: ' + err.message);
+    }
+};
+
   const shownStars = (score) => {
     const stars = [];
     let i;
@@ -169,6 +203,24 @@ function ProductPage() {
       <Header />
       {listing && (
         <div className="listing-container">
+          <div className='listing-options'>
+            <FaEllipsisVertical className='listing-ellipsis' onClick={handleOptionsClick} cursor='pointer' />
+            {dropdownOpen && (
+              <div className="dropdown-content">
+                {currentUser?.uid === listing?.userID ? (
+                  <>
+                    <button onClick={handleEditClick}>Edit Listing</button>
+                    {!listingSold && (<button onClick={handleListingSold}>Mark as sold</button>)}
+                    <button className='delete' onClick={handleDelete}>Delete Listing</button>
+                  </>
+                ) : (
+                  <button className="review" onClick={() => navigate(`/review/${listingID}`)}>
+                    Review User
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
           <div className="listing-details">
             <img src={listing.image} alt={listing.title} />
             <div className="listing-text">
@@ -200,18 +252,11 @@ function ProductPage() {
             <h4 onClick={handleUsernameClick}>{user.username}</h4>
           </div>
           <div className="user-reviews">
-            <div className="stars" onClick={handleUsernameClick}> 
-              {shownStars(averageScore)}             
+            <div className="stars" onClick={handleUsernameClick}>
+              {shownStars(averageScore)}
               <p>{averageScore.toFixed(1)} ({numberOfReviews} review{numberOfReviews !== 1 ? 's' : ''})</p>
             </div>
           </div>
-          {currentUser?.uid === listing?.userID ? (
-            <button onClick={handleEditClick}>Edit Listing</button>
-          ) : (
-            <button className="review" onClick={() => navigate(`/review/${listingID}`)}>
-              Review User
-            </button>
-          )}
         </div>
       )}
     </div>

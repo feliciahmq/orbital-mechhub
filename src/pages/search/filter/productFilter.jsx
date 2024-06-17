@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './productFilter.css';
 
-function ProductFilter({ onFilterChange, onSortChange }) {
+function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
     const [type, setType] = useState('');
-    const [priceRange, setPriceRange] = useState('');
+    const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [sortOrder, setSortOrder] = useState('');
 
     const handleTypeChange = (e) => {
@@ -11,9 +11,21 @@ function ProductFilter({ onFilterChange, onSortChange }) {
         onFilterChange(e.target.value, priceRange);
     };
 
+    const handleMinPriceChange = (e) => {
+        const newMinPrice = parseInt(e.target.value, 10);
+        if (newMinPrice <= priceRange[1]) {
+            setPriceRange([newMinPrice, priceRange[1]]);
+            onFilterChange(type, [newMinPrice, priceRange[1]]);
+        }
+    };
+
     const handlePriceChange = (e) => {
-        setPriceRange(e.target.value);
-        onFilterChange(type, e.target.value);
+        const newMaxPrice = parseInt(e.target.value, 10);
+        if (newMaxPrice >= priceRange[0]) {
+            const newPriceRange = [priceRange[0], newMaxPrice];
+            setPriceRange(newPriceRange);
+            onFilterChange(type, newPriceRange);
+        }
     };
 
     const handleSortChange = (e) => {
@@ -39,15 +51,25 @@ function ProductFilter({ onFilterChange, onSortChange }) {
             </div>
             <div className="filter-group">
                 <label>Price Range:</label>
-                <select value={priceRange} onChange={handlePriceChange}>
-                    <option value="">All</option>
-                    <option value="0-50">0 - 20</option>
-                    <option value="21-40">21 - 40</option>
-                    <option value="41-100">21 - 40</option>
-                    <option value="101-150">101 - 150</option>
-                    <option value=">150">150 +</option> 
-                    {/* I am unsure of how to filter for the upper bound */}
-                </select>
+                <div className="slider-container">
+                    <input 
+                        type="range" 
+                        min={minPrice} 
+                        max={maxPrice} 
+                        value={priceRange[0]} 
+                        onChange={handleMinPriceChange}
+                    />
+                    <input 
+                        type="range" 
+                        min={minPrice} 
+                        max={maxPrice} 
+                        value={priceRange[1]} 
+                        onChange={handlePriceChange}
+                    />
+                    <div>
+                        <span>{priceRange[0]}</span> - <span>{priceRange[1]}</span>
+                    </div>
+                </div>
             </div>
             <div className="filter-group">
                 <label>Sort By:</label>
