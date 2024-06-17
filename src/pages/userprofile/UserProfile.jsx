@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase/firebaseConfig';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, query, where, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/firestore';
 
 import ReviewList from './userReviews/ReviewList';
 import EditPopup from './editUser/EditPopup';
@@ -22,6 +24,9 @@ function UserProfile() {
   const [viewReviews, setViewReviews] = useState(false);
   const [averageScore, setAverageScore] = useState(0);
   const [numberOfReviews, setNumberOfReviews] = useState(0);
+  const [followUser, setFollowUser] = useState(false);
+  const [followCount, setFollowCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
 
   const handleOpenPopup = () => {
     setIsPopupOpen(true);
@@ -79,10 +84,16 @@ function UserProfile() {
     }
   };
 
-  useEffect(() => {
-    fetchUserData();
-  }, [userID]);
-
+  const fetchFollowStatus = async () => {
+    if (currentUser?.uid) {
+      const followDocRef = doc(db, 'Users', userID, 'followers', currentUser.uid);
+      const followDocSnap = await getDoc(followDocRef);
+      console.log(followDocSnap.exists());
+      return followDocSnap.exists();
+    }
+    return false;
+  };
+  
   const fetchUserData = async () => {
     try {
       const docRef = doc(db, 'Users', userID);
@@ -92,6 +103,12 @@ function UserProfile() {
         setUserInfo(userData);
         fetchUsersListings(userData.username);
         fetchUserReviews();
+        const isFollowing = await fetchFollowStatus(userID);
+        setFollowUser(isFollowing);
+        const followCount = userData.followCount || 0; 
+        const followingCount = userData.followingCount || 0; 
+        setFollowCount(followCount);
+        setFollowingCount(followingCount);
       } else {
         console.log('No user data found');
       }
@@ -99,7 +116,11 @@ function UserProfile() {
       console.log(`Firebase: ${error}`);
     }
   };
-
+  
+  useEffect(() => {
+    fetchUserData();
+  }, [userID]);
+  
   const handleLogout = async () => {
     try {
       await auth.signOut();
@@ -114,28 +135,113 @@ function UserProfile() {
     navigate('/account');
   };
 
+  const handleUserFollow = async () => {
+    if (currentUser?.uid !== userID) {
+      const followDocRef = doc(db, 'Users', userID, 'followers', currentUser.uid);
+      const followingDocRef = doc(db, 'Users', currentUser.uid, 'following', userID);
+      const followDocSnap = await getDoc(followDocRef);
+      const followingDocSnap = await getDoc(followingDocRef);
+  
+      if (followDocSnap.exists()) {
+        setFollowUser(true);
+        console.log('Already following this user');
+      } else {
+        try {
+          await setDoc(followDocRef, {
+            followerID: currentUser.uid,
+            timestamp: new Date()
+          });
+          const userDocRef = doc(db, 'Users', userID);
+          await updateDoc(userDocRef, {
+            followCount: firebase.firestore.FieldValue.increment(1)
+          });
+          await setDoc(followingDocRef, {
+            followedUserID: userID,
+            timestamp: new Date()
+          });
+          const followerDocRef = doc(db, 'Users', currentUser.uid);
+          if (followingDocSnap.exists()) {
+            console.log('Already following this user');
+          } else {
+            await updateDoc(followerDocRef, {
+              followingCount: firebase.firestore.FieldValue.increment(1)});
+          }
+          setFollowUser(true);
+          setFollowCount((prevCount) => prevCount + 1);
+          setFollowingCount((prevCount) => prevCount + 1);
+          console.log('Successfully followed the user');
+        } catch (err) {
+          console.error('Error following user: ', err);
+        }
+      }
+    } else {
+      console.log('You cannot follow yourself');
+    }
+  };
+
+  const handleUserUnFollow = async () => {
+    if (currentUser?.uid !== userID) {
+      const followDocRef = doc(db, 'Users', userID, 'followers', currentUser.uid);
+      const followingDocRef = doc(db, 'Users', currentUser.uid, 'following', userID);
+  
+      try {
+        const followDocSnap = await getDoc(followDocRef);
+        if (followDocSnap.exists()) {
+          await deleteDoc(followDocRef);
+          const userDocRef = doc(db, 'Users', userID);
+          await updateDoc(userDocRef, {
+            followCount: firebase.firestore.FieldValue.increment(-1)
+          });
+          await deleteDoc(followingDocRef);
+          setFollowUser(false);
+          setFollowCount((prevCount) => prevCount - 1);
+          setFollowingCount((prevCount) => prevCount - 1);
+          console.log('Successfully unfollowed the user');
+        } else {
+          console.log('You are not following this user');
+        }
+      } catch (err) {
+        console.error('Error unfollowing user: ', err);
+      }
+    } else {
+      console.log('You cannot unfollow yourself');
+    }
+  };
+
   return (
     <div className='content'>
       <Header />
       {userInfo ? (
         <>
           <div className="profile-container">
-            <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
-            <p>@{userInfo.username}</p>
-            <button className="toggle-listing-reviews" onClick={handleToggleReview}>
-              {viewReviews ? 'View Listings' : 'View Reviews'}
-            </button>
-            {currentUser?.uid === userID && (
-              <>
-                <button className="edit-profile" onClick={handleOpenPopup}>
-                  Edit Profile
-                </button>
-                {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
-                <button className="logout" onClick={handleLogout}>
-                  Logout
-                </button>
-              </>
-            )}
+            <div className='profile-info'>
+              <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
+              <p>@{userInfo.username}</p>
+              <p>Followers: {followCount}</p>
+              <p>Following: {followingCount}</p>
+            </div>
+            <div className='profile-buttons'>
+              <button className="toggle-listing-reviews" onClick={handleToggleReview}>
+                {viewReviews ? 'View Listings' : 'View Reviews'}
+              </button>
+              {currentUser?.uid === userID ? (
+                <>
+                  <button className="edit-profile" onClick={handleOpenPopup}>
+                    Edit Profile
+                  </button>
+                  {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
+                  <button className="logout" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                followUser ? (
+                  <button className='unfollow' onClick={handleUserUnFollow}>Unfollow</button>
+                ) : (
+                  <button className='follow' onClick={handleUserFollow}>Follow</button>
+                )
+              )}
+            </div>
             <ListingButton />
           </div>
           <div className="user-content">
@@ -168,7 +274,7 @@ function UserProfile() {
         </div>
       )}
     </div>
-  );
+  );  
 }
 
 export default UserProfile;
