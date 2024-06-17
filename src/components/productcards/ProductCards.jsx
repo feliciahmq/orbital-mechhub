@@ -25,6 +25,7 @@ function ProductCards({ productDetail }) {
       if (userDocSnap.exists()) {
         setUser(userDocSnap.data());
       }
+      setSoldStatus(userDocSnap.data().status === 'sold');
     };
 
     const checkIfLiked = async () => {
@@ -119,8 +120,6 @@ function ProductCards({ productDetail }) {
   if (!user) {
     return <div>Loading...</div>;
   }
-
-  
 
   return (
     <div className="product" onClick={handleViewClick}>
