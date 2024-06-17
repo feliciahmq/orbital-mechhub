@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
-import { addDoc, collection, doc, getDoc, deleteDoc, query, where, getDocs } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, setDoc, deleteDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth'; 
 import { useLikes } from '../header/likecounter/LikeCounter';
@@ -45,7 +45,33 @@ function ProductCards({ productDetail }) {
     checkIfLiked();
   }, [productDetail.userID, productDetail.id, currentUser]);
 
+  const trackClick = async () => {
+    if (currentUser && currentUser.uid !== productDetail.userID) {
+      const clickCountDoc = doc(db, 'listings', productDetail.id, 'clickCount', 'counter');
+      const clickCountDocSnapshot = await getDoc(clickCountDoc);
+
+      if (clickCountDocSnapshot.exists()) {
+        try {
+          await updateDoc(clickCountDoc, {
+            count: clickCountDocSnapshot.data().count + 1
+          });
+        } catch (err) {
+          console.error('Error updating click count: ', err);
+        }
+      } else {
+        try {
+          await setDoc(clickCountDoc, {
+            count: 1,
+          });
+        } catch (err) {
+          console.error('Error creating click count: ', err);
+        }
+      }
+    }
+  };
+
   const handleViewClick = () => {
+    trackClick();
     navigate(`/product/${productDetail.id}`);
   };
 
