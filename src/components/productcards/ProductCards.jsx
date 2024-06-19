@@ -138,9 +138,9 @@ function ProductCards({ productDetail }) {
       </div>
       <div className="productcard-like-button">
         {isLiked ? (
-          <FaHeart onClick={handleUnLike} color="red" /> 
+          <FaHeart  role="button" name='pc-like' onClick={handleUnLike} color="red" /> 
         ) : (
-          <FaRegHeart onClick={handleLike} /> 
+          <FaRegHeart name='pc-unlike' role="button" onClick={handleLike} /> 
         )}
       </div>
     </div>
