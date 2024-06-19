@@ -1,5 +1,14 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+
 .chat-page {
     display:flex; 
+    flex-direction: column;
     flex: 1;
     margin-top: 20px;
     position: f;
@@ -10,19 +19,23 @@
     background-color: #FFF;
 }
 
+.chat-header {
+    position: fixed;
+}
+
 .chat-container {
-    margin: 0;
     padding: 0;
+    display: flex;
+    flex: 1;
+    margin-top: 36px;
     box-sizing: border-box;
     font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+    width: 100%; /* Ensure it takes full width */
+    justify-content: center; /* Center the inner container horizontally */
+    align-items: center;
 }
 
-.chat-container * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
 
 .inner-container {
     width: 90vw;

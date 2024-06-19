@@ -8,7 +8,7 @@ import Header from "../../components/header/Header";
 const ChatApp = () => {
   return (
     <div className='chat-page'>
-      <Header/>
+      <Header className='chat-header'/>
         <div className='chat-container'>
           <div className='inner-container'>
             <List/>
