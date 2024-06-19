@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { useAuth } from '../../Auth';
-import { useLikes } from './likecounter/LikeCounter';
-import Header from './Header';
+import { useAuth } from '../../../src/Auth';
+import { useLikes } from '../../../src/components/Header/likecounter/LikeCounter';
+import Header from '../../../src/components/header/Header';
 import '@testing-library/jest-dom';
 
-jest.mock('../../Auth');
-jest.mock('./likecounter/LikeCounter');
+jest.mock('../../../src/Auth');
+jest.mock('../../../src/components/Header/likecounter/LikeCounter');
 
 describe('Header', () => {
     beforeEach(() => {

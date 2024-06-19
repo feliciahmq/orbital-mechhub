@@ -1,12 +1,12 @@
 import React from 'react';
 import { render, act } from '@testing-library/react';
-import { useLikes, LikeCountProvider } from './LikeCounter';
-import { useAuth } from '../../../Auth';
-import { db } from '../../../firebase/firebaseConfig';
+import { useLikes, LikeCountProvider } from '../../../src/components/Header/likecounter/LikeCounter';
+import { useAuth } from '../../../src/Auth';
+import { db } from '../../../src/firebase/firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
-jest.mock('../../../Auth');
-jest.mock('../../../firebase/firebaseConfig', () => ({
+jest.mock('../../../src/Auth');
+jest.mock('../../../src/firebase/firebaseConfig', () => ({
   db: {},
 }));
 jest.mock('firebase/firestore', () => ({
