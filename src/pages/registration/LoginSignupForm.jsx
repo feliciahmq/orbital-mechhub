@@ -50,7 +50,8 @@ function LoginSignUpForm() {
                 await setDoc(userDocRef, {
                     username: username,
                     email: user.email,
-                    profilePic: defaultProfile 
+                    profilePic: defaultProfile, 
+                    signUpDate: new Date().toISOString(),
                 });
                 console.log("User ID:", user.uid);
                 toast.success("Account created successfully.");

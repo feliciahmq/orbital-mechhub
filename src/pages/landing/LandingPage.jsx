@@ -4,7 +4,6 @@ import { db } from "../../firebase/firebaseConfig";
 import { useAuth } from '../../Auth'; 
 
 import Header from '../../components/header/Header';
-import Categories from "./categories/LandingCategories";
 import ProductList from '../../components/productcards/ProductList';
 import Banner from "./banner/LandingBanner";
 import ListingButton from '../../components/listingpopup/Button';
@@ -42,9 +41,6 @@ function LandingPage() {
             </div>
             <div className='main'>
                 <section>
-                    <div>
-                        <Categories />
-                    </div>
                     <div>
                         <ProductList heading="Featured Products" products={listings} />
                     </div>

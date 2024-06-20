@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth';
+import { useLocation } from 'react-router-dom';
 
 import Header from '../../components/header/Header';
 import ProductList from '../../components/productcards/ProductList';
-import SearchBar from './searchbar/Searchbar';
 import ListingButton from '../../components/listingpopup/Button';
 import ProductFilter from './filter/productFilter';
 import './SearchPage.css';
@@ -15,9 +15,13 @@ function SearchPage() {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortOrder, setSortOrder] = useState('');
-    const [searchQuery, setSearchQuery] = useState('');
+
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const searchQuery = searchParams.get('query') || '';
 
     const fetchListings = async () => {
         try {
@@ -58,21 +62,34 @@ function SearchPage() {
         setFilteredProducts(filtered);
     };
 
-    const sortProducts = (productsToSort, order) => {
+    const sortProducts = (productsToSort, order, query) => {
         let sorted = [...productsToSort];
 
         if (order === 'low-to-high') {
             sorted.sort((a, b) => a.price - b.price);
         } else if (order === 'high-to-low') {
             sorted.sort((a, b) => b.price - a.price);
+        } else if (order === 'best-match') {
+            sorted = sorted.sort((a, b) => calculateRelevance(b, query) - calculateRelevance(a, query));
         }
 
         return sorted;
     };
 
+    const calculateRelevance = (product, query) => {
+        const lowerCaseQuery = query.toLowerCase();
+        let relevance = 0;
+
+        if (product.name?.toLowerCase().includes(lowerCaseQuery)) relevance += 3;
+        if (product.description?.toLowerCase().includes(lowerCaseQuery)) relevance += 2;
+        if (product.productType?.toLowerCase().includes(lowerCaseQuery)) relevance += 1;
+
+        return relevance;
+    };
+
     useEffect(() => {
-        setFilteredProducts(sortProducts(filteredProducts, sortOrder));
-    }, [sortOrder]);
+        setFilteredProducts(sortProducts(filteredProducts, sortOrder, searchQuery));
+    }, [sortOrder, searchQuery]);
 
     useEffect(() => {
         const search = (query, products) => {
@@ -98,9 +115,6 @@ function SearchPage() {
                 <Header />
             </header>
             <section className='main'>
-                <div className='searchbar'>
-                    <SearchBar onSearch={setSearchQuery} />
-                </div>
                 <div className='product-filter'>
                     <ProductFilter 
                         minPrice={minPrice} 

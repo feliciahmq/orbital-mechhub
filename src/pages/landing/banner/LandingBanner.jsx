@@ -1,6 +1,5 @@
 import { useNavigate } from "react-router-dom"; 
 
-import ProductImg from "../../../assets/Product-Images/ditto_eg.png";
 import "./LandingBanner.css";
 
 
@@ -14,15 +13,12 @@ function Banner() {
   return (
     <div className="banner">
       <div>
-        <h1>KeyBoards</h1>
+        <h1>My Keyboard Quit Its Job</h1>
         <p>
-          Testing testing 123..................
-          <br />
-          whee test test 123
+        — apparently, it wasn't getting enough 'shift' work!
         </p>
-        <button onClick={viewProducts} className='button-go-brr'>View Now</button>
+        <button onClick={viewProducts} className='button-go-brr'>View All Products</button>
       </div>
-      <img src={ProductImg} alt="ProductImg" />
     </div>
   );
 }

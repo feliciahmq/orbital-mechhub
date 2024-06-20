@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './productFilter.css';
 
 function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
     const [type, setType] = useState('');
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [sortOrder, setSortOrder] = useState('');
+
+    useEffect(() => {
+        setPriceRange([minPrice, maxPrice]);
+    }, [minPrice, maxPrice]);
 
     const handleTypeChange = (e) => {
         setType(e.target.value);
@@ -19,7 +23,7 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
         }
     };
 
-    const handlePriceChange = (e) => {
+    const handleMaxPriceChange = (e) => {
         const newMaxPrice = parseInt(e.target.value, 10);
         if (newMaxPrice >= priceRange[0]) {
             const newPriceRange = [priceRange[0], newMaxPrice];
@@ -52,20 +56,28 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
             <div className="filter-group">
                 <label>Price Range:</label>
                 <div className="slider-container">
-                    <input 
-                        type="range" 
-                        min={minPrice} 
-                        max={maxPrice} 
-                        value={priceRange[0]} 
-                        onChange={handleMinPriceChange}
-                    />
-                    <input 
-                        type="range" 
-                        min={minPrice} 
-                        max={maxPrice} 
-                        value={priceRange[1]} 
-                        onChange={handlePriceChange}
-                    />
+                    <div className="slider">
+                        <div className="inside" style={{
+                            left: `${((priceRange[0] - minPrice) / (maxPrice - minPrice)) * 100}%`,
+                            right: `${100 - ((priceRange[1] - minPrice) / (maxPrice - minPrice)) * 100}%`
+                        }}></div>
+                    </div>
+                    <div className="range">
+                        <input
+                            type="range"
+                            min={minPrice}
+                            max={maxPrice}
+                            value={priceRange[0]}
+                            onChange={handleMinPriceChange}
+                        />
+                        <input
+                            type="range"
+                            min={minPrice}
+                            max={maxPrice}
+                            value={priceRange[1]}
+                            onChange={handleMaxPriceChange}
+                        />
+                    </div>
                     <div>
                         <span>{priceRange[0]}</span> - <span>{priceRange[1]}</span>
                     </div>
@@ -77,6 +89,7 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
                     <option value="">None</option>
                     <option value="low-to-high">Price: Low to High</option>
                     <option value="high-to-low">Price: High to Low</option>
+                    <option value="best-match">Best Match</option>
                 </select>
             </div>
         </div>

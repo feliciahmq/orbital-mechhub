@@ -5,6 +5,7 @@ import { doc, getDoc, collection, getDocs, query, where, setDoc, deleteDoc, upda
 import { useAuth } from '../../Auth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
+import { FaCalendarAlt } from 'react-icons/fa';
 
 import ReviewList from './userReviews/ReviewList';
 import EditPopup from './editUser/EditPopup';
@@ -96,6 +97,7 @@ function UserProfile() {
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
         const userData = docSnap.data();
+        userData.signUpDate = new Date(userData.signUpDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
         setUserInfo(userData);
         fetchUsersListings(userData.username);
         fetchUserReviews();
@@ -111,7 +113,7 @@ function UserProfile() {
     } catch (error) {
       console.log(`Firebase: ${error}`);
     }
-  };
+  };  
   
   useEffect(() => {
     fetchUserData();
@@ -214,8 +216,7 @@ function UserProfile() {
               <div className='profile-info'>
                 <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
                 <p>@{userInfo.username}</p>
-              </div>
-              <div className='profile-follow'>
+                <p className='join-date'><FaCalendarAlt /> Joined {userInfo.signUpDate}</p>
                 <div className='follow-info'>
                   <div className='follow-count'>
                     <h5>{followCount}</h5>
@@ -226,28 +227,28 @@ function UserProfile() {
                     <p>Following</p>
                   </div>
                 </div>
-                <div className='profile-buttons'>
-                  {currentUser?.uid === userID ? (
-                  <>
-                    <button className="edit-profile" onClick={handleOpenPopup}>
-                      Edit Profile
-                    </button>
-                    {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
-                    <button className="logout" onClick={handleLogout}>
-                      Logout
-                    </button>
-                  </>
-                ) : (
-                  followUser ? (
-                    <button className='unfollow' onClick={handleUserUnFollow}>Unfollow</button>
-                  ) : (
-                    <button className='follow' onClick={handleUserFollow}>Follow</button>
-                  )
-                )}
               </div>
+              <div className='profile-buttons'>
+              {currentUser?.uid === userID ? (
+                <>
+                  <button className="edit-profile" onClick={handleOpenPopup}>
+                    Edit Profile
+                  </button>
+                  {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
+                  <button className="logout" onClick={handleLogout}>
+                    Logout
+                  </button>
+                </>
+              ) : (
+                followUser ? (
+                  <button className='unfollow' onClick={handleUserUnFollow}>Unfollow</button>
+                ) : (
+                  <button className='follow' onClick={handleUserFollow}>Follow</button>
+                )
+              )}
             </div>
-          </div>
-          <div className="profile-toggle">
+            </div>
+            <div className="profile-toggle">
               <div
                 className={`toggle ${!viewReviews ? 'active' : ''}`}
                 onClick={() => setViewReviews(false)}
