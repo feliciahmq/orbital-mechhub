@@ -37,16 +37,13 @@
     max-width: 600px; 
 }
 
-.notifications-container ul .unread {
-    align-items: center;
-}
-
 .notifications-container ul li {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 12px;
     width: 100%; 
     justify-content: space-between; 
+    align-items: flex-start;
     padding: 16px;
     border-bottom: 1px solid #eee;
 }
@@ -54,6 +51,13 @@
 .notifications-container ul li p {
     margin: 0;
     flex-grow: 1; 
+    padding: 8px 0;
+}
+
+.notifications-container h5 {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 200;
 }
 
 .notifications-container ul button {

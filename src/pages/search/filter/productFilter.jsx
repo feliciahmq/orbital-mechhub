@@ -87,9 +87,10 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
                 <label>Sort By:</label>
                 <select value={sortOrder} onChange={handleSortChange}>
                     <option value="">None</option>
+                    <option value="best-match">Best Match</option>
+                    <option value="featured">Featured</option>
                     <option value="low-to-high">Price: Low to High</option>
                     <option value="high-to-low">Price: High to Low</option>
-                    <option value="best-match">Best Match</option>
                 </select>
             </div>
         </div>

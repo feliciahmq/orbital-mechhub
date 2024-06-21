@@ -132,6 +132,15 @@ function ProductPage() {
         listingID: listingID
       });
 
+      await addDoc(collection(db, 'Notifications'), {
+        recipientID: listing.userID,
+        senderID: currentUser.uid,
+        listingID: listingID,
+        type: 'like',
+        read: false,
+        timestamp: new Date()
+      });
+
       setIsLiked(true);
       setLikeID(docRef.id);
       increaseLikeCount();

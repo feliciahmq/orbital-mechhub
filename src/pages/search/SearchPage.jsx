@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, getDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth';
 import { useLocation } from 'react-router-dom';
@@ -30,9 +30,10 @@ function SearchPage() {
                 where('status', '==', 'available')
             );
             const data = await getDocs(listingsCollection);
-            const listingsData = data.docs.map(doc => ({
-                id: doc.id,
-                ...doc.data()
+            const listingsData = await Promise.all(data.docs.map(async (doc) => {
+                const listing = { id: doc.id, ...doc.data() };
+                const weeklyClicks = await getWeeklyClicks(doc.id);
+                return { ...listing, weeklyClicks };
             }));
             setProducts(listingsData);
             setFilteredProducts(listingsData);
@@ -44,6 +45,19 @@ function SearchPage() {
         } catch (error) {
             console.log(`Firebase: ${error}`);
         }
+    };
+
+    const getWeeklyClicks = async (listingId) => {
+        const weekStart = getWeekStart();
+        const clickCountDoc = await getDoc(doc(db, 'listings', listingId, 'clickCount', weekStart.toString()));
+        return clickCountDoc.exists() ? clickCountDoc.data().count : 0;
+    };
+
+    const getWeekStart = () => {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
+        return new Date(now.setDate(diff)).setHours(0, 0, 0, 0);
     };
 
     useEffect(() => {
@@ -74,6 +88,8 @@ function SearchPage() {
             sorted.sort((a, b) => b.price - a.price);
         } else if (order === 'best-match') {
             sorted = sorted.sort((a, b) => calculateRelevance(b, query) - calculateRelevance(a, query));
+        } else if (order === 'featured') {
+            sorted.sort((a, b) => b.weeklyClicks - a.weeklyClicks);
         }
 
         return sorted;

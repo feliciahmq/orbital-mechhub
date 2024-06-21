@@ -42,13 +42,31 @@ function ProductCards({ productDetail }) {
       }
     };
 
+    const checkSoldStatus = async () => {
+      const listingDocRef = doc(db, 'listings', productDetail.id);
+      const listingDocSnap = await getDoc(listingDocRef);
+
+      if (listingDocSnap.exists()) {
+        setSoldStatus(listingDocSnap.data().sold);
+      }
+    };
+
     fetchUser();
     checkIfLiked();
+    checkSoldStatus();
   }, [productDetail.userID, productDetail.id, currentUser]);
 
+  const getWeekStart = () => {
+    const now = new Date();
+    const dayOfWeek = now.getDay();
+    const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+    return new Date(now.setDate(diff)).setHours(0, 0, 0, 0); 
+  };
+
   const trackClick = async () => {
-    if (currentUser && currentUser.uid !== productDetail.userID) {
-      const clickCountDoc = doc(db, 'listings', productDetail.id, 'clickCount', 'counter');
+    if (currentUser && currentUser.uid !== productDetail.userID && !soldStatus) {
+      const weekStart = getWeekStart();
+      const clickCountDoc = doc(db, 'listings', productDetail.id, 'clickCount', weekStart.toString());
       const clickCountDocSnapshot = await getDoc(clickCountDoc);
 
       if (clickCountDocSnapshot.exists()) {
