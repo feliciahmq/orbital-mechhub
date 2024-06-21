@@ -126,7 +126,9 @@ function NotificationsPage() {
 															?`${notification.username} made an offer for "${notification.listingTitle}"!`
 															: notification.type === 'offer_accepted'
 																? `${notification.username} accepted your offer!`
-																: `${notification.username} rejected your offer`}
+																: notification.typr === 'offer_rejected' 
+																	? `${notification.username} rejected your offer`
+																	: `${notification.username} just left you a review!`}
 									</p>
 									<button onClick={() => markAsRead(notification.id)}>Mark as read</button>
 									<h5>{timeSincePost(notification.timestamp)}</h5>

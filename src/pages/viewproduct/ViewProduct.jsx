@@ -54,6 +54,7 @@ function ProductPage() {
     const [offers, setOffers] = useState([]);
 	const [selectedOffer, setSelectedOffer] = useState(null);
     const [viewOffersPopupOpen, setViewOffersPopupOpen] = useState(false);
+    const [offerAccepted, setOfferAccepted] = useState(false);
 
     useEffect(() => {
         const fetchListing = async () => {
@@ -116,12 +117,16 @@ function ProductPage() {
             try {
                 const offersCollection = collection(db, 'listings', listingID, 'offers');
                 const offersSnap = await getDocs(offersCollection);
-				console.log('Offers snapshot:', offersSnap.docs); 
                 
 				if (!offersSnap.empty) {
 					const offersData = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 					setOffers(offersData);
-					console.log('Offers data:', offersData);
+
+                    // Check if any offer is accepted
+                    const acceptedOffer = offersData.find(offer => offer.status === 'accepted');
+                    if (acceptedOffer) {
+                        setOfferAccepted(true);
+                    }
 				}
             } catch (err) {
                 console.log(err.message);
@@ -271,10 +276,15 @@ function ProductPage() {
 
 	const handleAcceptOffer = () => {
         setIsPopupOpen(false);
+        setOfferAccepted(true); // Set offerAccepted to true when offer is accepted
     };
 
 	const handleRejectOffer = () => {
         setIsPopupOpen(false);
+    };
+
+    const handleReviewUser = () => {
+        navigate(`/review/${listingID}`);
     };
 
     return (
@@ -297,20 +307,25 @@ function ProductPage() {
                             </>
                         ) : (
                             <>
-                                {listing.status === 'available' && (
-									<>
-										<button className='offer-button' onClick={handleOpenPopup}>Make an offer</button>
-										{isPopupOpen && (
-											<OfferPopup
-												onClose={handleClosePopup}
-												onSubmit={handleSubmit}
-												listingID={listingID}
-												currentUser={currentUser}
-												userID={listing.userID}
-											/>
-										)}
-									</>
-								)}
+                                {listing.status === 'available' && !offerAccepted && (
+                                    <>
+                                        <button className='offer-button' onClick={handleOpenPopup}>Make an offer</button>
+                                        {isPopupOpen && (
+                                            <OfferPopup
+                                                onClose={handleClosePopup}
+                                                onSubmit={handleSubmit}
+                                                listingID={listingID}
+                                                currentUser={currentUser}
+                                                userID={listing.userID}
+                                            />
+                                        )}
+                                    </>
+                                )}
+                                {offerAccepted && (
+                                    <button className="review" onClick={handleReviewUser}>
+                                        Review User
+                                    </button>
+                                )}
                             </>
                         )}
                     </div>

@@ -21,6 +21,7 @@ function ReviewPage() {
         listingID: userID,
         listerID: "",
     });
+    const [listerID, setListerID] = useState(null);
 
     useEffect(() => {
         const fetchListingData = async () => {
@@ -34,6 +35,7 @@ function ReviewPage() {
                         ...prevState,
                         listerID: listingData.userID 
                     }));
+                    setListerID(listingData.userID); 
                 } else {
                     console.log("No listing data found");
                 }
@@ -80,6 +82,16 @@ function ReviewPage() {
                 listingID: userID,
                 listerID: ""
             });
+
+            await addDoc(collection(db, 'Notifications'), {
+                recipientID: listerID,
+                senderID: currentUser.uid,
+                listingID: userID,
+                type: 'review',
+                read: false,
+                timestamp: new Date()
+            });
+            
             navigate('/');
         } catch (err) {
             alert('Error :' + err.message);
