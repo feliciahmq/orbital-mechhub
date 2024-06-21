@@ -27,11 +27,11 @@ function NotificationsPage() {
         const notificationsWithDetails = await Promise.all(
           notificationsData.map(async (notification) => {
             const senderDoc = await getDoc(doc(db, 'Users', notification.senderID));
-            const listingDoc = await getDoc(doc(db, 'listings', notification.listingID));
+            const listingDoc = notification.listingID ? await getDoc(doc(db, 'listings', notification.listingID)) : null;
             return {
               ...notification,
               username: senderDoc.exists() ? senderDoc.data().username : 'Unknown User',
-              listingTitle: listingDoc.exists() ? listingDoc.data().title : 'Unknown Listing'
+              listingTitle: listingDoc && listingDoc.exists() ? listingDoc.data().title : 'Unknown Listing'
             };
           })
         );
@@ -81,18 +81,23 @@ function NotificationsPage() {
       <Header />
       <div className='notifications-container'>
         {unreadNotifs.length > 0 ? (
-          <ul>
-            {unreadNotifs.map(notification => (
-              <li key={notification.id} className={notification.read ? 'read' : 'unread'}>
-                <p>
-                  {notification.type === 'like' 
-                    ? `${notification.username} liked your post "${notification.listingTitle}"!` 
-                    : `The listing "${notification.listingTitle}" was sold`}
-                </p>
-                <button onClick={() => markAsRead(notification.id)}>Mark as read</button>
-              </li>
-            ))}
-          </ul>
+          <>
+            <h2>Your Notifications</h2>
+            <ul>
+              {unreadNotifs.map(notification => (
+                <li key={notification.id} className={notification.read ? 'read' : 'unread'}>
+                  <p>
+                    {notification.type === 'like'
+                      ? `${notification.username} liked your post "${notification.listingTitle}"!`
+                      : notification.type === 'sold'
+                        ? `The listing "${notification.listingTitle}" was sold`
+                        : `${notification.username} started following you`}
+                  </p>
+                  <button onClick={() => markAsRead(notification.id)}>Mark as read</button>
+                </li>
+              ))}
+            </ul>
+          </>
         ) : (
           <h2>You have no notifications at the moment ( ˘･з･)</h2>
         )}

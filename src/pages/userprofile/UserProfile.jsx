@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { auth, db } from '../../firebase/firebaseConfig';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, collection, getDocs, query, where, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs, query, addDoc, where, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
@@ -167,6 +167,15 @@ function UserProfile() {
           setFollowUser(true);
           setFollowCount((prevCount) => prevCount + 1);
           setFollowingCount((prevCount) => prevCount + 1);
+
+          await addDoc(collection(db, 'Notifications'), {
+            recipientID: userID,
+            senderID: currentUser.uid,
+            listingID: '',
+            type: 'follow',
+            read: false,
+            timestamp: new Date()
+          });
           console.log('Successfully followed the user');
         } catch (err) {
           console.error('Error following user: ', err);
