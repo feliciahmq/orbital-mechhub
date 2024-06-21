@@ -47,7 +47,7 @@ function ProductCards({ productDetail }) {
             const listingDocSnap = await getDoc(listingDocRef);
 
             if (listingDocSnap.exists()) {
-                setSoldStatus(listingDocSnap.data().sold);
+                setSoldStatus(listingDocSnap.data().status === 'sold');
             }
         };
 
@@ -149,7 +149,10 @@ function ProductCards({ productDetail }) {
 
     return (
         <div className="product" onClick={handleViewClick}>
-            <img alt={productDetail.title} src={productDetail.image} />
+            <div className={`product-image-container ${soldStatus ? 'sold' : ''}`}>
+                <img alt={productDetail.title} src={productDetail.image} className="product-image" />
+                {soldStatus && <div className="sold-banner">Sold</div>}
+            </div>
             <h4>{productDetail.title}</h4>
             <h5>{productDetail.productType}</h5>
             <p>${productDetail.price}</p>

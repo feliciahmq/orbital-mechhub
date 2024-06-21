@@ -32,6 +32,29 @@
         font-weight: 500;
     }
 
+    .product-image-container {
+        position: relative;
+        width: 100%;
+        display: grid;
+    }
+    
+    .product-image-container.sold .product-image {
+        opacity: 0.8;
+    }
+    
+    .sold-banner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #FD634C;
+        color: white;
+        padding: 5px 10px;
+        font-size: 18px;
+        font-weight: bold;
+        border-radius: 5px;
+    }    
+
     .productcard-like-button {
         position: relative;
         bottom: 4px;
