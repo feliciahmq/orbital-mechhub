@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { db } from '../../../firebase/firebaseConfig';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, onSnapshot, collection } from 'firebase/firestore';
 import { useAuth } from '../../../Auth';
 
 const LikeCounter = createContext();
@@ -33,6 +33,18 @@ export const LikeCountProvider = ({ children }) => {
     }
   }, [currentUser]);
 
+  useEffect(() => {
+    if (currentUser) {
+      const unsubscribe = onSnapshot(doc(db, 'Users', currentUser.uid, 'likeCount', 'counter'), (doc) => {
+        if (doc.exists()) {
+          setLikeCount(doc.data().count);
+        }
+      });
+
+      return () => unsubscribe();
+    }
+  }, [currentUser]);
+
   const updateLikeCountInFirestore = async (newCount) => {
     if (currentUser) {
       const likeCountDoc = doc(db, 'Users', currentUser.uid, 'likeCount', 'counter');
@@ -55,6 +67,22 @@ export const LikeCountProvider = ({ children }) => {
       return newCount;
     });
   };
+
+  useEffect(() => {
+    if (currentUser) {
+      const listingsCollection = collection(db, 'Users', currentUser.uid, 'listings');
+
+      const unsubscribe = onSnapshot(listingsCollection, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+          if (change.type === 'removed') {
+            decreaseLikeCount();
+          }
+        });
+      });
+
+      return () => unsubscribe();
+    }
+  }, [currentUser]);
 
   return (
     <LikeCounter.Provider value={{ likeCount, increaseLikeCount, decreaseLikeCount }}>

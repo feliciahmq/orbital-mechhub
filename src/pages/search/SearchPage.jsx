@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../firebase/firebaseConfig';
 import { useAuth } from '../../Auth';
 import { useLocation } from 'react-router-dom';
@@ -25,7 +25,10 @@ function SearchPage() {
 
     const fetchListings = async () => {
         try {
-            const listingsCollection = collection(db, "listings");
+            const listingsCollection = query(
+                collection(db, "listings"),
+                where('status', '==', 'available')
+            );
             const data = await getDocs(listingsCollection);
             const listingsData = data.docs.map(doc => ({
                 id: doc.id,

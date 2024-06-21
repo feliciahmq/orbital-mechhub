@@ -25,7 +25,6 @@ function ProductCards({ productDetail }) {
       if (userDocSnap.exists()) {
         setUser(userDocSnap.data());
       }
-      setSoldStatus(userDocSnap.data().status === 'sold');
     };
 
     const checkIfLiked = async () => {
@@ -99,6 +98,15 @@ function ProductCards({ productDetail }) {
       setIsLiked(true); 
       setLikeID(docRef.id);
       increaseLikeCount();
+
+      await addDoc(collection(db, 'Notifications'), {
+        recipientID: productDetail.userID,
+        senderID: currentUser.uid,
+        listingID: productDetail.id,
+        type: 'like',
+        read: false,
+        timestamp: new Date()
+      });
     } catch (err) {
       alert('Error: ' + err.message);
     }

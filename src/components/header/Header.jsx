@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../Auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLikes } from './likecounter/LikeCounter';
 import { FaComment, FaHeart, FaUserAlt, FaBell } from 'react-icons/fa';
+import { query, collection, where, getDocs } from 'firebase/firestore';
+import { db } from '../../firebase/firebaseConfig';
 
 import SearchBar from '../searchbar/Searchbar';
 import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
@@ -14,6 +16,22 @@ function Header() {
     const { currentUser } = useAuth();
     const [searchQuery, setSearchQuery] = useState('');
     const { likeCount } = useLikes();
+    const [unreadCount, setUnreadCount] = useState(0);
+
+    useEffect(() => {
+      const fetchUnreadNotifications = async () => {
+        if (currentUser) {
+          const notificationsQuery = query(
+            collection(db, 'Notifications'),
+            where('recipientID', '==', currentUser.uid),
+            where('read', '==', false)
+          );
+          const notificationsSnapshot = await getDocs(notificationsQuery);
+          setUnreadCount(notificationsSnapshot.docs.length);
+        }
+      };
+      fetchUnreadNotifications();
+    }, [currentUser]);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -28,7 +46,7 @@ function Header() {
     };
 
     const handleNotifs = () => {
-        navigate(`/`);
+        navigate(`/notifications/${currentUser.uid}`);
     };
 
     const handleProfile = () => {
@@ -58,9 +76,12 @@ function Header() {
                         <FaComment onClick={handleChats} cursor="pointer" />
                         <div className='likes'>
                             <FaHeart onClick={handleLikes} cursor="pointer" />
-                            {likeCount > 0 && <span>{likeCount}</span>}
+                            {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
                         </div>
-                        <FaBell onClick={handleNotifs} cursor="pointer" />
+                        <div className='notifs'>
+                            <FaBell onClick={handleNotifs} cursor="pointer" />
+                            {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+                        </div>
                         <FaUserAlt onClick={handleProfile} cursor="pointer" />
                     </>
                 ) : (

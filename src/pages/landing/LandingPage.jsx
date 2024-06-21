@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { useAuth } from '../../Auth'; 
 
@@ -15,7 +15,10 @@ function LandingPage() {
 
     const fetchListings = async () => {
         try {
-            const listingsCollection = collection(db, "listings");
+            const listingsCollection = query(
+                collection(db, "listings"),
+                where('status', '==', 'available')
+            );
             const data = await getDocs(listingsCollection);
             const listingsData = data.docs.map(doc => ({
                 id: doc.id,
@@ -23,7 +26,7 @@ function LandingPage() {
             }));
             setListings(listingsData);
         } catch (error) {
-            console.log(`Firebase: ${error}`);
+            console.error(`Firebase fetch error: ${error.message}`);
         }
     };
 

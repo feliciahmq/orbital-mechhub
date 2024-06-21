@@ -11,6 +11,7 @@ import ListingPage from "./pages/listing/Listing";
 import ProductPage from "./pages/viewproduct/ViewProduct";
 import LikesPage from "./pages/likes/Likes";
 import ReviewPage from "./pages/review/Review";
+import NotificationsPage from "./pages/notificaiton/Notificaitons";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/product/:listingID" element={<ProductPage />} />
             <Route path="/likes/:userID" element={<LikesPage />} />
             <Route path="/review/:userID" element={<ReviewPage />} />
+            <Route path="/notifications/:userID" element={<NotificationsPage />} />
           </Routes>
         </Router>
       </LikeCountProvider>

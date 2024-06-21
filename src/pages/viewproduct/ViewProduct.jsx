@@ -64,7 +64,7 @@ function ProductPage() {
           setUser(userDocSnap.data());
           fetchUserReviews(userDocSnap.id);
         }
-      setListingSold(listingData.status === 'sold');
+        setListingSold(listingData.status === 'sold');
       } else {
         console.log('There is no such listing');
       }
@@ -157,17 +157,35 @@ function ProductPage() {
     setDropdownOpen(!dropdownOpen);
   };
 
-  const handleListingSold = async () => {
+  const handleListingSold = async (e) => {
     e.preventDefault();
 
     try {
-      await updateDoc(doc(db, 'listings', listingID), {
-        status: 'sold'
-      });
-      setListingSold(true);
-      console.log('Listing marked as sold successfully');
+        await updateDoc(doc(db, 'listings', listingID), {
+            status: 'sold'
+        });
+        setListingSold(true);
+
+        const likesQuery = query(collection(db, 'Likes'), where('listingID', '==', listingID));
+        const likesSnapshot = await getDocs(likesQuery);
+
+        const notifications = likesSnapshot.docs.map((likeDoc) => {
+            const likeData = likeDoc.data();
+            return addDoc(collection(db, 'Notifications'), {
+                recipientID: likeData.userID,
+                senderID: currentUser.uid,
+                listingID: listingID,
+                type: 'sold',
+                read: false,
+                timestamp: new Date()
+            });
+        });
+
+        await Promise.all(notifications);
+
+        console.log('Listing marked as sold and notifications sent successfully');
     } catch (err) {
-      console.log(err.message);
+        console.log(err.message);
     }
   };
 
@@ -176,12 +194,12 @@ function ProductPage() {
 
     try {
         await deleteDoc(doc(db, 'listings', listingID));
-        toast.success('Listing Successfully Deleted!');
+        console.log('Listing Successfully Deleted!');
         navigate('/');
     } catch (err) {
-        toast.error('Error: ' + err.message);
+        console.log('Error: ' + err.message);
     }
-};
+  };
 
   const shownStars = (score) => {
     const stars = [];
