@@ -116,7 +116,9 @@ function NotificationsPage() {
 							? `${notification.username} liked your post "${notification.listingTitle}"!`
 							: notification.type === 'sold'
 								? `The listing "${notification.listingTitle}" was sold`
-								: `${notification.username} started following you`}
+								:notification.type === 'follow' 
+									? `${notification.username} started following you!`
+									: `${notification.username} just posted "${notification.listingTitle}"!`}
 					</p>
 					<button onClick={() => markAsRead(notification.id)}>Mark as read</button>
 					<h5>{timeSincePost(notification.timestamp)}</h5>

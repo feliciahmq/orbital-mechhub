@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../firebase/firebaseConfig';
-import { collection, addDoc, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, getDocs, query } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
@@ -27,19 +27,24 @@ function ListingPage() {
     useEffect(() => {
         if (listingID) {
             const fetchListing = async () => {
-                const listingDoc = await getDoc(doc(db, 'listings', listingID));
-                if (listingDoc.exists()) {
-                    setFormData({
-                        title: listingDoc.data().title || "",
-                        image: listingDoc.data().image || "",
-                        productType: listingDoc.data().productType || "",
-                        price: listingDoc.data().price || "",
-                        description: listingDoc.data().description || "",
-                        postDate: listingDoc.data().postDate || "", 
-                        status: listingDoc.data().status || 'available'
-                    });
-                } else {
-                    toast.error('Listing not found');
+                try {
+                    const listingDoc = await getDoc(doc(db, 'listings', listingID));
+                    if (listingDoc.exists()) {
+                        setFormData({
+                            title: listingDoc.data().title || "",
+                            image: listingDoc.data().image || "",
+                            productType: listingDoc.data().productType || "",
+                            price: listingDoc.data().price || "",
+                            description: listingDoc.data().description || "",
+                            postDate: listingDoc.data().postDate || "", 
+                            status: listingDoc.data().status || 'available'
+                        });
+                    } else {
+                        toast.error('Listing not found');
+                        navigate('/');
+                    }
+                } catch (error) {
+                    toast.error('Failed to fetch listing');
                     navigate('/');
                 }
             };
@@ -78,7 +83,30 @@ function ListingPage() {
                     ...dataToSubmit,
                     postDate: new Date().toISOString()
                 };
-                await addDoc(collection(db, 'listings'), dataToSubmit);
+                const docRef = await addDoc(collection(db, 'listings'), dataToSubmit);
+                const newListingID = docRef.id;
+
+                const followersQuery = query(collection(db, 'Users', currentUser.uid, 'followers'));
+                const followersSnap = await getDocs(followersQuery);
+
+                const notifications = followersSnap.docs.map((followerDoc) => {
+                    const followerData = followerDoc.data();
+                    if (followerData) {
+                        return addDoc(collection(db, 'Notifications'), {
+                            recipientID: followerData.followerID,
+                            senderID: currentUser.uid,
+                            listingID: newListingID,
+                            type: 'list',
+                            read: false,
+                            timestamp: new Date()
+                        });
+                    } else {
+                        console.error('Follower document missing userID:', followerDoc.id);
+                        return null;
+                    }
+                });
+
+                await Promise.all(notifications.filter(notification => notification !== null));
                 toast.success('Listing Successfully Created!');
             } else {
                 await updateDoc(doc(db, 'listings', listingID), dataToSubmit);
@@ -96,7 +124,7 @@ function ListingPage() {
             });
             navigate('/');
         } catch (err) {
-            toast.error('Error: ' + err.message);
+            console.log('Error: ' + err.message);
         }
     };
 

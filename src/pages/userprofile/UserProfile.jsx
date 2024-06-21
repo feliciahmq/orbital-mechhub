@@ -195,6 +195,10 @@ function UserProfile() {
 			const followDocSnap = await getDoc(followDocRef);
 			if (followDocSnap.exists()) {
 			await deleteDoc(followDocRef);
+			const currentUserDocRef = doc(db, 'Users', currentUser.uid);
+			await updateDoc(currentUserDocRef, {
+				followingCount: firebase.firestore.FieldValue.increment(-1)
+			});
 			const userDocRef = doc(db, 'Users', userID);
 			await updateDoc(userDocRef, {
 				followCount: firebase.firestore.FieldValue.increment(-1)
