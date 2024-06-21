@@ -1,79 +1,79 @@
 .categories {
-  width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-bottom: 50px;
-  cursor: pointer;
-  list-style: none;
-  display: inline-flex;
-  column-gap: 30px;
-  align-items: center;
-  margin: 0;
-  padding: 20px 0; 
+	width: 100%;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin-bottom: 50px;
+	cursor: pointer;
+	list-style: none;
+	display: inline-flex;
+	column-gap: 30px;
+	align-items: center;
+	margin: 0;
+	padding: 20px 0; 
 
-  h2 {
-    font-size: 28px;
-    color: #FD634C;
-  }
+	h2 {
+		font-size: 28px;
+		color: #FD634C;
+	}
 
-  li {
-    padding: 4px;
-  }
+	li {
+		padding: 4px;
+	}
 }
 .image-container {
-  background-color:  #FD634C;
-  margin: 0 20px;
-  padding: 40px;
-  border-radius: 100%;
-  width: 120px;
-  height: 120px;
-  transition: all 0.2s ease-in;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center; 
-  align-items: center; 
+	background-color:  #FD634C;
+	margin: 0 20px;
+	padding: 40px;
+	border-radius: 100%;
+	width: 120px;
+	height: 120px;
+	transition: all 0.2s ease-in;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center; 
+	align-items: center; 
 }
 .categories img {
-  width: 120px;
-  transition: all 0.2s ease-in-out;
+	width: 120px;
+	transition: all 0.2s ease-in-out;
 }
 .categories li:hover img {
-  transform: scale(1.15);
+	transform: scale(1.15);
 }
 .categories .image-container:hover {
-  filter: brightness(0.85);
+	filter: brightness(0.85);
 }
 .title {
-  text-align: center;
-  margin: 8px;
-  font-size: 20px;
-  color: black;
+	text-align: center;
+	margin: 8px;
+	font-size: 20px;
+	color: black;
 }
 
 /* @media screen and (max-width: 992px) {
-  .categories {
-    flex-direction: column;
-    align-items: center;
-  }
-  .categories li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  .image-container {
-    margin-top: 0;
-    margin-right: 10px; 
-    width: 80px;
-    height: 80px; 
-    padding: 20px; 
-  }
-  .categories img {
-    width: 76px;
-  }
-  .title {
-    margin-top: 0;
-    font-size: 18px; 
-    text-align: left; 
-  }
+	.categories {
+		flex-direction: column;
+		align-items: center;
+	}
+	.categories li {
+		display: flex;
+		align-items: center;
+		margin-bottom: 20px;
+	}
+	.image-container {
+		margin-top: 0;
+		margin-right: 10px; 
+		width: 80px;
+		height: 80px; 
+		padding: 20px; 
+	}
+	.categories img {
+		width: 76px;
+	}
+	.title {
+		margin-top: 0;
+		font-size: 18px; 
+		text-align: left; 
+	}
 } */

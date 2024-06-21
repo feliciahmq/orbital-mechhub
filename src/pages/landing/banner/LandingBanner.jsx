@@ -4,22 +4,22 @@ import "./LandingBanner.css";
 
 
 function Banner() {
-  const navigate = useNavigate(); 
+	const navigate = useNavigate(); 
 
-  const viewProducts = () => {
-    navigate('/search'); 
-  };
+	const viewProducts = () => {
+		navigate('/search'); 
+	};
 
   return (
-    <div className="banner">
-      <div>
-        <h1>My Keyboard Quit Its Job</h1>
-        <p>
-        — apparently, it wasn't getting enough 'shift' work!
-        </p>
-        <button onClick={viewProducts} className='button-go-brr'>View All Products</button>
-      </div>
-    </div>
+	<div className="banner">
+		<div>
+			<h1>My Keyboard Quit Its Job</h1>
+			<p>
+				— apparently, it wasn't getting enough 'shift' work!
+			</p>
+			<button onClick={viewProducts} className='button-go-brr'>View All Products</button>
+		</div>
+	</div>
   );
 }
 
