@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../../firebase/firebaseConfig";
 import { useAuth } from '../../Auth'; 
 
 import Header from '../../components/header/Header';
-import Categories from "./categories/LandingCategories";
 import ProductList from '../../components/productcards/ProductList';
 import Banner from "./banner/LandingBanner";
 import ListingButton from '../../components/listingpopup/Button';
@@ -16,7 +15,10 @@ function LandingPage() {
 
     const fetchListings = async () => {
         try {
-            const listingsCollection = collection(db, "listings");
+            const listingsCollection = query(
+                collection(db, "listings"),
+                where('status', '==', 'available')
+            );
             const data = await getDocs(listingsCollection);
             const listingsData = data.docs.map(doc => ({
                 id: doc.id,
@@ -24,7 +26,7 @@ function LandingPage() {
             }));
             setListings(listingsData);
         } catch (error) {
-            console.log(`Firebase: ${error}`);
+            console.error(`Firebase fetch error: ${error.message}`);
         }
     };
 
@@ -42,9 +44,6 @@ function LandingPage() {
             </div>
             <div className='main'>
                 <section>
-                    <div>
-                        <Categories />
-                    </div>
                     <div>
                         <ProductList heading="Featured Products" products={listings} />
                     </div>
