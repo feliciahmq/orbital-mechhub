@@ -1,5 +1,5 @@
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { auth, db } from "../../firebase/firebaseConfig";
+import { auth, db } from "../../lib/firebaseConfig";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { toast } from 'react-hot-toast';
 

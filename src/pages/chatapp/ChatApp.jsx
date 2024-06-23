@@ -1,7 +1,7 @@
 import './ChatApp.css';
 import { useEffect } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from "/src/firebase/firebaseConfig";
+import { auth } from "/src/lib/firebaseConfig";
 import { useUserStore } from '../../lib/userStore.js';
 import { useNavigate } from 'react-router-dom';
 

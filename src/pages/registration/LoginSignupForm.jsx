@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 
 import './LoginSignupForm.css'; 
 
-import { auth, db } from "../../firebase/firebaseConfig";
+import { auth, db } from "../../lib/firebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { query, collection, where, getDocs, doc, setDoc } from "firebase/firestore";
 import { signInWithGoogle } from './GoogleAuth';

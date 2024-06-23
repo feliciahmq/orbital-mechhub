@@ -3,7 +3,7 @@ import './ChatList.css';
 import AddUser from '/src/components/chatComp/chatApp_list/addUser/addUser.jsx';
 import { useUserStore } from '../../../../lib/userStore';
 import { doc, onSnapshot, getDoc } from 'firebase/firestore';
-import { db } from '../../../../firebase/firebaseConfig';
+import { db } from '../../../../lib/firebaseConfig';
 
 const ChatList = () => {
     const [chats, setChats] = useState([]);

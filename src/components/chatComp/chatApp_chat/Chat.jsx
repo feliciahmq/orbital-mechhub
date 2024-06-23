@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import './Chat.css';
 import EmojiPicker from 'emoji-picker-react';
 import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from '../../../firebase/firebaseConfig';
+import { db } from '../../../lib/firebaseConfig';
 
 const Chat = () => {
     const [chat, setChat] = useState();

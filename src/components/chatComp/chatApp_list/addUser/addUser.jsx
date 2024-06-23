@@ -1,6 +1,6 @@
 import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
 import "./addUser.css"
-import { db } from "../../../../firebase/firebaseConfig";
+import { db } from "../../../../lib/firebaseConfig";
 import { useState } from "react";
 import { useUserStore } from "../../../../lib/userStore";
 
