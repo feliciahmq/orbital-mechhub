@@ -10,6 +10,8 @@ import ListingButton from "../../components/listingpopup/Button";
 import ProductList from '../../components/productcards/ProductList'; 
 import './UserProfile.css';
 
+const defaultProfilePic = "/src/assets/defaultProfile.jpg"; 
+
 function UserProfile() {
   const { userID } = useParams();
   const navigate = useNavigate();
@@ -81,13 +83,17 @@ function UserProfile() {
     navigate("/account");
   };
 
+  const handleChatNavigation = () => {
+    navigate(`/chat/${currentUser.uid}`);
+  };
+
   return (
     <div>
       <Header />
       {userInfo ? (
         <>
           <div className="profile-container">
-            <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
+            <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic || defaultProfilePic})` }} />
             <p>@{userInfo.username}</p>
             {currentUser?.uid === userID && (
               <>
@@ -95,6 +101,9 @@ function UserProfile() {
                   Edit Profile
                 </button>
                 {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
+                <button className="chat-button" onClick={handleChatNavigation}>
+                  Chat
+                </button>
                 <button className="logout" onClick={handleLogout}>
                   Logout
                 </button>

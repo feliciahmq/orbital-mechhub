@@ -21,21 +21,21 @@ const Chat = () => {
     <div className='chat'>
         <div className="top">
             <div className="user">
-                <img src="src/assets/chat-icons/avatar.png" alt="" />
+                <img src="/src/assets/chat-icons/avatar.png" alt="" />
                 <div className="texts">
                     <span>Vanessa Lai</span>
                     <p>Lorem ipsum dolar, sit amet.</p>
                 </div>
             </div>
             <div className="icons">
-                <img src="src/assets/chat-icons/phone.png" alt="" />
-                <img src="src/assets/chat-icons/video.png" alt="" />
-                <img src="src/assets/chat-icons/info.png" alt="" />
+                <img src="/src/assets/chat-icons/phone.png" alt="" />
+                <img src="/src/assets/chat-icons/video.png" alt="" />
+                <img src="/src/assets/chat-icons/info.png" alt="" />
             </div>
         </div>
         <div className="center">
             <div className="message">
-                <img src="src/assets/chat-icons/avatar.png" alt="" />
+                <img src="/src/assets/chat-icons/avatar.png" alt="" />
                 <div className="texts">
                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing 
                         elit. Nemo nihil repellat sed, expedita quas aut 
@@ -58,7 +58,7 @@ const Chat = () => {
                 </div>
             </div>
             <div className="message">
-                <img src="src/assets/chat-icons/avatar.png" alt="" />
+                <img src="/src/assets/chat-icons/avatar.png" alt="" />
                 <div className="texts">
                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing 
                         elit. Nemo nihil repellat sed, expedita quas aut 
@@ -81,7 +81,7 @@ const Chat = () => {
                 </div>
             </div>
             <div className="message">
-                <img src="src/assets/chat-icons/avatar.png" alt="" />
+                <img src="/src/assets/chat-icons/avatar.png" alt="" />
                 <div className="texts">
                     <p>Lorem ipsum, dolor sit amet consectetur adipisicing 
                         elit. Nemo nihil repellat sed, expedita quas aut 
@@ -108,14 +108,14 @@ const Chat = () => {
         </div>
         <div className="bottom">
             <div className="icons">
-                <img src="src/assets/chat-icons/img.png" alt="" />
-                <img src="src/assets/chat-icons/camera.png" alt="" />
-                <img src="src/assets/chat-icons/mic.png" alt="" />
+                <img src="/src/assets/chat-icons/img.png" alt="" />
+                <img src="/src/assets/chat-icons/camera.png" alt="" />
+                <img src="/src/assets/chat-icons/mic.png" alt="" />
             </div>
             <input type="text" placeholder='Type a message...' 
                 value={text} onChange={e=>setText(e.target.value)} />
             <div className="emoji">
-                <img src="src/assets/chat-icons/emoji.png" alt="" onClick={() => setOpen((prev) => !prev)} />
+                <img src="/src/assets/chat-icons/emoji.png" alt="" onClick={() => setOpen((prev) => !prev)} />
                 <div className="picker">
                     <EmojiPicker open={open} onEmojiClick={handleEmoji} />
                 </div>

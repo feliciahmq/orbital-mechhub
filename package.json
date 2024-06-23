@@ -22,7 +22,8 @@
     "react-router-dom": "^6.23.1",
     "react-slider": "^2.0.6",
     "s": "^1.0.0",
-    "styled-components": "^6.1.11"
+    "styled-components": "^6.1.11",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

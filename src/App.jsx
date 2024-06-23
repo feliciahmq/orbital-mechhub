@@ -24,6 +24,7 @@ const App = () => {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/listing" element={<ListingPage />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/chat/:userID" element={<Chat />} />
         </Routes>
       </Router>
     </AuthProvider>
