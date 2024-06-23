@@ -11,6 +11,8 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 import { query, collection, where, getDocs, doc, setDoc } from "firebase/firestore";
 import { signInWithGoogle } from './GoogleAuth';
 
+import Header from "../../components/header/Header";
+
 function LoginSignUpForm() {
     const [rightPanelActive, setRightPanelActive] = useState(false);
 
@@ -104,6 +106,7 @@ function LoginSignUpForm() {
 
     return (
         <div className='login-signup-page'>
+            <Header />
             <div className='login-signup-container'>
                 <div className={`container ${rightPanelActive ? 'right-panel-active' : ''}`} id="container">
                     <div className="form-container sign-up-container">
