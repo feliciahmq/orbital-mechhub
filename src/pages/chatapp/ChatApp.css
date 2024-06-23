@@ -10,11 +10,12 @@
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden；
 }
 
 .chat-header {
     position: fixed;
+    width: 100%;
+    top: 0;
 }
 
 .chat-container {
@@ -22,11 +23,11 @@
     display: flex;
     flex: 1;
     margin-top: 64px;
-    box-sizing: border-box;
+    box-sizing: border-box; 
     font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-    width: 100%; /* Ensure it takes full width */
-    justify-content: center; /* Center the inner container horizontally */
+    width: 100%;
+    justify-content: center; 
     align-items: center;
 }
 
@@ -40,3 +41,4 @@
     border: 1px solid rgba(255, 255, 255, 0.076);
     display: flex;
 }
+

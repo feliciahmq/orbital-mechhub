@@ -8,7 +8,7 @@ import LoginSignupForm from "../../pages/registration/LoginSignupForm.jsx";
 
 const ChatApp = () => {
 
-  const user = false;
+  const user = true;
 
   return (
     <div className='chat-page'>
@@ -27,7 +27,7 @@ const ChatApp = () => {
         ) : (<LoginSignupForm/>)
       }
     </div>
-  )
-}
+  );
+};
 
 export default ChatApp;
