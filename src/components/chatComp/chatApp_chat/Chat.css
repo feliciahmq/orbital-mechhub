@@ -70,7 +70,7 @@
             &.own {
                 align-self: flex-end;
                 
-                .texts {
+                .texts { 
                     p {
                         background-color: rgba(30, 83, 241, 0.45);
                     }
@@ -88,7 +88,7 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column;
-                gap: 5px;
+                gap: 0;
 
                 img {
                     width: 100%;
