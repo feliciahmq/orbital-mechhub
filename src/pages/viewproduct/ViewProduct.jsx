@@ -122,8 +122,7 @@ function ProductPage() {
 					const offersData = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 					setOffers(offersData);
 
-                    // Check if any offer is accepted
-                    const acceptedOffer = offersData.find(offer => offer.status === 'accepted');
+                    const acceptedOffer = offersData.find(offer => offer.accepted === 'true');
                     if (acceptedOffer) {
                         setOfferAccepted(true);
                     }
@@ -276,7 +275,7 @@ function ProductPage() {
 
 	const handleAcceptOffer = () => {
         setIsPopupOpen(false);
-        setOfferAccepted(true); // Set offerAccepted to true when offer is accepted
+        setOfferAccepted(true);
     };
 
 	const handleRejectOffer = () => {

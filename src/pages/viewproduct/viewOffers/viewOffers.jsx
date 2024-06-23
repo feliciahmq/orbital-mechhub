@@ -24,7 +24,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
                     const userData = userDoc.data();
                     return { 
                         [userId]: userData.username,
-                        [`${userId}_profilePic`]: userData.profilePic || '/default-profile-pic.jpg' // Default profile pic
+                        [`${userId}_profilePic`]: userData.profilePic || '/default-profile-pic.jpg'
                     };
                 }
                 return { [userId]: 'Unknown User' }; 
@@ -34,7 +34,6 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
             const usernamesObject = Object.assign({}, ...userDataArray);
             setUsernames(usernamesObject);
 
-            // Extract profile pics into a separate object
             const profilePicObject = {};
             userIds.forEach(userId => {
                 if (usernamesObject[userId]) {
@@ -50,7 +49,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
     const handleAcceptOffer = async (offer) => {
         try {
             await updateDoc(doc(db, 'listings', listingID, 'offers', offer.id), {
-                status: 'accepted',
+                accepted: 'true',
             });
             await addDoc(collection(db, 'Notifications'), {
                 recipientID: offer.userID,
