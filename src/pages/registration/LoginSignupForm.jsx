@@ -51,8 +51,16 @@ function LoginSignUpForm() {
                 await setDoc(userDocRef, {
                     username: username,
                     email: user.email,
-                    profilePic: defaultProfile 
+                    id : user.uid,
+                    profilePic: defaultProfile,
+                    blocked: [], 
                 });
+
+                const userChatDoc = doc(db, "UserChats", user.uid);
+                await setDoc(userChatDoc, {
+                    chats: [],
+                });
+                
                 console.log("User ID:", user.uid);
                 toast.success("Account created successfully.");
                 navigate(`/profile/${user.uid}`);

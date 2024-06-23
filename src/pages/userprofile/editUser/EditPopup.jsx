@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { auth, db } from "../../../firebase/firebaseConfig";
+import { auth, db, storage } from "../../../firebase/firebaseConfig";
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, writeBatch } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import './EditPopup.css';
 
@@ -11,9 +12,12 @@ function EditPopup({ onClose, onSubmit }) {
         email: ""
     });
 
+    const [imageFile, setImageFile] = useState(null);
+
     const uploadImage = (e) => {
         const file = e.target.files[0];
         if (file && file.type.includes('image')) {
+            setImageFile(file);
             const fileReader = new FileReader();
             fileReader.readAsDataURL(file);
             fileReader.onload = (fileReaderEvent) => {
@@ -33,8 +37,16 @@ function EditPopup({ onClose, onSubmit }) {
         const userDocRef = doc(db, 'Users', user.uid);
         
         try {
+            let profilePicUrl = formData.image;
+
+            if (imageFile) {
+                const storageRef = ref(storage, `profilePics/${user.uid}/${imageFile.name}`);
+                await uploadBytes(storageRef, imageFile);
+                profilePicUrl = await getDownloadURL(storageRef);
+            }
+
             await updateDoc(userDocRef, {
-                profilePic: formData.image,
+                profilePic: profilePicUrl,
                 username: formData.username,
                 email: formData.email
             });
@@ -99,7 +111,7 @@ function EditPopup({ onClose, onSubmit }) {
                             name="image" 
                             onChange={uploadImage} /> 
                         </div> 
-                        <label>Profile Picture:</label> 
+                        <label>Profile Picture</label> 
                     </div>
                     <div className="popup-group">
                         <label>Username:</label>
