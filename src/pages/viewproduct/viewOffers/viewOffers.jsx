@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { doc, updateDoc, collection, deleteDoc, addDoc, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '../../../Auth';
 
 import './viewOffers.css';
 
@@ -9,6 +11,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
     const [usernames, setUsernames] = useState({});
     const [profilePic, setProfilePic] = useState({});
     const navigate = useNavigate();
+    const { currentUser } = useAuth();
 
     useEffect(() => {
         fetchUsernamesAndProfilePics();
@@ -53,7 +56,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
             });
             await addDoc(collection(db, 'Notifications'), {
                 recipientID: offer.userID,
-                senderID: offer.userID,
+                senderID: currentUser.uid,
                 listingID: listingID,
                 type: 'offer_accepted',
                 read: false,
@@ -61,6 +64,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
             });
 
             onOfferAccept();
+            toast.success(`AcceptedOffer from ${offer.userID}`);
         } catch (err) {
             console.error('Error accepting offer:', err.message);
         }
@@ -71,7 +75,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
             await deleteDoc(doc(db, 'listings', listingID, 'offers', offer.id));
             await addDoc(collection(db, 'Notifications'), {
                 recipientID: offer.userID,
-                senderID: offer.userID,
+                senderID: currentUser.uid,
                 listingID: listingID,
                 type: 'offer_rejected',
                 read: false,
@@ -79,6 +83,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
             });
 
             onOfferReject();
+            toast.success(`Rejected Offer from ${offer.userID}`);
         } catch (err) {
             console.error('Error rejecting offer:', err.message);
         }
@@ -97,7 +102,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
                         <div key={offer.id} className="offer-item">
                             <p><strong>Offer:</strong> ${offer.offerPrice}</p>
                             <p><strong>Comments:</strong> {offer.comments}</p>
-                            <p><strong>Status:</strong> {offer.status}</p>
+                            <p><strong>Accepted:</strong> {offer.accepted}</p>
                             <div className='user-details'>
                                 <img
                                     className='userpic'
@@ -107,7 +112,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
                                 />
                                 <p onClick={() => handleUsernameClick(offer)}>{usernames[offer.userID]}</p>
                             </div>
-                            {offer.status !== 'accepted' && (
+                            {offer.accepted !== 'true' && (
                                 <div className="offer-actions">
                                     <button onClick={() => handleAcceptOffer(offer)}>Accept</button>
                                     <button onClick={() => handleRejectOffer(offer)}>Reject</button>

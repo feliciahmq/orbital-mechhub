@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { auth, db } from "../../../firebase/firebaseConfig";
 import { doc, addDoc, collection } from "firebase/firestore";
+import { toast } from 'react-hot-toast';
+
 import './offerPopup.css';
 
 function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
@@ -39,6 +41,7 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
             });
 
             onSubmit();
+            toast.success('Offer Sent!');
         } catch (err) {
             console.log(err.message);
         }

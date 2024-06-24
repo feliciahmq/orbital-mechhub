@@ -6,6 +6,7 @@ import { useAuth } from '../../Auth';
 import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { useLikes } from '../../components/header/likecounter/LikeCounter';
+import { toast } from 'react-hot-toast';
 
 import Header from '../../components/header/Header';
 import OfferPopup from './offerPopup/offerPopup';
@@ -149,7 +150,7 @@ function ProductPage() {
         e.stopPropagation();
 
         if (!currentUser) {
-            alert("Please log in to like the product.");
+            toast.error("Please log in to like the product.");
             return;
         }
 
@@ -172,7 +173,7 @@ function ProductPage() {
             setLikeID(docRef.id);
             increaseLikeCount();
         } catch (err) {
-            alert('Error: ' + err.message);
+            toast.error('Error: ' + err.message);
         }
     };
 
@@ -185,7 +186,7 @@ function ProductPage() {
             setLikeID(null);
             decreaseLikeCount();
         } catch (err) {
-            alert('Error: ' + err.message);
+            toast.error('Error: ' + err.message);
         }
     };
 
@@ -219,7 +220,7 @@ function ProductPage() {
 
             await Promise.all(notifications);
 
-            console.log('Listing marked as sold and notifications sent successfully');
+            toast.success('Listing marked as sold and notifications sent successfully');
         } catch (err) {
             console.log(err.message);
         }
@@ -230,7 +231,7 @@ function ProductPage() {
 
         try {
             await deleteDoc(doc(db, 'listings', listingID));
-            console.log('Listing Successfully Deleted!');
+            toast.success('Listing Successfully Deleted!');
             navigate('/');
         } catch (err) {
             console.log('Error: ' + err.message);
