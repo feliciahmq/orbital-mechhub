@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { db } from '../../lib/firebaseConfig';
-import { collection, addDoc, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, updateDoc, getDocs, query } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
+import { FaAngleLeft } from 'react-icons/fa6';
 
 import Header from '../../components/header/Header';
 import './Listing.css';
@@ -19,23 +20,31 @@ function ListingPage() {
         productType: '',
         price: '',
         description: '',
+        postDate: '',
         status: 'available'
     });
 
     useEffect(() => {
         if (listingID) {
             const fetchListing = async () => {
-                const listingDoc = await getDoc(doc(db, 'listings', listingID));
-                if (listingDoc.exists()) {
-                    setFormData({
-                        title: listingDoc.data().title || "",
-                        image: listingDoc.data().image || "",
-                        productType: listingDoc.data().productType || "",
-                        price: listingDoc.data().price || "",
-                        description: listingDoc.data().description || ""
-                    });
-                } else {
-                    toast.error('Listing not found');
+                try {
+                    const listingDoc = await getDoc(doc(db, 'listings', listingID));
+                    if (listingDoc.exists()) {
+                        setFormData({
+                            title: listingDoc.data().title || "",
+                            image: listingDoc.data().image || "",
+                            productType: listingDoc.data().productType || "",
+                            price: listingDoc.data().price || "",
+                            description: listingDoc.data().description || "",
+                            postDate: listingDoc.data().postDate || "", 
+                            status: listingDoc.data().status || 'available'
+                        });
+                    } else {
+                        toast.error('Listing not found');
+                        navigate('/');
+                    }
+                } catch (error) {
+                    toast.error('Failed to fetch listing');
                     navigate('/');
                 }
             };
@@ -63,18 +72,45 @@ function ListingPage() {
             }
 
             const userData = userDoc.data();
-            const dataToSubmit = {
+            let dataToSubmit = {
                 ...formData,
                 username: userData.username,
                 userID: currentUser.uid
             };
 
-            if (listingID) {
+            if (!listingID) {
+                dataToSubmit = {
+                    ...dataToSubmit,
+                    postDate: new Date().toISOString()
+                };
+                const docRef = await addDoc(collection(db, 'listings'), dataToSubmit);
+                const newListingID = docRef.id;
+
+                const followersQuery = query(collection(db, 'Users', currentUser.uid, 'followers'));
+                const followersSnap = await getDocs(followersQuery);
+
+                const notifications = followersSnap.docs.map((followerDoc) => {
+                    const followerData = followerDoc.data();
+                    if (followerData) {
+                        return addDoc(collection(db, 'Notifications'), {
+                            recipientID: followerData.followerID,
+                            senderID: currentUser.uid,
+                            listingID: newListingID,
+                            type: 'list',
+                            read: false,
+                            timestamp: new Date()
+                        });
+                    } else {
+                        console.error('Follower document missing userID:', followerDoc.id);
+                        return null;
+                    }
+                });
+
+                await Promise.all(notifications.filter(notification => notification !== null));
+                toast.success('Listing Successfully Created!');
+            } else {
                 await updateDoc(doc(db, 'listings', listingID), dataToSubmit);
                 toast.success('Listing Successfully Updated!');
-            } else {
-                await addDoc(collection(db, 'listings'), dataToSubmit);
-                toast.success('Listing Successfully Created!');
             }
 
             setFormData({
@@ -83,23 +119,12 @@ function ListingPage() {
                 productType: '',
                 price: '',
                 description: '',
+                postDate: '',
                 status: 'available'
             });
             navigate('/');
         } catch (err) {
-            toast.error('Error: ' + err.message);
-        }
-    };
-
-    const handleDelete = async (e) => {
-        e.preventDefault();
-
-        try {
-            await deleteDoc(doc(db, 'listings', listingID));
-            toast.success('Listing Successfully Deleted!');
-            navigate('/');
-        } catch (err) {
-            toast.error('Error: ' + err.message);
+            console.log('Error: ' + err.message);
         }
     };
 
@@ -119,12 +144,17 @@ function ListingPage() {
         }
     };
 
+    const handleCancel = () => {
+        navigate(-1);
+    }
+
     return (
         <>
             <div>
                 <Header />
             </div>
             <div className='listing-form'>
+                <h5 className='back-button' onClick={handleCancel}> <FaAngleLeft /> Go Back </h5>
                 <h2>{listingID ? 'Edit Listing' : 'Create Listing'}</h2>
                 <form onSubmit={handleSubmit}>
                     <h1>Add Image:</h1>
@@ -158,14 +188,14 @@ function ListingPage() {
                             value={formData.productType}
                             onChange={handleChange}
                         >
-                            <option value='fullBuilds'>Full Builds</option>
-                            <option value='keycaps'>Keycaps</option>
-                            <option value='switches'>Switches</option>
-                            <option value='stabilisers'>Stabilisers</option>
-                            <option value='deskmats'>Deskmats</option>
-                            <option value='cables'>Cables</option>
-                            <option value='groupOrders'>Group Orders</option>
-                            <option value='others'>Others</option>
+                            <option value='Full Builds'>Full Builds</option>
+                            <option value='Keycaps'>Keycaps</option>
+                            <option value='Switches'>Switches</option>
+                            <option value='Stabilisers'>Stabilisers</option>
+                            <option value='Deskmats'>Deskmats</option>
+                            <option value='Cables'>Cables</option>
+                            <option value='Group Orders'>Group Orders</option>
+                            <option value='Others'>Others</option>
                         </select>
                     </div>
                     <div className="form-group">
@@ -186,9 +216,6 @@ function ListingPage() {
                         />
                     </div>
                     <button className='submit' type="submit">{listingID ? 'Update' : 'Submit'}</button>
-                    {listingID && (
-                        <button className='delete' onClick={handleDelete}>Delete Listing</button>
-                    )}
                 </form>
             </div>
         </>

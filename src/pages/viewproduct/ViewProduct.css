@@ -9,6 +9,49 @@
     align-items: center;
     padding: 92px 44px;
 
+    .listing-options {
+        position: absolute;
+        right: 12px;
+    }
+
+    .listing-ellipsis {
+        position: absolute;
+        right: 12px;
+        font-size: 16px;
+    }
+    
+    .options-icon {
+        cursor: pointer;
+    }
+    
+    .dropdown-content {
+        position: absolute;
+        top: 30px;
+        right: 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(100, 100, 100, 0.1);
+        z-index: 100;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .dropdown-content button {
+        display: block;
+        width: 160px;
+        padding: 12px;        
+        font-size: 16px;
+        font-weight: 200;
+        background-color: white;
+        border: 1px solid rgb(240, 240, 240);
+        cursor: pointer;
+    }
+
+    .dropdown-content button:hover {
+        background-color: #FF4B2B;
+        color: white;
+    }
+
     .listing-details {
         display: flex;
         align-items: flex-start; 
@@ -19,13 +62,24 @@
             height: auto;
             border: 1px solid rgb(240, 240, 240);
         }
+    }
 
-        .like-button {
-            position:relative;
-            margin: 12px 0;
-            font-size: 24px;
-            font-weight: 200;
-        }
+    .offer-button, .review {
+        border-radius: 20px;
+        border: 1px solid #FF4B2B;
+        background-color: #FF4B2B;
+        color: #FFFFFF;
+        font-size: 12px;
+        font-weight: bold;
+        padding: 12px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        transition: transform 80ms ease-in;
+        cursor: pointer;
+        width: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
     
     .listing-text {
@@ -42,6 +96,8 @@
         }
 
         h1 {
+            display: flex;
+            align-items: center;
             font-size: 32px;
             font-weight: 500;
         }
@@ -65,25 +121,31 @@
             padding: 4px;
         }
     }
+
+    .like-button {
+        font-size: 24px;
+        font-weight: 200;
+        cursor: pointer;
+    }
 }
 
 .user-container {
     position: absolute;
     top: 540px;
     left: 0;
-    height: 100px;
     width: 100%;
     background-color: white;
     border-top: 1px solid rgb(240, 240, 240);
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    align-items: flex-start;
     padding: 10px 44px;
 
     .user-details {
         display: flex;
         align-items: center;
         gap: 10px;
+        height: 72px;
 
         .userpic {
             cursor: pointer;
@@ -114,6 +176,63 @@
         text-transform: uppercase;
         transition: transform 80ms ease-in;
         cursor: pointer;
-      }
+    }
+
+    .stars {
+        font-size: 20px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-left: 72px;
+        height: 36px;
+        cursor: pointer;
+
+        .star-icon {
+            color: #FF4B2B;
+        }
+        .star-empty {
+            color: #a9a9a9;
+        }
+    }
 }
   
+@media screen and (max-width: 768px) {
+    .listing-container {
+      position: static;
+      width: 100%;
+      height: auto;
+      margin-top: 60px;
+      padding: 12px; 
+    }
+  
+    .listing-container .listing-details {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .listing-container .listing-details img {
+      width: 100%;
+    }
+  
+    .listing-container .listing-text p {
+      width: 100%;
+    }
+  
+    .user-container {
+      position: static;
+      width: 100%;
+      height: auto;
+      margin-top: 20px; 
+      padding: 20px; 
+    }
+  
+    .user-container button {
+      position: static;
+      margin-top: 20px; 
+      width: 100%;
+    }
+
+    .listing-options {
+        font-size: 16px;
+    }
+}

@@ -4,6 +4,7 @@
     padding: 24px 12px;
     margin: 40px auto;
     width: 100%;
+    height: 400px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -54,7 +55,7 @@
     
 }
 
-@media only screen and (max-width: 992px) {
+@media only screen and (max-width: 768px) {
     .banner img {
         display: none;
     }

@@ -40,7 +40,8 @@ function LikesPage() {
   }, [currentUser]);
 
     return (
-        <div>
+
+        <div className='content'>
             <Header />
             <div className='liked-products'>
                 {likedProducts.length > 0 ? (

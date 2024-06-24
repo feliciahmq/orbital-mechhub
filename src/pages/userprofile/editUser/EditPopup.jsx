@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { auth, db, storage } from "../../../lib/firebaseConfig";
 import { doc, getDoc, updateDoc, collection, query, where, getDocs, writeBatch } from "firebase/firestore";
+import { toast } from 'react-hot-toast';
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import './EditPopup.css';
@@ -27,7 +28,7 @@ function EditPopup({ onClose, onSubmit }) {
                 });
             };
         } else {
-            alert('Only Images Allowed');
+            toast.error('Only Images Allowed');
         }
     };
 
@@ -63,8 +64,9 @@ function EditPopup({ onClose, onSubmit }) {
             await batch.commit();
             
             onSubmit();
+            toast.success("Profile Updated!");
         } catch (err) {
-            alert(err);
+            toast.error(err);
         }
     };
     

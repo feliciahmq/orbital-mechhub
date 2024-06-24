@@ -1,0 +1,32 @@
+.reviews {
+    .average-stars {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        p {
+            font-size: 20px;
+            font-weight: 400;
+            margin: 4px;
+        }
+
+        .stars {
+            font-size: 28px;
+            .star-icon {
+                color: #FF4B2B;
+            }
+            .star-empty {
+                color: #a9a9a9;
+            }
+        }
+    }
+    .review-list {
+        h3 {
+            padding-left: 20px;
+            font-size: 20px;
+            font-weight: 400;
+            
+        }
+    }
+}

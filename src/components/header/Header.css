@@ -1,13 +1,13 @@
 .navbar {
-    margin: 0 auto;
-    padding: 0 24px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
     position: fixed;
-    top: 0; 
+    padding: 0 12px;
+    top: 0;
     left: 0;
-    right: 0; 
-    z-index: 1000; 
+    right: 0;
+    z-index: 1000;
     background-color: white;
     height: 52px;
     border-bottom: 1px solid rgb(240, 240, 240);
@@ -15,30 +15,29 @@
     .MechHub_Logo {
         width: 160px;
         height: 32px;
-        position: absolute;
-        left: 20px;
-        top: 8px;
         cursor: pointer;
     }
-    
+
     .hamburger {
         display: none;
         font-size: 30px;
         cursor: pointer;
         position: absolute;
         right: 24px;
-        top: 16px;
+        top: 8px;
     }
-    
+
     ul {
         list-style: none;
         display: inline-flex;
         column-gap: 30px;
         align-items: center;
         margin: 0;
-        padding: 20px 0; 
+        padding: 20px 0;
     }
+
     a {
+        width: 20px;
         font-size: 12px;
         text-decoration: none;
         color: #000;
@@ -47,65 +46,115 @@
     a:hover {
         color: red;
     }
+    
+    .closed {
+        width: fit-content;
+    }
 
-    .likes {
+    .likes, .notifs {
         padding: 5px 10px;
         border-radius: 10px;
-        background: #FD634C;
-        color: #fff;
-        border: 1px solid rgb(255, 247, 209);
         display: flex;
         align-items: center;
+        position: relative;
     }
-    
-    .likes:hover {
-        color: #fff;
-        transform: scale(1.05);
-        filter: brightness(0.85);
-    }
-    
+
     .likes span {
-        display: inline-block;
-        padding-left: 5px;
+        color: white;
+        border-radius: 50%;
+        width: 12px;
+        height: 12px;
+        align-items: center;
+        justify-content: center;
+        background-color: #FD634C;
+        display: flex;
+        font-size: 8px;
         font-weight: 500;
+        position: absolute;
+        top: -1px;
+        right: -1px;
     }
-    
+
+    .notifs span {
+        color: white;
+        border-radius: 50%;
+        width: 14px;
+        height: 12px;
+        align-items: center;
+        justify-content: center;
+        background-color: #FD634C;
+        display: flex;
+        font-size: 8px;
+        font-weight: 500;
+        position: absolute;
+        top: -1px;
+        right: -1px;
+    }
+
+    .open {
+        top: 52px;
+        background-color: white;
+
+        .likes {
+            display: block;
+        }
+    }
+
+    .header-searchbar {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+    }
+
     @media screen and (max-width: 768px) {
         .hamburger {
             display: block;
         }
-    
+
         ul {
             display: none;
             flex-direction: column;
             position: absolute;
             top: 80px;
             right: 0;
-            background-color: white;
             width: 100%;
             padding: 0;
             margin: 0;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
         }
-    
+
         ul.open {
+            width: 200px;
             display: flex;
+
+            .header-dropdown {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+
+                margin: 8px;
+                cursor: pointer;
+            }
+
+            p {
+                margin: 0 8px;
+            }
         }
-    
+
         ul li {
             text-align: center;
             width: 100%;
             padding: 10px 0;
         }
-    
+
         ul li a {
             width: 100%;
             padding: 10px 0;
         }
-    
+
         .likes {
             border-radius: 0;
         }
     }
-    
 }
