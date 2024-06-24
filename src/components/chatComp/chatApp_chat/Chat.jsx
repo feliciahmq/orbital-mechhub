@@ -161,7 +161,9 @@ const Chat = () => {
                 <div className="emoji">
                     <img src="/src/assets/chat-icons/emoji.png" 
                         alt="" 
-                        onClick={() => setOpen((prev) => !prev)} />
+                        onClick={() => !isCurrentUserBlocked && !isReceiverBlocked && setOpen((prev) => !prev)}
+                        className={(isCurrentUserBlocked || isReceiverBlocked) ? 'disabled' : ''}
+                        />
                     <div className="picker">
                         <EmojiPicker open={open} onEmojiClick={handleEmoji} />
                     </div>

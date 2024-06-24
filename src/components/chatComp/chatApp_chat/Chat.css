@@ -150,11 +150,17 @@
         .emoji {
             position: relative;
 
+            img.disabled {
+                cursor: not-allowed;
+            }        
+
             .picker {
                 position: absolute;
                 bottom: 50px;
                 left: 0;
+
             }
+
         }
 
         .sendButton {
