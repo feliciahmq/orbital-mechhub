@@ -101,6 +101,8 @@
                     padding: 20px;
                     background-color: rgba(19, 32, 68, 0.45);
                     border-radius: 10px;
+                    word-break: break-word; 
+                    white-space: normal; 
                 }
 
                 span {
