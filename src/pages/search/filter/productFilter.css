@@ -100,4 +100,13 @@
         width: 100%;
         top: 24px;
     }
+
+    .filter-group label {
+        font-size: 12px;
+    }
+    .display {
+        position: relative;
+        font-size: 12px;
+        top: -6px;
+    }
 }

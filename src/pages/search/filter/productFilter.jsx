@@ -78,7 +78,7 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
                             onChange={handleMaxPriceChange}
                         />
                     </div>
-                    <div>
+                    <div className='display'>
                         <span>{priceRange[0]}</span> - <span>{priceRange[1]}</span>
                     </div>
                 </div>

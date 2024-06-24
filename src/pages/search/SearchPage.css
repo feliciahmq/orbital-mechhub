@@ -34,4 +34,12 @@
     padding: 12px;
     top: 100px;
 }
+
+.product-filter {
+    font-size: 16px;
+}
+    .product-filter select {
+        padding: 5px;
+        font-size: 12px;
+    }
 }
