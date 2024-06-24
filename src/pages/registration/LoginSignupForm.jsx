@@ -106,12 +106,8 @@ function LoginSignUpForm() {
             let errorMessage = 'An error occurred.';
             console.log("Firebase Login Error: ", error.code, error.message);
 
-            if (error.code === 'auth/user-not-found') {
-                errorMessage = 'No user found with this email.';
-            } else if (error.code === 'auth/wrong-password') {
-                errorMessage = 'Incorrect password.';
-            } else if (error.code === 'auth/invalid-email') {
-                errorMessage = 'The email address is invalid.';
+            if (error.code === 'auth/invalid-credential') {
+                errorMessage = 'You have entered an invalid username or password';
             }
             toast.error(errorMessage);
         }
