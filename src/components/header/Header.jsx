@@ -102,26 +102,26 @@ function Header() {
                     )
                 ) : (
                     <>
-                        <div className='header-dropdown'>
-                            <FaComment onClick={handleChats} cursor="pointer" />
+                        <div className='header-dropdown' onClick={handleChats}>
+                            <FaComment cursor="pointer" />
                             <p>Chats</p>
                         </div>
-                        <div className='header-dropdown'>
+                        <div className='header-dropdown' onClick={handleLikes}>
                             <div className='likes'>
-                                <FaHeart onClick={handleLikes} cursor="pointer" />
+                                <FaHeart cursor="pointer" />
                                 {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
                             </div>
                             <p>Likes</p>
                         </div>
-                        <div className='header-dropdown'>
+                        <div className='header-dropdown' onClick={handleNotifs}>
                             <div className='notifs'>
-                                <FaBell onClick={handleNotifs} cursor="pointer" />
+                                <FaBell cursor="pointer" />
                                 {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
                             </div>
                             <p>notifications</p>
                         </div>
-                        <div className='header-dropdown'>
-                            <FaUserAlt onClick={handleProfile}  />
+                        <div className='header-dropdown' onClick={handleProfile}>
+                            <FaUserAlt />
                             <p>profile</p>
                         </div>
                     </>
