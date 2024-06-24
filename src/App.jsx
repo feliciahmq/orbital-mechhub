@@ -8,34 +8,38 @@ import LoginSignupForm from "./pages/registration/LoginSignupForm";
 import UserProfile from "./pages/userprofile/UserProfile";
 import SearchPage from "./pages/search/SearchPage";
 import ListingPage from "./pages/listing/Listing";
-import ProductPage from "./pages/viewproduct/ViewProduct";
-import LikesPage from "./pages/likes/Likes";
+import Chat from "./pages/chatapp/ChatApp";
 import ReviewPage from "./pages/review/Review";
 import NotificationsPage from "./pages/notificaiton/Notificaitons";
+import ProductPage from "./pages/viewproduct/ViewProduct";
+import LikesPage from "./pages/likes/Likes";
 
 const App = () => {
-	return (
-		<AuthProvider>
-			<LikeCountProvider>
-				<Toaster />
-				<Router>
-					<Routes>
-						<Route path="/" element={<LandingPage />} />
-						<Route path="/account" element={<LoginSignupForm />} />
-						<Route path="/profile" element={<UserProfile />} />
-						<Route path="/profile/:userID" element={<UserProfile />} />
-						<Route path="/search" element={<SearchPage />} />
-						<Route path="/listing" element={<ListingPage />} />
-						<Route path="/listing/:listingID" element={<ListingPage />} />
-						<Route path="/product/:listingID" element={<ProductPage />} />
-						<Route path="/likes/:userID" element={<LikesPage />} />
-						<Route path="/review/:userID" element={<ReviewPage />} />
-						<Route path="/notifications/:userID" element={<NotificationsPage />} />
-					</Routes>
-				</Router>
-			</LikeCountProvider>
-		</AuthProvider>
-	);
+return (
+	<AuthProvider>
+	<LikeCountProvider>
+
+	<Toaster />
+	<Router>
+		<Routes>
+		<Route path="/" element={<LandingPage />} />
+		<Route path="/account" element={<LoginSignupForm />} />
+		<Route path="/profile" element={<UserProfile />} />
+		<Route path="/profile/:userID" element={<UserProfile />} />
+		<Route path="/search" element={<SearchPage />} />
+		<Route path="/listing" element={<ListingPage />} />
+		<Route path="/listing/:listingID" element={<ListingPage />} />
+		<Route path="/product/:listingID" element={<ProductPage />} />
+		<Route path="/likes/:userID" element={<LikesPage />} />
+		<Route path="/review/:userID" element={<ReviewPage />} />
+		<Route path="/notifications/:userID" element={<NotificationsPage />} />
+		<Route path="/chat" element={<Chat />} />
+		<Route path="/chat/:userID" element={<Chat />} />
+		</Routes>
+	</Router>
+	</LikeCountProvider>
+	</AuthProvider>
+);
 }
 
 export default App;

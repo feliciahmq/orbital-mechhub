@@ -4,7 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLikes } from './likecounter/LikeCounter';
 import { FaComment, FaHeart, FaUserAlt, FaBell } from 'react-icons/fa';
 import { query, collection, where, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase/firebaseConfig';
+import { db } from '../../lib/firebaseConfig';
 
 import SearchBar from '../searchbar/Searchbar';
 import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
@@ -54,7 +54,7 @@ function Header() {
     };
 
     const handleChats = () => {
-        navigate(`/`);
+        window.location.href = `/chat/${currentUser.uid}`;
     };
 
     const handleNotifs = () => {
