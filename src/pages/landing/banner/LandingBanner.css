@@ -59,6 +59,13 @@
     .banner img {
         display: none;
     }
+
+    .banner h1 {
+        font-size: 32px;
+    }
+    .banner p {
+        font-size: 16px;
+    }
     .faq {
         display: none;
     }

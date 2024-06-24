@@ -8,6 +8,7 @@ import { db } from '../../lib/firebaseConfig';
 
 import SearchBar from '../searchbar/Searchbar';
 import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
+import Mechhub_Logo_Mobile from "../../assets/Logo/MH_logo.png";
 import "./Header.css";
 
 function Header() {
@@ -71,11 +72,20 @@ function Header() {
 
     return (
         <nav className='navbar'>
-            <img 
-                src={MechHub_Logo} 
-                className="MechHub_Logo"
-                onClick={handleLogoClick} 
-            />
+            {!isMobile ? (
+                <img 
+                    src={MechHub_Logo} 
+                    className="MechHub_Logo"
+                    onClick={handleLogoClick} 
+                />
+            ) : (
+                <img 
+                    src={Mechhub_Logo_Mobile} 
+                    className="MechHub_Logo_Mobile"
+                    onClick={handleLogoClick} 
+                />
+            )
+            }
             <div className='header-searchbar'>
                 <SearchBar onSearch={setSearchQuery} />
             </div>
