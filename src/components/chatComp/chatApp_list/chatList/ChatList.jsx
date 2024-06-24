@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './ChatList.css';
 import AddUser from '/src/components/chatComp/chatApp_list/addUser/addUser.jsx';
 import { useUserStore } from '../../../../lib/userStore';
-import { doc, onSnapshot, getDoc } from 'firebase/firestore';
+import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../lib/firebaseConfig';
 import { useChatStore } from '../../../../lib/chatStore';
 
@@ -61,7 +61,7 @@ const ChatList = () => {
                 chats: userChats,
             })
             changeChat(chat.chatId, chat.user);
-            
+
         } catch (err) {
             console.log(err);
         }
