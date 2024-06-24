@@ -9,6 +9,8 @@ import { useChatStore } from '../../../../lib/chatStore';
 const ChatList = () => {
     const [chats, setChats] = useState([]);
     const [addMode, setAddMode] = useState(false);
+    const [input, setInput] = useState("");
+
     const { currentUser } = useUserStore();
     const { changeChat } = useChatStore();
 
@@ -65,27 +67,40 @@ const ChatList = () => {
         } catch (err) {
             console.log(err);
         }
-    }
+    };
+
+    const filteredChats = chats.filter((c) => 
+        c.user.username.toLowerCase().includes(input.toLowerCase())
+    );
 
     return (
         <div className='chatList'>
             <div className='search'>
                 <div className="searchBar">
                     <img src="/src/assets/chat-icons/search.png" alt="" />
-                    <input type="text" placeholder='Search ' />
+                    <input type="text" 
+                        placeholder="Search" 
+                        onChange={(e) => setInput(e.target.value)}/>
                 </div>
                 <img src={addMode ? "/src/assets/chat-icons/minus.png" : "/src/assets/chat-icons/plus.png"} alt="" className="add"
                     onClick={() => setAddMode((prev) => !prev)} />
             </div>
-            {chats.map((chat) => (
+            {filteredChats.map((chat) => (
                 <div className="item" key={chat.chatId} 
                     onClick={() => handleSelect(chat)}
                     style= {{
                         backgroundColor: chat?.isSeen ? "transparent" : "#5083FE",
                     }}>
-                    <img src={chat.user.profilePic || "/src/assets/chat-icons/avatar.png"} alt="" />
+                    <img src={chat.user.blocked.includes(currentUser.id) 
+                        ? "/src/assets/chat-icons/avatar.png"
+                        : chat.user.profilePic 
+                        || "/src/assets/chat-icons/avatar.png"} 
+                        alt="" />
                     <div className="texts">
-                        <span>{chat.user.username}</span>
+                        <span>{chat.user.blocked.includes(currentUser.id) 
+                            ? "User" 
+                            : chat.user.username}
+                        </span>
                         <p>{chat.lastMessage}</p>
                     </div>
                 </div>
