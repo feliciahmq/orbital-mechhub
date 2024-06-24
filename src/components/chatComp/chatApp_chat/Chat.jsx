@@ -118,7 +118,7 @@ const Chat = () => {
         <div className='chat'>
             <div className="top">
                 <div className="user">
-                    <img src={user?.profilePic || "/src/assets/chat-icons/avatar.png"} alt="" />
+                    <img src={user?.profilePic || "/chat-icons/avatar.png"} alt="" />
                     <div className="texts">
                         <span>{user?.username}</span>
                     </div>
@@ -149,7 +149,7 @@ const Chat = () => {
             <div className="bottom">
                 <div className="icons">
                     <label htmlFor="file">
-                        <img src="/src/assets/chat-icons/img.png" alt="" />
+                        <img src="/chat-icons/img.png" alt="" />
                     </label>
                     <input type="file" id="file" style={{display:"none"}} onChange={handleImg}/>
                 </div>
@@ -159,7 +159,7 @@ const Chat = () => {
                     onChange={e=>setText(e.target.value)} 
                     disabled={isCurrentUserBlocked || isReceiverBlocked} />
                 <div className="emoji">
-                    <img src="/src/assets/chat-icons/emoji.png" 
+                    <img src="/chat-icons/emoji.png" 
                         alt="" 
                         onClick={() => !isCurrentUserBlocked && !isReceiverBlocked && setOpen((prev) => !prev)}
                         className={(isCurrentUserBlocked || isReceiverBlocked) ? 'disabled' : ''}

@@ -78,7 +78,7 @@ const addUser = () => {
         {user ? (
         <div className="user">
           <div className="detail">
-            <img src={user.profilePic || "/src/assets/chat-icons/avatar.png"} alt="" />
+            <img src={user.profilePic || "/chat-icons/avatar.png"} alt="" />
             <span>{user.username}</span>
           </div>
           <button onClick={handleAdd}>Add User</button>

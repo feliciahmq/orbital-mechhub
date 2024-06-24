@@ -10,7 +10,7 @@ const Detail = () => {
   const { currentUser } = useUserStore();
   const [photos, setPhotos] = useState([]);
   const [showPhotos, setShowPhotos] = useState(false);
-  const [icon, setIcon] = useState("/src/assets/chat-icons/arrowDown.png");
+  const [icon, setIcon] = useState("/chat-icons/arrowDown.png");
 
   useEffect(() => {
     if (!chatId) return;
@@ -46,13 +46,13 @@ const Detail = () => {
 
   const toggleShowPhotos = () => {
     setShowPhotos(!showPhotos);
-    setIcon(showPhotos ? "/src/assets/chat-icons/arrowDown.png" : "/src/assets/chat-icons/arrowUp.png");
+    setIcon(showPhotos ? "/chat-icons/arrowDown.png" : "/chat-icons/arrowUp.png");
   };
 
   return (
     <div className='detail'>
       <div className="user">
-        <img src={user?.profilePic || "/src/assets/chat-icons/avatar.png"} alt="" />
+        <img src={user?.profilePic || "/chat-icons/avatar.png"} alt="" />
         <h2>{user?.username}</h2>
       </div>
       <div className="info">
@@ -72,7 +72,7 @@ const Detail = () => {
                     <span>{photo.id}</span>
                   </div>
                   <a href={photo.url} target="_blank">
-                    <img src="/src/assets/chat-icons/download.png" alt="Download" className='icon'/>
+                    <img src="/chat-icons/download.png" alt="Download" className='icon'/>
                   </a>
                 </div>
               ))}

@@ -77,12 +77,12 @@ const ChatList = () => {
         <div className='chatList'>
             <div className='search'>
                 <div className="searchBar">
-                    <img src="/src/assets/chat-icons/search.png" alt="" />
+                    <img src="/chat-icons/search.png" alt="" />
                     <input type="text" 
                         placeholder="Search" 
                         onChange={(e) => setInput(e.target.value)}/>
                 </div>
-                <img src={addMode ? "/src/assets/chat-icons/minus.png" : "/src/assets/chat-icons/plus.png"} alt="" className="add"
+                <img src={addMode ? "/chat-icons/minus.png" : "/chat-icons/plus.png"} alt="" className="add"
                     onClick={() => setAddMode((prev) => !prev)} />
             </div>
             {filteredChats.map((chat) => (
@@ -92,9 +92,9 @@ const ChatList = () => {
                         backgroundColor: chat?.isSeen ? "transparent" : "#5083FE",
                     }}>
                     <img src={chat.user.blocked.includes(currentUser.id) 
-                        ? "/src/assets/chat-icons/avatar.png"
+                        ? "/chat-icons/avatar.png"
                         : chat.user.profilePic 
-                        || "/src/assets/chat-icons/avatar.png"} 
+                        || "/chat-icons/avatar.png"} 
                         alt="" />
                     <div className="texts">
                         <span>{chat.user.blocked.includes(currentUser.id) 
