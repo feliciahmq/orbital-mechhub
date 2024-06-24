@@ -111,6 +111,7 @@ function Header() {
                         <li><Link to="/account">Register/ Login</Link></li>
                     )
                 ) : (
+                    currentUser ? (
                     <>
                         <div className='header-dropdown' onClick={handleChats}>
                             <FaComment cursor="pointer" />
@@ -135,6 +136,9 @@ function Header() {
                             <p>profile</p>
                         </div>
                     </>
+                    ) : (
+                         <li><Link to="/account">Register/ Login</Link></li>
+                    )
                 )}
             </ul>
         </nav>
