@@ -251,9 +251,6 @@ function UserProfile() {
 									Edit Profile
 								</button>
 								{isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
-                <button className="chat-button" onClick={handleChatNavigation}>
-                  Chat
-                </button>
 								<button className="logout" onClick={handleLogout}>
 									Logout
 								</button>
