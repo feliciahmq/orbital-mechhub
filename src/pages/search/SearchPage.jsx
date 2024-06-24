@@ -33,7 +33,9 @@ function SearchPage() {
             const listingsData = await Promise.all(data.docs.map(async (doc) => {
                 const listing = { id: doc.id, ...doc.data() };
                 const weeklyClicks = await getWeeklyClicks(doc.id);
-                return { ...listing, weeklyClicks };
+                const likes = await getLikes(doc.id);
+                const offers = await getOffers(doc.id);
+                return { ...listing, weeklyClicks, likes, offers };
             }));
             setProducts(listingsData);
             setFilteredProducts(listingsData);
@@ -51,6 +53,18 @@ function SearchPage() {
         const weekStart = getWeekStart();
         const clickCountDoc = await getDoc(doc(db, 'listings', listingId, 'clickCount', weekStart.toString()));
         return clickCountDoc.exists() ? clickCountDoc.data().count : 0;
+    };
+
+    const getLikes = async (listingId) => {
+        const likesCollection = query(collection(db, 'Likes'), where('listingID', '==', listingId));
+        const likesSnapshot = await getDocs(likesCollection);
+        return likesSnapshot.size;
+    };
+
+    const getOffers = async (listingId) => {
+        const offersCollection = collection(db, 'listings', listingId, 'offers');
+        const offersSnapshot = await getDocs(offersCollection);
+        return offersSnapshot.size;
     };
 
     const getWeekStart = () => {
@@ -89,7 +103,7 @@ function SearchPage() {
         } else if (order === 'best-match') {
             sorted = sorted.sort((a, b) => calculateRelevance(b, query) - calculateRelevance(a, query));
         } else if (order === 'featured') {
-            sorted.sort((a, b) => b.weeklyClicks - a.weeklyClicks);
+            sorted.sort((a, b) => calculateFeaturedScore(b) - calculateFeaturedScore(a));
         }
 
         return sorted;
@@ -104,6 +118,11 @@ function SearchPage() {
         if (product.productType?.toLowerCase().includes(lowerCaseQuery)) relevance += 1;
 
         return relevance;
+    };
+
+    const calculateFeaturedScore = (product) => {
+        const { weeklyClicks, likes, offers } = product;
+        return (weeklyClicks * 0.5) + (likes * 0.3) + (offers * 0.2);
     };
 
     useEffect(() => {
