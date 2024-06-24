@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import { addDoc, collection, doc, getDoc, setDoc, deleteDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase/firebaseConfig';
+import { db } from '../../lib/firebaseConfig';
 import { useAuth } from '../../Auth'; 
 import { useLikes } from '../header/likecounter/LikeCounter';
 

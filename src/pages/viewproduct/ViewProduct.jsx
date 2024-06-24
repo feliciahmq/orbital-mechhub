@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
-import { db } from '../../firebase/firebaseConfig';
+import { db } from '../../lib/firebaseConfig';
 import { useAuth } from '../../Auth';
 import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
 import { FaEllipsisVertical } from 'react-icons/fa6';

@@ -3,14 +3,13 @@ import GoogleLogo from '../../assets/google-logo.png';
 import defaultProfile from '../../assets/defaultProfile.jpg';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-
-import './LoginSignupForm.css';
-import Header from '../../components/header/Header';
-
-import { auth, db } from "../../firebase/firebaseConfig";
+import { auth, db } from "../../lib/firebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { query, collection, where, getDocs, doc, setDoc } from "firebase/firestore";
 import { signInWithGoogle } from './GoogleAuth';
+
+import './LoginSignupForm.css';
+import Header from '../../components/header/Header';
 
 function LoginSignUpForm() {
     const [rightPanelActive, setRightPanelActive] = useState(false);
@@ -63,9 +62,17 @@ function LoginSignUpForm() {
                 await setDoc(userDocRef, {
                     username: username,
                     email: user.email,
+                    id : user.uid,
                     profilePic: defaultProfile,
+                    blocked: [],
                     signUpDate: new Date().toISOString(),
                 });
+
+                const userChatDoc = doc(db, "UserChats", user.uid);
+                await setDoc(userChatDoc, {
+                    chats: [],
+                });
+                
                 console.log("User ID:", user.uid);
                 toast.success("Account created successfully.");
                 navigate(`/profile/${user.uid}`);

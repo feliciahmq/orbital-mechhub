@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { auth, db } from '../../firebase/firebaseConfig';
+import { auth, db } from '/src/lib/firebaseConfig';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, collection, getDocs, query, addDoc, where, setDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
@@ -14,6 +14,8 @@ import Header from '../../components/header/Header';
 import ListingButton from '../../components/listingpopup/Button';
 import ProductList from '../../components/productcards/ProductList';
 import './UserProfile.css';
+
+const defaultProfilePic = "/src/assets/defaultProfile.jpg"; 
 
 function UserProfile() {
 	const { userID } = useParams();
@@ -228,7 +230,7 @@ function UserProfile() {
 			<div className="profile-container">
 				<div className='profile-info-container'>
 					<div className='profile-info'>
-						<div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic})` }} />
+						<div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic || defaultProfilePic})` }} />
 						<p>@{userInfo.username}</p>
 						<p className='join-date'><FaCalendarAlt /> Joined {userInfo.signUpDate}</p>
 						<div className='follow-info'>

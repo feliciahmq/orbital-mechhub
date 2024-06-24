@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '../../../firebase/firebaseConfig';
+import { db } from '../../../lib/firebaseConfig';
 import { FaStar } from 'react-icons/fa';
 
 import './UserReviews.css';
