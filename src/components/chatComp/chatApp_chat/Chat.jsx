@@ -67,7 +67,7 @@ const Chat = () => {
 
         try {
             if (img.file) {
-                imgUrl = await upload(img.file);
+                imgUrl = await upload(img.file, chatId);
             }
 
             await updateDoc(doc(db, "Chats", chatId), {

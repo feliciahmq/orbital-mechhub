@@ -1,12 +1,33 @@
-import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { arrayRemove, arrayUnion, doc, updateDoc, collection, query, where, onSnapshot } from 'firebase/firestore';
 import { useChatStore } from '../../../lib/chatStore';
 import { useUserStore } from '../../../lib/userStore';
-import './Detail.css';
 import { db } from '../../../lib/firebaseConfig';
+import './Detail.css';
 
 const Detail = () => {
   const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, changeBlock } = useChatStore();
   const { currentUser } = useUserStore();
+  const [photos, setPhotos] = useState([]);
+  const [showPhotos, setShowPhotos] = useState(false);
+  const [icon, setIcon] = useState("/src/assets/chat-icons/arrowDown.png");
+
+  useEffect(() => {
+    if (!chatId) return;
+
+    const photosRef = collection(db, 'photos');
+    const q = query(photosRef, where('chatId', '==', chatId));
+
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const photosData = [];
+      querySnapshot.forEach((doc) => {
+        photosData.push({ id: doc.id, ...doc.data() });
+      });
+      setPhotos(photosData);
+    });
+
+    return () => unsubscribe();
+  }, [chatId]);
 
   const handleBlock = async () => {
     if (!user) return;
@@ -23,6 +44,11 @@ const Detail = () => {
     }
   }
 
+  const toggleShowPhotos = () => {
+    setShowPhotos(!showPhotos);
+    setIcon(showPhotos ? "/src/assets/chat-icons/arrowDown.png" : "/src/assets/chat-icons/arrowUp.png");
+  };
+
   return (
     <div className='detail'>
       <div className="user">
@@ -33,24 +59,25 @@ const Detail = () => {
         <div className="option">
           <div className="setting">
             <span>Shared Photos</span>
-            <img src="/src/assets/chat-icons/arrowDown.png" alt="" />
+            <button onClick={toggleShowPhotos} style={{ background: 'none', border: 'none', padding: 0 }}>
+              <img src={icon} alt="" />
+            </button>
           </div>
-          <div className="photos">
-            <div className="photoItem">
-              <div className="photoDetail">
-                <img src="https://plus.unsplash.com/premium_photo-1718235358876-ed7d63466e11?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                <span>photo_2024_2.png</span>
-              </div>
-              <img src="/src/assets/chat-icons/download.png" alt="" className='icon' />
+          {showPhotos && (
+            <div className="photos">
+              {photos.map((photo) => (
+                <div className="photoItem" key={photo.id}>
+                  <div className="photoDetail">
+                    <img src={photo.url} alt="" />
+                    <span>{photo.id}</span>
+                  </div>
+                  <a href={photo.url} target="_blank">
+                    <img src="/src/assets/chat-icons/download.png" alt="Download" className='icon'/>
+                  </a>
+                </div>
+              ))}
             </div>
-            <div className="photoItem">
-              <div className="photoDetail">
-                <img src="https://plus.unsplash.com/premium_photo-1718235358876-ed7d63466e11?q=80&w=987&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="" />
-                <span>photo_2024_2.png</span>
-              </div>
-              <img src="/src/assets/chat-icons/download.png" alt="" className='icon' />
-            </div>
-          </div>
+          )}
         </div>
         <span></span>
         <button onClick={handleBlock}>{
