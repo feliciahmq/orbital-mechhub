@@ -18,6 +18,11 @@
         cursor: pointer;
     }
 
+    .MechHub_Logo_Mobile {
+        height: 32px;
+        cursor: pointer;
+    }
+
     .hamburger {
         display: none;
         font-size: 30px;
@@ -111,6 +116,12 @@
             display: block;
         }
 
+        .banner {
+            h1 {
+                font-size: 20px;
+            }
+        }
+
         ul {
             display: none;
             flex-direction: column;
@@ -132,7 +143,6 @@
                 flex-direction: row;
                 flex-wrap: wrap;
                 justify-content: center;
-
                 margin: 8px;
                 cursor: pointer;
             }
