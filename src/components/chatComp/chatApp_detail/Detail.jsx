@@ -1,4 +1,4 @@
-import { arrayUnion, doc, updateDoc } from 'firebase/firestore';
+import { arrayRemove, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { useChatStore } from '../../../lib/chatStore';
 import { useUserStore } from '../../../lib/userStore';
 import './Detail.css';
@@ -28,21 +28,8 @@ const Detail = () => {
       <div className="user">
         <img src={user?.profilePic || "/src/assets/chat-icons/avatar.png"} alt="" />
         <h2>{user?.username}</h2>
-        <p>Lorem ipsum dolor sit amet.</p>
       </div>
       <div className="info">
-        <div className="option">
-          <div className="setting">
-            <span>Chat Settings</span>
-            <img src="/src/assets/chat-icons/arrowUp.png" alt="" />
-          </div>
-        </div>
-        <div className="option">
-          <div className="setting">
-            <span>Privacy & Help</span>
-            <img src="/src/assets/chat-icons/arrowUp.png" alt="" />
-          </div>
-        </div>
         <div className="option">
           <div className="setting">
             <span>Shared Photos</span>
@@ -65,17 +52,12 @@ const Detail = () => {
             </div>
           </div>
         </div>
-        <div className="option">
-          <div className="setting">
-            <span>Shared Files</span>
-            <img src="/src/assets/chat-icons/arrowUp.png" alt="" />
-          </div>
-        </div>
+        <span></span>
         <button onClick={handleBlock}>{
           isCurrentUserBlocked 
           ? "You are blocked" 
           : isReceiverBlocked 
-          ? "User blocked" 
+          ? "Unblock user" 
           : "Block user" 
         }</button>
       </div>

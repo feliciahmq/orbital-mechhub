@@ -6,6 +6,7 @@ import { db } from '../../../lib/firebaseConfig';
 import { useChatStore } from '../../../lib/chatStore';
 import { useUserStore } from '../../../lib/userStore';
 import upload from '../../../lib/upload';
+import { formatDistanceToNow, isValid } from 'date-fns';
 
 const Chat = () => {
     const [chat, setChat] = useState();
@@ -73,7 +74,7 @@ const Chat = () => {
                 messages: arrayUnion({
                     senderId: currentUser.id,
                     text,
-                    createdAt: new Date(),
+                    createdAt: new Date().toString(),
                     ...(imgUrl && { img: imgUrl }),
                 }),
             });
@@ -120,28 +121,24 @@ const Chat = () => {
                     <img src={user?.profilePic || "/src/assets/chat-icons/avatar.png"} alt="" />
                     <div className="texts">
                         <span>{user?.username}</span>
-                        <p>Lorem ipsum dolar, sit amet.</p>
                     </div>
                 </div>
                 <div className="icons">
-                    <img src="/src/assets/chat-icons/phone.png" alt="" />
-                    <img src="/src/assets/chat-icons/video.png" alt="" />
-                    <img src="/src/assets/chat-icons/info.png" alt="" />
                 </div>
             </div>
             <div className="center">
-                {chat?.messages?.map((message) => (
-                    <div className={message.senderId === currentUser?.id ? "message own" : "message"} key={message?.createdAt}>
-                    <div className="texts">
-                        {message.img && <img 
-                            src={message.img} 
-                            alt="" 
-                        />}
-                        <p>{message.text}</p>
-                        {/* <span>{message.createdAt}</span> */}
-                    </div>
-                </div>
-                ))}
+                {chat?.messages?.map((message) => {
+                    const parsedDate = new Date(message.createdAt);
+                    return (
+                        <div className={message.senderId === currentUser?.id ? "message own" : "message"} key={message?.createdAt}>
+                            <div className="texts">
+                                {message.img && <img src={message.img} alt="" />}
+                                <p>{message.text}</p>
+                                <span>{isValid(parsedDate) ? formatDistanceToNow(parsedDate, { addSuffix: true }) : "Invalid date"}</span>
+                            </div>
+                        </div>
+                    );
+                })}
                 {img.url && <div className="message own">
                     <div className="texts">
                         <img src={img.url} alt="" />
@@ -155,8 +152,6 @@ const Chat = () => {
                         <img src="/src/assets/chat-icons/img.png" alt="" />
                     </label>
                     <input type="file" id="file" style={{display:"none"}} onChange={handleImg}/>
-                    <img src="/src/assets/chat-icons/camera.png" alt="" />
-                    <img src="/src/assets/chat-icons/mic.png" alt="" />
                 </div>
                 <input type="text" 
                     placeholder={(isCurrentUserBlocked || isReceiverBlocked) ? "You cannot send a message" : "Type a message"}
