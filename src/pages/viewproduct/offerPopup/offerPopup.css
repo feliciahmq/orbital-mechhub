@@ -1,4 +1,4 @@
-.popup-overlay {
+.offer-popup-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -11,7 +11,7 @@
     z-index: 1000;
 }
 
-.popup {
+.offer-popup {
     background: white;
     width: 300px;
     height: 300px;
@@ -43,21 +43,21 @@
     color: black;
 }
 
-.popup-group {
+.offer-popup-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 20px;
     width: 100%;
 }
 
-.popup-group label {
+.offer-popup-group label {
     font-size: 16px;
     margin-bottom: 5px;
     align-self: center;
 }
 
-.popup-group input,
-.popup-group textarea {
+.offer-popup-group input,
+.offer-popup-group textarea {
     width: 100%;
     padding: 10px;
     font-size: 16px;
@@ -66,7 +66,7 @@
     border-radius: 5px;
 }
 
-.popup-group textarea {
+.offer-popup-group textarea {
     height: 100px; 
 }
 

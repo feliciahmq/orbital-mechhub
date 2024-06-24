@@ -45,11 +45,11 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
     };
 
     return (
-        <div className="popup-overlay">
-            <div className="popup">
+        <div className="offer-popup-overlay">
+            <div className="offer-popup">
                 <button className="close-button" onClick={onClose}>X</button>
                 <form onSubmit={handleOfferSubmit} className='offer-form'>
-                    <div className="popup-group">
+                    <div className="offer-popup-group">
                         <label>Offer Price:</label>
                         <input 
                             type="number" 
@@ -59,7 +59,7 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
                             required
                         />
                     </div>
-                    <div className="popup-group">
+                    <div className="offer-popup-group">
                         <label>Comments:</label>
                         <textarea 
                             name="comments"
