@@ -64,7 +64,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
             });
 
             onOfferAccept();
-            toast.success(`AcceptedOffer from ${offer.userID}`);
+            toast.success(`AcceptedOffer from ${usernames[offer.userID]}`);
         } catch (err) {
             console.error('Error accepting offer:', err.message);
         }
@@ -83,7 +83,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
             });
 
             onOfferReject();
-            toast.success(`Rejected Offer from ${offer.userID}`);
+            toast.success(`Rejected Offer from ${usernames[offer.userID]}`);
         } catch (err) {
             console.error('Error rejecting offer:', err.message);
         }
