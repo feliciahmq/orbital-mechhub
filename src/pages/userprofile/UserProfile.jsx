@@ -6,6 +6,7 @@ import { useAuth } from '../../Auth';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 import { FaCalendarAlt } from 'react-icons/fa';
+import { toast } from 'react-hot-toast';
 
 import ReviewList from './userReviews/ReviewList';
 import EditPopup from './editUser/EditPopup';
@@ -176,7 +177,7 @@ function UserProfile() {
 				read: false,
 				timestamp: new Date()
 			});
-			console.log('Successfully followed the user');
+			toast.success(`Successfully Followed`);
 			} catch (err) {
 			console.error('Error following user: ', err);
 			}

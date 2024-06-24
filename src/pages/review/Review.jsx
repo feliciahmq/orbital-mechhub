@@ -4,6 +4,8 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { collection, doc, getDoc, addDoc } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
 import { FaStar } from "react-icons/fa";
+import { toast } from 'react-hot-toast';
+
 import Header from "../../components/header/Header";
 import './Review.css';
 
@@ -51,11 +53,11 @@ function ReviewPage() {
         e.preventDefault();
 
         if (currentValue === 0) {
-            alert('Please provide a rating.');
+            toast.error('Please provide a rating.');
             return;
         }
         if (formData.details.trim() === "") {
-            alert('Please provide your review details.');
+            toast.error('Please Fill in All Fields');
             return;
         }
 
@@ -73,7 +75,7 @@ function ReviewPage() {
             };
 
             await addDoc(collection(db, 'Reviews'), dataToSubmit);
-            alert('Review Successfully Submitted!');
+            toast.success('Review Successfully Submitted!');
             setFormData({
                 image: "",
                 score: 0,
@@ -94,7 +96,7 @@ function ReviewPage() {
             
             navigate('/');
         } catch (err) {
-            alert('Error :' + err.message);
+            toast.error('Error :' + err.message);
         }
     };
 
@@ -129,7 +131,7 @@ function ReviewPage() {
             };
             fileReader.readAsDataURL(file);
         } else {
-            alert('Only Images Allowed');
+            toast.error('Only Images Allowed');
         }
     };
     

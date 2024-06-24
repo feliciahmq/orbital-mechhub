@@ -126,6 +126,20 @@
         ul.open {
             width: 200px;
             display: flex;
+
+            .header-dropdown {
+                display: flex;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+
+                margin: 8px;
+                cursor: pointer;
+            }
+
+            p {
+                margin: 0 8px;
+            }
         }
 
         ul li {

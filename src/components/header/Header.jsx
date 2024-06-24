@@ -17,6 +17,7 @@ function Header() {
     const [searchQuery, setSearchQuery] = useState('');
     const { likeCount } = useLikes();
     const [unreadCount, setUnreadCount] = useState(0);
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
       const fetchUnreadNotifications = async () => {
@@ -32,6 +33,17 @@ function Header() {
       };
       fetchUnreadNotifications();
     }, [currentUser]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     const toggleMenu = () => {
         setMenuOpen(!menuOpen);
@@ -71,21 +83,48 @@ function Header() {
                 &#9776;
             </div>
             <ul className={menuOpen ? 'open' : 'closed'}>
-                {currentUser ? (
-                    <>
-                        <FaComment onClick={handleChats} cursor="pointer" />
-                        <div className='likes'>
-                            <FaHeart onClick={handleLikes} cursor="pointer" />
-                            {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
-                        </div>
-                        <div className='notifs'>
-                            <FaBell onClick={handleNotifs} cursor="pointer" />
-                            {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
-                        </div>
-                        <FaUserAlt onClick={handleProfile} cursor="pointer" />
-                    </>
+                {!isMobile ? (
+                    currentUser ? (
+                        <>
+                            <FaComment onClick={handleChats} cursor="pointer" />
+                            <div className='likes'>
+                                <FaHeart onClick={handleLikes} cursor="pointer" />
+                                {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
+                            </div>
+                            <div className='notifs'>
+                                <FaBell onClick={handleNotifs} cursor="pointer" />
+                                {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+                            </div>
+                            <FaUserAlt onClick={handleProfile} cursor="pointer" />
+                        </>
+                    ) : (
+                        <li><Link to="/account">Register/ Login</Link></li>
+                    )
                 ) : (
-                    <li><Link to="/account">Register/ Login</Link></li>
+                    <>
+                        <div className='header-dropdown' onClick={handleChats}>
+                            <FaComment cursor="pointer" />
+                            <p>Chats</p>
+                        </div>
+                        <div className='header-dropdown' onClick={handleLikes}>
+                            <div className='likes'>
+                                <FaHeart cursor="pointer" />
+                                {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
+                            </div>
+                            <p>Likes</p>
+                        </div>
+                        <div className='header-dropdown' onClick={handleNotifs}>
+                            <div className='notifs'>
+                                <FaBell cursor="pointer" />
+                                {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+                            </div>
+                            <p>notifications</p>
+                        </div>
+                        <div className='header-dropdown' onClick={handleProfile}>
+                            <FaUserAlt />
+                            <p>profile</p>
+                        </div>
+                    </>
                 )}
             </ul>
         </nav>

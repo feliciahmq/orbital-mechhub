@@ -245,3 +245,51 @@ body {
 		height: 20px;
 	}
 }
+
+@media screen and (max-width: 768px) {
+	.login-signup-container {
+		.container {
+			padding: 12px;
+			width: 100%;
+			min-height: 400px;
+		}
+	}
+    .form-container {
+        width: 100%;
+        position: relative;
+    }
+    .overlay-container, .overlay, .overlay-panel {
+        display: none;
+    }
+    .container .form-container {
+        position: relative;
+        left: 0;
+        transform: translateX(0);
+        opacity: 1;
+        z-index: 5;
+        width: 100%;
+        animation: none;
+    }
+    .toggle-button-container {
+        display: flex;
+        justify-content: center;
+		align-items: center;
+        margin: 20px;
+    }
+	.toggle-button-container .toggle-text {
+		font-size: 12px;
+		font-weight: 100;
+		margin: 10px;
+	}
+    .toggle-button-container .toggle-button {
+        background-color: #FF4B2B;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+}
