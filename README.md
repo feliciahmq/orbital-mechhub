@@ -1,6 +1,8 @@
 # NUS Orbital Project 2024 - MechHub
 Created By **Felicia Hwang** & **Vanessa Lai**
 
+Check out our website here : https://orbital-mechhub.web.app/ 
+
 ## Key Features
 
 ## Tech Stack
