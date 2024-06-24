@@ -297,8 +297,12 @@ function ProductPage() {
                                 <FaEllipsisVertical className='listing-ellipsis' onClick={handleOptionsClick} cursor='pointer' />
                                 {dropdownOpen && (
                                     <div className="dropdown-content">
-                                        <button onClick={handleEditClick}>Edit Listing</button>
-                                        {!listingSold && <button onClick={handleListingSold}>Mark as sold</button>}
+                                        {!listingSold && 
+                                            <>
+                                                <button onClick={handleEditClick}>Edit Listing</button>
+                                                <button onClick={handleListingSold}>Mark as sold</button>
+                                            </>
+                                        }
                                         <button className='delete' onClick={handleDelete}>Delete Listing</button>
                                         {offers.length > 0 && <button onClick={handleViewOffers}>View Offers</button>}
                                     </div>
