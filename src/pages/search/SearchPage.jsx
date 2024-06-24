@@ -134,8 +134,9 @@ function SearchPage() {
             if (!query) return products;
 
             const searchQuery = query.toLowerCase();
+                    console.log(searchQuery);
             return products.filter(product => {
-                const name = product.name ? product.name.toLowerCase() : '';
+                const name = product.title ? product.title.toLowerCase() : '';
                 const productType = product.productType ? product.productType.toLowerCase() : '';
                 const description = product.description ? product.description.toLowerCase() : '';
                 const username = product.username ? product.username.toLowerCase() : '';
