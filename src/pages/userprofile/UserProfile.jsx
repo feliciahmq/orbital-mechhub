@@ -84,7 +84,7 @@ function UserProfile() {
   };
 
   const handleChatNavigation = () => {
-    navigate(`/chat/${currentUser.uid}`);
+    window.location.href = `/chat/${currentUser.uid}`;
   };
 
   return (
