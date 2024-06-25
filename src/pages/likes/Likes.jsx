@@ -54,7 +54,7 @@ function LikesPage() {
                 {/* you can implement the stripe payment css here (can like maybe
                     allow users to choose what to checkout then redirect ? idk just
                     a suggestion lol) */}
-                <h3>this section is for u (◍•ᴗ•◍)❤</h3>
+                <h3>this section is for stripe (◍•ᴗ•◍)❤</h3>
             </div>
         </div>
     );
