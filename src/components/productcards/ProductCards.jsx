@@ -154,7 +154,22 @@ function ProductCards({ productDetail }) {
                 {soldStatus && <div className="sold-banner">Sold</div>}
             </div>
             <h4>{productDetail.title}</h4>
-            <h5>{productDetail.productType}</h5>
+            <h5>{productDetail.productType ==='switches'
+                    ? 'Switches'
+                    : productDetail.productType ==='keycaps'
+                        ? 'Keycaps'
+                        : productDetail.productType ==='fullBuilds'
+                            ? 'Full Builds'
+                            :  productDetail.productType ==='stabilisers'
+                                ? 'Stabilisers'
+                                :  productDetail.productType ==='deskmats'
+                                    ? 'Deskmats'
+                                    :  productDetail.productType ==='cables'
+                                        ? 'Cables'
+                                        :  productDetail.productType ==='groupOrders'
+                                            ? 'Group Orders'
+                                            : 'Others'
+                    }</h5>
             <p>${productDetail.price}</p>
             <div className="product-profile">
                 <img

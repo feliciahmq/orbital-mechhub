@@ -17,7 +17,7 @@ function ListingPage() {
     const [formData, setFormData] = useState({
         title: '',
         image: '',
-        productType: '',
+        productType: 'fullBuilds',
         price: '',
         description: '',
         postDate: '',
@@ -33,7 +33,7 @@ function ListingPage() {
                         setFormData({
                             title: listingDoc.data().title || "",
                             image: listingDoc.data().image || "",
-                            productType: listingDoc.data().productType || "",
+                            productType: listingDoc.data().productType || "fullBuilds",
                             price: listingDoc.data().price || "",
                             description: listingDoc.data().description || "",
                             postDate: listingDoc.data().postDate || "", 
@@ -54,6 +54,7 @@ function ListingPage() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log(`Updating ${name} to ${value}`);
         setFormData({
             ...formData,
             [name]: value
@@ -116,7 +117,7 @@ function ListingPage() {
             setFormData({
                 title: '',
                 image: '',
-                productType: '',
+                productType: 'fullBuilds',
                 price: '',
                 description: '',
                 postDate: '',
@@ -188,14 +189,14 @@ function ListingPage() {
                             value={formData.productType}
                             onChange={handleChange}
                         >
-                            <option value='Full Builds'>Full Builds</option>
-                            <option value='Keycaps'>Keycaps</option>
-                            <option value='Switches'>Switches</option>
-                            <option value='Stabilisers'>Stabilisers</option>
-                            <option value='Deskmats'>Deskmats</option>
-                            <option value='Cables'>Cables</option>
-                            <option value='Group Orders'>Group Orders</option>
-                            <option value='Others'>Others</option>
+                            <option value='fullBuilds'>Full Builds</option>
+                            <option value='keycaps'>Keycaps</option>
+                            <option value='switches'>Switches</option>
+                            <option value='stabilisers'>Stabilisers</option>
+                            <option value='deskmats'>Deskmats</option>
+                            <option value='cables'>Cables</option>
+                            <option value='groupOrders'>Group Orders</option>
+                            <option value='others'>Others</option>
                         </select>
                     </div>
                     <div className="form-group">
