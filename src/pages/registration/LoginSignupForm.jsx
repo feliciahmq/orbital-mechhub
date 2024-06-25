@@ -73,7 +73,6 @@ function LoginSignUpForm() {
                     chats: [],
                 });
                 
-                console.log("User ID:", user.uid);
                 toast.success("Account created successfully.");
                 navigate(`/profile/${user.uid}`);
             }
