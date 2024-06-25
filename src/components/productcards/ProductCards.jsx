@@ -125,6 +125,18 @@ function ProductCards({ productDetail }) {
                 read: false,
                 timestamp: new Date()
             });
+
+            const likeHistoryRef = collection(db, 'userHistory', currentUser.uid, 'likeHistory');
+            const likeHistoryQuery = query(likeHistoryRef, where('listingID', '==', productDetail.id));
+            const querySnapshot = await getDocs(likeHistoryQuery);
+
+            if (querySnapshot.empty) {
+                await addDoc(collection(db, 'userHistory', currentUser.uid, 'likeHistory'), {
+                    listing: productDetail.title,
+                    listingID: productDetail.id,
+                    timestamp: new Date().toISOString()
+                });
+            }
         } catch (err) {
             alert('Error: ' + err.message);
         }

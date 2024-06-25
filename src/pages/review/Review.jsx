@@ -24,6 +24,7 @@ function ReviewPage() {
         listerID: "",
     });
     const [listerID, setListerID] = useState(null);
+    const [listingName, setListingName] = useState(null);
 
     useEffect(() => {
         const fetchListingData = async () => {
@@ -38,6 +39,7 @@ function ReviewPage() {
                         listerID: listingData.userID 
                     }));
                     setListerID(listingData.userID); 
+                    setListingName(listingData.title);
                 } else {
                     console.log("No listing data found");
                 }
@@ -94,6 +96,11 @@ function ReviewPage() {
                 timestamp: new Date()
             });
             
+            await addDoc(collection(db, 'userHistory', currentUser.uid, 'reviewHistory'), {
+                score: currentValue,
+                listing: listingName,
+                timestamp: new Date().toISOString()
+            });
             navigate('/');
         } catch (err) {
             toast.error('Error :' + err.message);

@@ -169,6 +169,18 @@ function ProductPage() {
                 timestamp: new Date()
             });
 
+            const likeHistoryRef = collection(db, 'userHistory', currentUser.uid, 'likeHistory');
+            const likeHistoryQuery = query(likeHistoryRef, where('listingID', '==', listingID));
+            const querySnapshot = await getDocs(likeHistoryQuery);
+
+            if (querySnapshot.empty) {
+                await addDoc(collection(db, 'userHistory', currentUser.uid, 'likeHistory'), {
+                    listing: listing.title,
+                    listingID: listingID,
+                    timestamp: new Date().toISOString()
+                });
+            }
+
             setIsLiked(true);
             setLikeID(docRef.id);
             increaseLikeCount();
