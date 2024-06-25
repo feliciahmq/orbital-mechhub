@@ -124,9 +124,9 @@ function UserProfile() {
 	
 	const handleLogout = async () => {
 		try {
-		await auth.signOut();
-		console.log('User logged out successfully!');
-		navigate('/');
+			await auth.signOut();
+			console.log('User logged out successfully!');
+			navigate('/');
 		} catch (error) {
 		console.error('Error logging out: ', error.message);
 		}
