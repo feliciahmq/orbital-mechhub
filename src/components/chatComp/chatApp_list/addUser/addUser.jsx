@@ -1,4 +1,4 @@
-import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import "./addUser.css"
 import { db } from "../../../../lib/firebaseConfig";
 import { useState } from "react";
@@ -51,7 +51,7 @@ const addUser = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: currentUser.id,
-          updatedAt: new Date.now(),
+          updatedAt: Date.now(),
         }),
       });
 
@@ -60,7 +60,7 @@ const addUser = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: user.id,
-          updatedAt: new Date.now(),
+          updatedAt: Date.now(),
         }),
       });
 
