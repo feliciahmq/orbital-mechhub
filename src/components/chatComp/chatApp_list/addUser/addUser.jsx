@@ -42,7 +42,7 @@ const addUser = () => {
       const newChatRef = doc(chatRef);
 
       await setDoc(newChatRef, {
-        createdAt: serverTimestamp(),
+        createdAt: new Date(),
         messages:[],
       });
 
@@ -51,7 +51,7 @@ const addUser = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: currentUser.id,
-          updatedAt: Date.now(),
+          updatedAt: new Date.now(),
         }),
       });
 
@@ -60,7 +60,7 @@ const addUser = () => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: user.id,
-          updatedAt: Date.now(),
+          updatedAt: new Date.now(),
         }),
       });
 
