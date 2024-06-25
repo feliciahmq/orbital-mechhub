@@ -8,9 +8,9 @@ import defaultProfile from '../../assets/defaultProfile.jpg';
 // Google Auth
 const provider = new GoogleAuthProvider();
 
-const generateRandomDigits = () => {
-    return Math.floor(1000 + Math.random() * 9000).toString(); // generates a random 4-digit number
-};
+const generateUsername = (email) => {
+    return email.split('@')[0].replace(/[^a-zA-Z0-9]/g, '');
+}
 
 export const signInWithGoogle = async () => {
     try {
@@ -21,17 +21,24 @@ export const signInWithGoogle = async () => {
             const userDoc = await getDoc(userDocRef);
 
             if (!userDoc.exists()) {
-                // Generate username only if the user does not exist in Firestore
-                const randomDigits = generateRandomDigits();
-                const username = `${user.displayName.replace(/\s+/g, '').toLowerCase()}${randomDigits}`;
-                console.log("Generated Username: ", username); // Print the generated username
+                // Generate username based on email 
+                const username = generateUsername(user.email);
+                console.log("Generated Username: ", username); 
 
                 await setDoc(userDocRef, {
-                    email: user.email,
                     username: username,
+                    email: user.email,
+                    id: user.uid,
                     profilePic: defaultProfile,
+                    blocked: [],
                     signUpDate: new Date().toISOString(),
                 });
+
+                const userChatDoc = doc(db, "UserChats", user.uid);
+                await setDoc(userChatDoc, {
+                    chats: [],
+                });
+                
                 toast.success("Account created successfully.");
             } else {
                 toast.success("Login successfully.");
