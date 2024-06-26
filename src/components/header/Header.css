@@ -56,6 +56,12 @@
         width: fit-content;
     }
 
+    .header-icon {
+        width: 36px;
+        display: flex;
+        justify-content: center;
+    }
+
     .likes, .notifs {
         padding: 5px 10px;
         border-radius: 10px;
