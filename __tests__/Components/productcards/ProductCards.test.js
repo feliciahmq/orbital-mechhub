@@ -35,16 +35,6 @@ jest.mock('react-router-dom', () => ({
 }));
 
 
-const mockIncreaseLikeCount = jest.fn();
-const mockDecreaseLikeCount = jest.fn();
-jest.mock('../../../src/components/Header/likecounter/LikeCounter', () => ({
-    useLikes: jest.fn(() => ({
-        likesCount: 0,
-        increaseLikeCount: mockIncreaseLikeCount,
-        decreaseLikeCount: mockDecreaseLikeCount,
-    })),
-}));
-
 const productDetail = {
     id: 'product-id',
     title: 'Test Product',
@@ -111,15 +101,4 @@ test('renders product details and handles user interactions', async () => {
 
     fireEvent.click(screen.getByText('testuser'));
     expect(mockNavigate).toHaveBeenCalledWith(`/profile/${productDetail.userID}`);
-    
-    // for some reason these tests dont work
-    // fireEvent.click(screen.getByRole('button'));
-    // await waitFor(() => {
-    //     expect(mockIncreaseLikeCount).toHaveBeenCalled();
-    // });
-
-    // fireEvent.click(screen.getByRole('button'));
-    // await waitFor(() => {
-    //     expect(mockDecreaseLikeCount).toHaveBeenCalled();
-    // });
 });
