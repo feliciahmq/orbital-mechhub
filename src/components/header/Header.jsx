@@ -96,16 +96,20 @@ function Header() {
                 {!isMobile ? (
                     currentUser ? (
                         <>
-                            <FaComment onClick={handleChats} cursor="pointer" />
-                            <div className='likes'>
+                            <div className='header-icon'>
+                                <FaComment onClick={handleChats} cursor="pointer" />
+                            </div>
+                            <div className='likes header-icon'>
                                 <FaHeart onClick={handleLikes} cursor="pointer" />
                                 {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
                             </div>
-                            <div className='notifs'>
+                            <div className='notifs header-icon'>
                                 <FaBell onClick={handleNotifs} cursor="pointer" />
                                 {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
                             </div>
-                            <FaUserAlt onClick={handleProfile} cursor="pointer" />
+                            <div className='header-icon'>
+                                <FaUserAlt onClick={handleProfile} cursor="pointer" />
+                            </div>
                         </>
                     ) : (
                         <li><Link to="/account">Register/ Login</Link></li>
