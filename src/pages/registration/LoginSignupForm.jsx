@@ -109,11 +109,13 @@ function LoginSignupForm() {
             toast.success("Login successfully.");
             navigate(`/profile/${user.uid}`);
         } catch (error) {
-            let errorMessage = 'An error occurred.';
+            let errorMessage = "You have entered an invalid username or password.";
             console.log("Firebase Login Error: ", error.code, error.message);
 
-            if (error.code === 'auth/invalid-credential') {
-                errorMessage = 'You have entered an invalid username or password';
+            if (error.code === "auth/wrong-username") {
+                errorMessage = "You have entered an invalid username.";
+            } else if (error.code === "auth/wrong-password") {
+                errorMessage = "You have entered an invalid password.";
             }
             toast.error(errorMessage);
         }

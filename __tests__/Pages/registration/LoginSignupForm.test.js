@@ -162,8 +162,155 @@ describe('LoginSignUpForm', () => {
         });
     }); 
 
-    test('renders correct error notifications', async () => {
+    test('renders signup email in use error notifications', async () => {
+        createUserWithEmailAndPassword.mockRejectedValue({
+            code: "auth/email-already-in-use",
+        });
+
+        render(
+            <MemoryRouter>
+              <LoginSignUpForm />
+            </MemoryRouter>
+        );
+
+        // Toggle to signup form
+        fireEvent.click(screen.getByTestId("sign-up-toggle"));
+
+        // Input signup form
+        fireEvent.change(screen.getByTestId("signup-username"), 
+            { target: { value: 'tester' } });
+        fireEvent.change(screen.getByTestId("signup-email"), 
+            { target: { value: 'tester@eg.com' } });
+        fireEvent.change(screen.getByTestId("signup-password"), 
+            { target: { value: 'password123' } });
+
+        // Submit signup form
+        fireEvent.submit(screen.getByTestId("sign-up-submit"));
+
+        await waitFor(() => {
+            expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
+                auth, 'tester@eg.com', 'password123'
+            );
+            expect(toast.error).toHaveBeenCalledWith("The email address is already in use.");
+        });
+    });
+
+    test('renders signup email error notifications', async () => {
+        createUserWithEmailAndPassword.mockRejectedValue({
+            code: "auth/invalid-email",
+        });
+
+        render(
+            <MemoryRouter>
+              <LoginSignUpForm />
+            </MemoryRouter>
+        );
+
+        // Toggle to signup form
+        fireEvent.click(screen.getByTestId("sign-up-toggle"));
+
+        // Input signup form
+        fireEvent.change(screen.getByTestId("signup-username"), 
+            { target: { value: 'tester' } });
+        fireEvent.change(screen.getByTestId("signup-email"), 
+            { target: { value: 'tester@eg.com' } });
+        fireEvent.change(screen.getByTestId("signup-password"), 
+            { target: { value: 'password123' } });
+
+        // Submit signup form
+        fireEvent.submit(screen.getByTestId("sign-up-submit"));
+
+        await waitFor(() => {
+            expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
+                auth, 'tester@eg.com', 'password123'
+            );
+            expect(toast.error).toHaveBeenCalledWith("Invalid email address.");
+        });
+    });
+
+    test('renders signup weak password error notifications', async () => {
+        createUserWithEmailAndPassword.mockRejectedValue({
+            code: "auth/weak-password",
+        });
+
+        render(
+            <MemoryRouter>
+              <LoginSignUpForm />
+            </MemoryRouter>
+        );
+
+        // Toggle to signup form
+        fireEvent.click(screen.getByTestId("sign-up-toggle"));
+
+        // Input signup form
+        fireEvent.change(screen.getByTestId("signup-username"), 
+            { target: { value: 'tester' } });
+        fireEvent.change(screen.getByTestId("signup-email"), 
+            { target: { value: 'tester@eg.com' } });
+        fireEvent.change(screen.getByTestId("signup-password"), 
+            { target: { value: 'password123' } });
+
+        // Submit signup form
+        fireEvent.submit(screen.getByTestId("sign-up-submit"));
+
+        await waitFor(() => {
+            expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
+                auth, 'tester@eg.com', 'password123'
+            );
+            expect(toast.error).toHaveBeenCalledWith("Password must be at least six characters.");
+        });
+    });
+
+    test('renders empty fields error notifications', async () => {
+        render(
+            <MemoryRouter>
+              <LoginSignUpForm />
+            </MemoryRouter>
+        );
+
+        // Login form
+        fireEvent.submit(screen.getByTestId("login-submit"));
+
+        await waitFor(() => {
+            expect(toast.error).toHaveBeenCalledWith("All fields are required.")
+        });
+
+        // Signup form
+        fireEvent.click(screen.getByTestId("sign-up-toggle"));
+        fireEvent.submit(screen.getByTestId("sign-up-submit"));
+
+        await waitFor(() => {
+            expect(toast.error).toHaveBeenCalledWith("All fields are required.")
+        });
         
-    })
+    });
+
+    test('renders login error notifications', async () => {
+        signInWithEmailAndPassword.mockRejectedValue({
+            code: "auth/invalid-credential"
+        })
+
+        render(
+            <MemoryRouter>
+              <LoginSignUpForm />
+            </MemoryRouter>
+        );
+
+        // Input login form
+        fireEvent.change(screen.getByTestId("login-email"), 
+            { target: { value: 'tester@eg.com' } });
+        fireEvent.change(screen.getByTestId("login-password"), 
+            { target: { value: 'password123' } });
+
+        // Submit login form
+        fireEvent.submit(screen.getByTestId("login-submit"));
+
+        await waitFor(() => {
+            expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+                auth, 'tester@eg.com', 'password123'
+            );
+            expect(toast.error).toHaveBeenCalledWith("You have entered an invalid username or password.");
+        });
+    });
 
 });
