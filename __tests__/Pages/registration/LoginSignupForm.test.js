@@ -3,9 +3,9 @@ import '@testing-library/jest-dom';
 import LoginSignUpForm from '../../../src/pages/registration/LoginSignupForm';
 
 import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../src/Auth';
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getDocs, setDoc } from 'firebase/firestore';
 import { auth } from '../../../src/lib/firebaseConfig';
 import toast from 'react-hot-toast';
@@ -16,8 +16,14 @@ jest.mock( '../../../src/components/Header/likecounter/LikeCounter', () => ({
 }));
 jest.mock('firebase/auth');
 jest.mock('firebase/firestore')
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: jest.fn(),
+}));
 
 describe('LoginSignUpForm', () => {
+    const mockNavigate = jest.fn();
+    
     beforeEach(() => {
         useAuth.mockReturnValue({
             currentUser: { uid: 'test-user' }
@@ -31,6 +37,7 @@ describe('LoginSignUpForm', () => {
         setDoc.mockResolvedValue();
         toast.success = jest.fn();
         toast.error = jest.fn();
+        useNavigate.mockReturnValue(mockNavigate);
     });
 
     afterEach(() => {
@@ -89,7 +96,7 @@ describe('LoginSignUpForm', () => {
         expect(passwordInput.value).toBe("password123");
     }); 
 
-    test('renders signup correctly', async () => {
+    test('handles signup correctly', async () => {
         createUserWithEmailAndPassword.mockResolvedValue({
             user: { uid: 'tester-uid', email: 'tester@eg.com'},
         })
@@ -119,25 +126,44 @@ describe('LoginSignUpForm', () => {
             expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
                 auth, 'tester@eg.com', 'password123'
             );
-            expect(setDoc).toHaveBeenCalledTimes(2);
+            expect(setDoc).toHaveBeenCalledTimes(2); // Users and UserChats
             expect(toast.success).toHaveBeenCalledWith("Account created successfully.");
+            expect(mockNavigate).toHaveBeenCalledWith(`/profile/tester-uid`);
+        });
+    });  
+
+    test('handles login correctly', async () => {
+        signInWithEmailAndPassword.mockResolvedValue({
+            user: { uid: 'tester-uid', email: 'tester@eg.com'},
+        })
+        setDoc.mockResolvedValue();
+
+        render(
+            <MemoryRouter>
+              <LoginSignUpForm />
+            </MemoryRouter>
+        );
+
+        // Input login form
+        fireEvent.change(screen.getByTestId("login-email"), 
+            { target: { value: 'tester@eg.com' } });
+        fireEvent.change(screen.getByTestId("login-password"), 
+            { target: { value: 'password123' } });
+
+        // Submit login form
+        fireEvent.submit(screen.getByTestId("login-submit"));
+
+        await waitFor(() => {
+            expect(signInWithEmailAndPassword).toHaveBeenCalledWith(
+                auth, 'tester@eg.com', 'password123'
+            );
+            expect(toast.success).toHaveBeenCalledWith("Login successfully.");
+            expect(mockNavigate).toHaveBeenCalledWith(`/profile/tester-uid`);
         });
     }); 
 
-    test('handles login correctly', async () => {
-        render(
-            <MemoryRouter>
-              <LoginSignUpForm />
-            </MemoryRouter>
-        );
-    }) 
-
     test('renders correct error notifications', async () => {
-        render(
-            <MemoryRouter>
-              <LoginSignUpForm />
-            </MemoryRouter>
-        );
-    }) 
+        
+    })
 
 });
