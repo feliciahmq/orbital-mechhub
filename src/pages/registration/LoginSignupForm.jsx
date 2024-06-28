@@ -11,7 +11,7 @@ import { signInWithGoogle } from './GoogleAuth';
 import './LoginSignupForm.css';
 import Header from '../../components/header/Header';
 
-function LoginSignUpForm() {
+function LoginSignupForm() {
     const [rightPanelActive, setRightPanelActive] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [showLogin, setShowLogin] = useState(true);
@@ -239,4 +239,4 @@ function LoginSignUpForm() {
     );
 }
 
-export default LoginSignUpForm;
+export default LoginSignupForm;
