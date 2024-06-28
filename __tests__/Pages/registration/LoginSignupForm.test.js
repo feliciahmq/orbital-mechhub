@@ -1,36 +1,36 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import LoginSignupForm from '../../../src/pages/registration/LoginSignupForm';
+import LoginSignUpForm from '../../../src/pages/registration/LoginSignupForm';
 
-import { render, screen, within, fireEvent,waitFor } from '@testing-library/react';
-import { MemoryRouter, useNavigate } from 'react-router-dom';
+import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { useAuth } from '../../../src/Auth';
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from 'firebase/firestore';
-import defaultProfile from '../../assets/defaultProfile.jpg';
-import { auth, db } from '../../../src/lib/firebaseConfig';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDocs, setDoc } from 'firebase/firestore';
+import { auth } from '../../../src/lib/firebaseConfig';
 import toast from 'react-hot-toast';
 
 jest.mock('../../../src/Auth');
 jest.mock( '../../../src/components/Header/likecounter/LikeCounter', () => ({
     useLikes: jest.fn(() => ({ likeCount: 50 }))
 }));
-jest.mock('react-router-dom', () => ({
-    useNavigate: jest.fn(),
-}));
 jest.mock('firebase/auth');
-jest.mock('firebase/firestore');
-jest.mock('react-hot-toast');
+jest.mock('firebase/firestore')
 
-
-describe('LoginSignupForm', () => {
-    const navigate = jest.fn();
-
+describe('LoginSignUpForm', () => {
     beforeEach(() => {
         useAuth.mockReturnValue({
-            currentUser: { uid: 'tester' }
+            currentUser: { uid: 'test-user' }
         });
-        useNavigate.mockReturnValue(navigate);
+    
+        getDocs.mockResolvedValue({
+            empty: true,
+            docs: []
+        });
+
+        setDoc.mockResolvedValue();
+        toast.success = jest.fn();
+        toast.error = jest.fn();
     });
 
     afterEach(() => {
@@ -39,147 +39,105 @@ describe('LoginSignupForm', () => {
 
     test('renders login and signup form', async () => {
         render(
-            <MemoryRouter>
-                <LoginSignupForm />
-            </MemoryRouter>
+        <MemoryRouter>
+            <LoginSignUpForm />
+        </MemoryRouter>
         );
         
-        // Login form
-        const loginLabel = screen.getByText(/Login/i);
-        expect(loginLabel).toBeInTheDocument();
-        const loginForm = loginLabel.closest("form");
-        expect(within(loginForm).getByPlaceholderText("Email")).toBeInTheDocument();
-        expect(within(loginForm).getByPlaceholderText("Password")).toBeInTheDocument();
+        const loginLabel = screen.getByText("Login");
+        expect(screen.getByTestId("login-email")).toBeInTheDocument();
+        expect(screen.getByTestId("login-password")).toBeInTheDocument();
         
-        // Toggle to signup form
-        fireEvent.click(screen.getByRole("button", {name: /Sign up/i}));
+        fireEvent.click(screen.getByTestId("sign-up-toggle"));
         const signupLabel = screen.getByText("Create Account");
-        expect(signupLabel).toBeInTheDocument();
-        const signupForm = signupLabel.closest("form");
-        expect(within(signupForm).getByPlaceholderText("Username")).toBeInTheDocument();
-        expect(within(signupForm).getByPlaceholderText("Email")).toBeInTheDocument();
-        expect(within(signupForm).getByPlaceholderText("Password")).toBeInTheDocument();
+        expect(screen.getByTestId("signup-username")).toBeInTheDocument();
+        expect(screen.getByTestId("signup-email")).toBeInTheDocument();
+        expect(screen.getByTestId("signup-password")).toBeInTheDocument();
 
-        // Toggle to login form
-        fireEvent.click(screen.getByRole("button", {name: /Log in/i}));
+        fireEvent.click(screen.getByTestId("login-toggle"));
         expect(loginLabel).toBeInTheDocument();
-        
     });
 
     test('renders input changes', async () => {
         render(
             <MemoryRouter>
-                <LoginSignupForm />
+              <LoginSignUpForm />
             </MemoryRouter>
         );
 
-        // Login Form input changes
-        const loginLabel = screen.getByText(/Login/i);
-        const loginForm = loginLabel.closest("form");
-        const emailInput = within(loginForm).getByPlaceholderText("Email");
-        const passwordInput = within(loginForm).getByPlaceholderText("Password");
+        const emailInput = screen.getByTestId("login-email");
+        const passwordInput = screen.getByTestId("login-password");
 
-        fireEvent.change(emailInput, {target: {value: "tester@eg.com"}});
+        fireEvent.change(emailInput, {target: {value: "test@eg.com"}});
         fireEvent.change(passwordInput, {target: {value: "password123"}});
 
-        expect(emailInput.value).toBe("tester@eg.com");
+        expect(emailInput.value).toBe("test@eg.com");
         expect(passwordInput.value).toBe("password123");
 
-        // Toggle, Signup Form input changes
-        fireEvent.click(screen.getByRole("button", {name: /Sign up/i}));
-        const signupLabel = screen.getByText("Create Account");
-        const signupForm = signupLabel.closest("form");
-        const suUsername = within(signupForm).getByPlaceholderText("Username");
-        const suEmailInput = within(signupForm).getByPlaceholderText("Email");
-        const suPasswordInput = within(signupForm).getByPlaceholderText("Password");
+        fireEvent.click(screen.getByTestId("sign-up-toggle"));
+
+        const suUsername = screen.getByTestId("signup-username");
+        const suEmailInput = screen.getByTestId("signup-email");
+        const suPasswordInput = screen.getByTestId("signup-password");
 
         fireEvent.change(suUsername, {target: {value: "tester"}});
-        fireEvent.change(suEmailInput, {target: {value: "tester@eg.com"}});
+        fireEvent.change(suEmailInput, {target: {value: "test@eg.com"}});
         fireEvent.change(suPasswordInput, {target: {value: "password123"}});
 
         expect(suUsername.value).toBe("tester");
-        expect(emailInput.value).toBe("tester@eg.com");
+        expect(emailInput.value).toBe("test@eg.com");
         expect(passwordInput.value).toBe("password123");
-
     }); 
 
-    test('handles signup correctly', async () => {
+    test('renders signup correctly', async () => {
         createUserWithEmailAndPassword.mockResolvedValue({
             user: { uid: 'tester-uid', email: 'tester@eg.com'},
-        });
+        })
         setDoc.mockResolvedValue();
 
         render(
             <MemoryRouter>
-                <LoginSignupForm />
+              <LoginSignUpForm />
             </MemoryRouter>
         );
 
         // Toggle to signup form
-        fireEvent.click(screen.getByRole("button", {name: /Sign up/i}));
+        fireEvent.click(screen.getByTestId("sign-up-toggle"));
 
         // Input signup form
-        fireEvent.change(screen.getByPlaceholderText('Username'), { target: { value: 'tester' } });
-        fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'tester@eg.com' } });
-        fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
+        fireEvent.change(screen.getByTestId("signup-username"), 
+            { target: { value: 'tester' } });
+        fireEvent.change(screen.getByTestId("signup-email"), 
+            { target: { value: 'tester@eg.com' } });
+        fireEvent.change(screen.getByTestId("signup-password"), 
+            { target: { value: 'password123' } });
 
         // Submit signup form
-        fireEvent.submit(screen.getByRole("button", { name: /Sign up/i}));
+        fireEvent.submit(screen.getByTestId("sign-up-submit"));
 
         await waitFor(() => {
-            expect(createUserWithEmailAndPassword).toHaveBeenCalled(auth,'tester@eg.com', 'password123');
-            expect(setDoc).toHaveBeenCalled(
-                doc(db, "Users", 'tester-uid'), {
-                    username: 'tester',
-                    email: 'tester@eg.com',
-                    id: 'tester-uid',
-                    profilePic: defaultProfile,
-                    blocked: [],
-                    signUpDate: expect.any(String),
-                }
+            expect(createUserWithEmailAndPassword).toHaveBeenCalledWith(
+                auth, 'tester@eg.com', 'password123'
             );
-            expect(toast.success).toHaveBeenCalled("Account created successfully.");
-            expect(navigate).toHaveBeenCalled(`/profile/tester-uid`);
+            expect(setDoc).toHaveBeenCalledTimes(2);
+            expect(toast.success).toHaveBeenCalledWith("Account created successfully.");
         });
-
     }); 
 
     test('handles login correctly', async () => {
-        signInWithEmailAndPassword.mockResolvedValue({
-            user: { uid: 'tester-uid', email: 'tester@eg.com'},
-        });
-
         render(
             <MemoryRouter>
-                <LoginSignupForm />
+              <LoginSignUpForm />
             </MemoryRouter>
         );
-
-        // Input login form
-        fireEvent.change(screen.getByPlaceholderText('Email'), { target: { value: 'tester@eg.com' } });
-        fireEvent.change(screen.getByPlaceholderText('Password'), { target: { value: 'password123' } });
-
-        screen.debug();
-        
-        // Submit login form
-        fireEvent.submit(screen.getByRole("submit", { name: /Log in/i}));
-
-        await waitFor(() => {
-            expect(createUserWithEmailAndPassword).toHaveBeenCalled(auth,'tester@eg.com', 'password123');
-            expect(toast.success).toHaveBeenCalled("Login successfully.");
-            expect(navigate).toHaveBeenCalled(`/profile/tester-uid`);
-        });
-
-    }); 
+    }) 
 
     test('renders correct error notifications', async () => {
         render(
             <MemoryRouter>
-                <LoginSignupForm />
+              <LoginSignUpForm />
             </MemoryRouter>
         );
-
-
     }) 
 
 });

@@ -131,7 +131,7 @@ function LoginSignupForm() {
                     {!isMobile && (
                         <>
                             <div className="form-container sign-up-container">
-                                <form onSubmit={handleSignup}>
+                                <form onSubmit={handleSignup} data-testid="signup-form">
                                     <h1>Create Account</h1>
                                     <div className="social-container">
                                         <a onClick={signInWithGoogle} className="google-btn">
@@ -141,12 +141,12 @@ function LoginSignupForm() {
                                     </div>
                                     <span>or use your email to register</span>
                                     <input type="text" placeholder="Username"
-                                        value={username} onChange={(e) => setUsername(e.target.value)} required />
+                                        value={username} onChange={(e) => setUsername(e.target.value)} required data-testid="signup-username" />
                                     <input type="email" placeholder="Email"
-                                        value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required />
+                                        value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required data-testid="signup-email" />
                                     <input type="password" placeholder="Password"
-                                        value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required />
-                                    <button type="submit">Sign up</button>
+                                        value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required data-testid="signup-password" />
+                                    <button type="submit" data-testid="sign-up-submit">Sign up</button>
                                 </form>
                             </div>
                             <div className="form-container log-in-container">
@@ -160,10 +160,10 @@ function LoginSignupForm() {
                                     </div>
                                     <span>or use your email</span>
                                     <input type="email" placeholder="Email"
-                                        value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
+                                        value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} data-testid="login-email" />
                                     <input type="password" placeholder="Password"
-                                        value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
-                                    <button type="submit">Log in</button>
+                                        value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} data-testid="login-password" />
+                                    <button type="submit" data-testid="login-submit">Log in</button>
                                 </form>
                             </div>
                             <div className="overlay-container">
@@ -171,12 +171,12 @@ function LoginSignupForm() {
                                     <div className="overlay-panel overlay-left">
                                         <h1>Already have an account?</h1>
                                         <p>Keep connected with us!</p>
-                                        <button className="ghost" id="login" onClick={() => setRightPanelActive(false)}>Log In</button>
+                                        <button className="ghost" id="login" data-testid="login-toggle" onClick={() => setRightPanelActive(false)}>Log In</button>
                                     </div>
                                     <div className="overlay-panel overlay-right">
                                         <h1>Don't have an account yet?</h1>
                                         <p>Start your journey with us!</p>
-                                        <button className="ghost" id="signup" onClick={() => setRightPanelActive(true)}>Sign Up</button>
+                                        <button className="ghost" id="signup" data-testid="sign-up-toggle"onClick={() => setRightPanelActive(true)}>Sign Up</button>
                                     </div>
                                 </div>
                             </div>
