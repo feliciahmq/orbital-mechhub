@@ -27,7 +27,7 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
                 userID: currentUser.uid,
                 offerPrice: offerData.offerPrice,
                 comments: offerData.comments,
-                accepted: false,
+                accepted: '',
                 timestamp: new Date()
             });
 
