@@ -58,11 +58,25 @@ describe('google auth', () => {
     });
 
     test('handles login correctly', async () => {
+        getDoc.mockResolvedValue({
+            exists: () => true,
+        });
 
+        await signInWithGoogle();
+
+        expect(signInWithPopup).toHaveBeenCalledWith(auth, provider);
+        expect(getDoc).toHaveBeenCalledWith(doc(db, "Users", "tester-uid"));
+        expect(setDoc).not.toHaveBeenCalled();
+        expect(toast.success).toHaveBeenCalledWith("Login successfully.");
+        expect(navigate).toHaveBeenCalledWith(`/profile/tester-uid`);
     });
 
     test('renders error notifications', async () => {
+        signInWithPopup.mockRejectedValue("Google Sign-In Error");
 
+        await signInWithGoogle();
+        expect(signInWithPopup).toHaveBeenCalledWith(auth, provider);
+        expect(toast.error).toHaveBeenCalledWith("Google Sign-In failed. Please try again.");
     });
 
 })
