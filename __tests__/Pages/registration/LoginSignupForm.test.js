@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import LoginSignUpForm from '../../../src/pages/registration/LoginSignupForm';
 
-import { render, screen, within, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../src/Auth';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
@@ -20,6 +20,7 @@ jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useNavigate: jest.fn(),
 }));
+jest.mock('react-hot-toast');
 
 describe('LoginSignUpForm', () => {
     const mockNavigate = jest.fn();
@@ -31,10 +32,9 @@ describe('LoginSignUpForm', () => {
     
         getDocs.mockResolvedValue({
             empty: true,
-            docs: []
+            docs: [],
         });
 
-        setDoc.mockResolvedValue();
         toast.success = jest.fn();
         toast.error = jest.fn();
         useNavigate.mockReturnValue(mockNavigate);
@@ -56,7 +56,6 @@ describe('LoginSignUpForm', () => {
         expect(screen.getByTestId("login-password")).toBeInTheDocument();
         
         fireEvent.click(screen.getByTestId("sign-up-toggle"));
-        const signupLabel = screen.getByText("Create Account");
         expect(screen.getByTestId("signup-username")).toBeInTheDocument();
         expect(screen.getByTestId("signup-email")).toBeInTheDocument();
         expect(screen.getByTestId("signup-password")).toBeInTheDocument();
