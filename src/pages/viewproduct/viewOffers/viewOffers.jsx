@@ -112,7 +112,7 @@ function ViewOffers({ onClose, listingID, offers, onOfferAccept, onOfferReject }
                                 />
                                 <p onClick={() => handleUsernameClick(offer)}>{usernames[offer.userID]}</p>
                             </div>
-                            {offer.accepted === 'false' && (
+                            {offer.accepted === '' && (
                                 <div className="offer-actions">
                                     <button onClick={() => handleAcceptOffer(offer)}>Accept</button>
                                     <button onClick={() => handleRejectOffer(offer)}>Reject</button>
