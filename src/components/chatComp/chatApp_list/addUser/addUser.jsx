@@ -1,10 +1,10 @@
-import { arrayUnion, collection, doc, getDocs, query, serverTimestamp, setDoc, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import "./addUser.css"
 import { db } from "../../../../lib/firebaseConfig";
 import { useState } from "react";
 import { useUserStore } from "../../../../lib/userStore";
 
-const addUser = () => {
+const addUser = ({ closePopup }) => {
   const [user, setUser] = useState(null);
   const [error, setError] = useState("");
   const { currentUser } = useUserStore();
@@ -71,9 +71,12 @@ const addUser = () => {
 
   return (
     <div className="addUser">
+        <div className="closeButton" onClick={closePopup}> 
+          <img src="/chat-icons/cross.png" alt="" />
+        </div>
         <form onSubmit={handleSearch}>
             <input type="text" placeholder="Username" name="username" />
-            <button>Search</button>
+            <button type="submit">Search</button>
         </form>
         {user ? (
         <div className="user">

@@ -11,6 +11,21 @@
     right: 0;
     margin: auto;
 
+    .closeButton {
+        display: flex;
+        justify-content: flex-end;  
+        padding-bottom: 30px;
+
+        img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+            cursor: pointer;
+
+        }
+    }
+
     form {
         display: flex;
         gap: 20px;
