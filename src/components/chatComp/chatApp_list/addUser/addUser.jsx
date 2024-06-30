@@ -51,7 +51,7 @@ const addUser = ({ closePopup }) => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: currentUser.id,
-          updatedAt: new Date.now(),
+          updatedAt: Date.now(),
         }),
       });
 
@@ -60,10 +60,11 @@ const addUser = ({ closePopup }) => {
           chatId: newChatRef.id,
           lastMessage: "",
           receiverId: user.id,
-          updatedAt: new Date.now(),
+          updatedAt: Date.now(),
         }),
       });
 
+      closePopup();
     } catch (err) {
       console.log(err);
     }
