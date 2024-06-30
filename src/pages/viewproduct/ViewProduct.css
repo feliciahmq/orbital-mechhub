@@ -60,7 +60,7 @@
         .slick-slider {
             width: 100%; 
             max-width: 400px;
-            margin: 0 auto;
+            margin: 0 20px;
             z-index: 99;
             height: auto;
             border: 1px solid rgb(240, 240, 240);
@@ -76,6 +76,10 @@
                     max-height: 100%;
                     object-fit: contain;
                 }
+            }
+
+            .slick-list {
+                width: 400px;
             }
 
             .slick-prev,

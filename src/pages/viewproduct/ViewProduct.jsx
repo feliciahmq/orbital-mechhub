@@ -56,7 +56,7 @@ function ProductPage() {
     const [listingSold, setListingSold] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [offers, setOffers] = useState([]);
-	const [selectedOffer, setSelectedOffer] = useState(null);
+    const [selectedOffer, setSelectedOffer] = useState(null);
     const [viewOffersPopupOpen, setViewOffersPopupOpen] = useState(false);
     const [offerAccepted, setOfferAccepted] = useState(false);
 
@@ -122,16 +122,16 @@ function ProductPage() {
                 const offersCollection = collection(db, 'listings', listingID, 'offers');
                 const offersSnap = await getDocs(offersCollection);
                 
-				if (!offersSnap.empty) {
-					const offersData = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-					setOffers(offersData);
+                if (!offersSnap.empty) {
+                    const offersData = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setOffers(offersData);
 
                     const acceptedOffer = offersData.find(offer => offer.accepted === 'true');
                     const userOffer = offersData.find(offer => offer.userID === currentUser.uid);
                     if (acceptedOffer && userOffer) {
                         setOfferAccepted(true);
                     }
-				}
+                }
             } catch (err) {
                 console.log(err.message);
             }
@@ -258,13 +258,13 @@ function ProductPage() {
         const stars = [];
         let i;
         for (i = 1; i <= 5; i++) {
-			if (i <= score) {
-				stars.push(<FaStar key={i} className="star-icon" />);
-			} else if (i === Math.ceil(score) && score % 1 !== 0) {
-				stars.push(<FaStarHalf key={i} className="star-icon" />);
-			} else {
-				stars.push(<FaStar key={i} className="star-empty" />);
-			}
+            if (i <= score) {
+                stars.push(<FaStar key={i} className="star-icon" />);
+            } else if (i === Math.ceil(score) && score % 1 !== 0) {
+                stars.push(<FaStarHalf key={i} className="star-icon" />);
+            } else {
+                stars.push(<FaStar key={i} className="star-empty" />);
+            }
         }
         return stars;
     };
@@ -281,8 +281,7 @@ function ProductPage() {
         setIsPopupOpen(false);
     };
 
-	const handleViewOffers = () => {
-		console.log(offers)
+    const handleViewOffers = () => {
         setViewOffersPopupOpen(true);
     };
 
@@ -290,12 +289,12 @@ function ProductPage() {
         setViewOffersPopupOpen(false);
     };
 
-	const handleAcceptOffer = () => {
+    const handleAcceptOffer = () => {
         setIsPopupOpen(false);
         setOfferAccepted(true);
     };
 
-	const handleRejectOffer = () => {
+    const handleRejectOffer = () => {
         setIsPopupOpen(false);
     };
 
@@ -362,7 +361,7 @@ function ProductPage() {
                     </div>
                     <div className="listing-details">
                         <Slider {...settings}>
-                            {listing.images.map((image, index) => (
+                            {(listing.images || [listing.image]).map((image, index) => (
                                 <div key={index} className='listing-images'>
                                     <img src={image} alt={`Product image ${index + 1}`} />
                                 </div>
