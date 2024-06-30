@@ -16,6 +16,8 @@ const Chat = () => {
         file: null,
         url: "",
     });
+    const [showImg, setShowImg] = useState(false);
+    const [imgMsg, setImgMsg] = useState("");
 
     const { currentUser } = useUserStore();
     const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } = useChatStore();
@@ -57,62 +59,93 @@ const Chat = () => {
                 file: e.target.files[0],
                 url: URL.createObjectURL(e.target.files[0]),
             });
+            setShowImg(true);
         }
     };
 
-    const handleSend = async () => {
-        if (text === "") return;
+    const handleSendText = async () => {
+        if (text.trim() === "") return;
 
-        let imgUrl = null;
+        const message = {
+            senderId: currentUser.id,
+            text: text,
+            createdAt: new Date().toString(),
+        };
 
         try {
-            if (img.file) {
-                imgUrl = await upload(img.file, chatId);
-            }
-
             await updateDoc(doc(db, "Chats", chatId), {
-                messages: arrayUnion({
-                    senderId: currentUser.id,
-                    text,
-                    createdAt: new Date().toString(),
-                    ...(imgUrl && { img: imgUrl }),
-                }),
+                messages: arrayUnion(message),
             });
-
-            const userIDs = [currentUser.id, user.id];
-
-            userIDs.forEach(async (id) => {
-                const userChatsRef = doc(db, "UserChats", id);
-                const userChatsSnapshot = await getDoc(userChatsRef);
-
-                if (userChatsSnapshot.exists()) {
-                    const userChatsData = userChatsSnapshot.data();
-
-                    const chatIndex = userChatsData.chats.findIndex(
-                        c => c.chatId === chatId
-                    );
-
-                    userChatsData.chats[chatIndex].lastMessage = text;
-                    userChatsData.chats[chatIndex].isSeen = 
-                        id === currentUser.id ? true : false;
-                    userChatsData.chats[chatIndex].updatedAt = Date.now();
-
-                    await updateDoc(userChatsRef, {
-                        chats: userChatsData.chats,
-                    });
-                }
-            });
+            setText("");
         } catch (err) {
             console.log(err);
         }
 
+        updateChat();
+    };
+
+    const handleSendImg = async () => {
+        if (!img.file) return;
+
+        let imgUrl = await upload(img.file, chatId);
+
+        const imgMessage = {
+            senderId: currentUser.id,
+            text: imgMsg,
+            createdAt: new Date().toString(),
+            img: imgUrl,
+        };
+
+        try {
+            await updateDoc(doc(db, "Chats", chatId), {
+                messages: arrayUnion(imgMessage),
+            });
+            setImg({
+                file: null,
+                url: ""
+            });
+            setImgMsg("");
+            setShowImg(false);
+        } catch (err) {
+            console.log(err);
+        }
+
+        updateChat();
+    };
+
+    const updateChat = async () => {
+        const userIDs = [currentUser.id, user.id];
+        userIDs.forEach(async (id) => {
+            const userChatsRef = doc(db, "UserChats", id);
+            const userChatsSnapshot = await getDoc(userChatsRef);
+
+            if (userChatsSnapshot.exists()) {
+                const userChatsData = userChatsSnapshot.data();
+
+                const chatIndex = userChatsData.chats.findIndex(
+                    c => c.chatId === chatId
+                );
+
+                userChatsData.chats[chatIndex].lastMessage = text;
+                userChatsData.chats[chatIndex].isSeen = 
+                    id === currentUser.id ? true : false;
+                userChatsData.chats[chatIndex].updatedAt = Date.now();
+
+                await updateDoc(userChatsRef, {
+                    chats: userChatsData.chats,
+                });
+            }
+        });
+    }
+
+    const handleCloseImgPopup = () => {
+        setImgMsg("");
         setImg({
             file: null,
-            url: ""
+            url: "" 
         });
-
-        setText("");
-    }
+        setShowImg(false); 
+    };
 
     return (
         <div className='chat'>
@@ -122,8 +155,6 @@ const Chat = () => {
                     <div className="texts">
                         <span>{user?.username}</span>
                     </div>
-                </div>
-                <div className="icons">
                 </div>
             </div>
             <div className="center">
@@ -144,7 +175,7 @@ const Chat = () => {
                         <img src={img.url} alt="" />
                     </div>
                 </div>}
-                <div ref={endRef}></div>
+                <div ref={endRef} />
             </div>
             <div className="bottom">
                 <div className="icons">
@@ -157,7 +188,8 @@ const Chat = () => {
                     placeholder={(isCurrentUserBlocked || isReceiverBlocked) ? "You cannot send a message" : "Type a message"}
                     value={text} 
                     onChange={e=>setText(e.target.value)} 
-                    disabled={isCurrentUserBlocked || isReceiverBlocked} />
+                    disabled={isCurrentUserBlocked || isReceiverBlocked} 
+                />
                 <div className="emoji">
                     <img src="/chat-icons/emoji.png" 
                         alt="" 
@@ -169,11 +201,25 @@ const Chat = () => {
                     </div>
                 </div>
                 <button className='sendButton' 
-                    onClick={handleSend}
+                    onClick={handleSendText}
                     disabled={isCurrentUserBlocked || isReceiverBlocked}>
                         Send
                 </button>
             </div>
+            {showImg && (
+                <div className="popup">
+                    <div className="pop">
+                        <img src={img.url} alt="" />
+                        <input
+                            placeholder="Add a message to this image."
+                            value={imgMsg}
+                            onChange={(e) => setImgMsg(e.target.value)}
+                        />
+                        <button onClick={handleSendImg}>Send Image</button>
+                        <button onClick={handleCloseImgPopup}>Close</button>
+                    </div>
+                </div>
+            )}
         </div>
     )
 };

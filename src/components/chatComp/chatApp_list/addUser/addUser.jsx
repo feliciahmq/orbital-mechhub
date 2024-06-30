@@ -72,9 +72,9 @@ const addUser = ({ closePopup }) => {
 
 	return (
 		<div className="addUser">
-      <div className="closeButton" onClick={closePopup}> 
-          <img src="/chat-icons/cross.png" alt="" />
-      </div>
+			<div className="closeButton" onClick={closePopup}> 
+				<img src="/chat-icons/cross.png" alt="" />
+			</div>
 			<form onSubmit={handleSearch}>
 				<input type="text" placeholder="Username" name="username" />
 				<button type="submit">Search</button>
