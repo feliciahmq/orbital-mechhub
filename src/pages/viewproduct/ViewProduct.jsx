@@ -7,6 +7,9 @@ import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { useLikes } from '../../components/header/likecounter/LikeCounter';
 import { toast } from 'react-hot-toast';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import Header from '../../components/header/Header';
 import OfferPopup from './offerPopup/offerPopup';
@@ -300,6 +303,17 @@ function ProductPage() {
         navigate(`/review/${listingID}`);
     };
 
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        centerMode: true,
+        centerPadding: '0',
+    };
+
     return (
         <div className='content'>
             <Header />
@@ -347,7 +361,13 @@ function ProductPage() {
                         )}
                     </div>
                     <div className="listing-details">
-                        <img src={listing.image} alt={listing.title} />
+                        <Slider {...settings}>
+                            {listing.images.map((image, index) => (
+                                <div key={index} className='listing-images'>
+                                    <img src={image} alt={`Product image ${index + 1}`} />
+                                </div>
+                            ))}
+                        </Slider>
                         <div className="listing-text">
                             <h1>{listing.title}</h1>
                             <div className='like-button'>
