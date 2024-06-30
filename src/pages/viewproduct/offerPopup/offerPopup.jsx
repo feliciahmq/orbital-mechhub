@@ -56,7 +56,11 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
                         <label htmlFor="offerPrice">Offer Price:</label>
                         <input 
                             id="offerPrice"
+<<<<<<< HEAD
                             type="text" 
+=======
+                            type="number" 
+>>>>>>> 5b017cff0662ddc947173a261e949fbcbd733f11
                             name="offerPrice"
                             value={offerData.offerPrice} 
                             onChange={handleChange} 
