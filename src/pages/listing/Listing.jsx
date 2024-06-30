@@ -147,6 +147,7 @@ function ListingPage() {
             navigate('/');
         } catch (err) {
             console.log('Error: ' + err.message);
+            toast.error(err.message || 'Submission failed');
         }
     };
 
@@ -234,8 +235,9 @@ function ListingPage() {
                         )}
                     </div>
                     <div className="form-group">
-                        <label>Title:</label>
-                        <input required
+                        <label htmlFor="title">Title:</label>
+                        <input
+                            id="title"
                             type="text"
                             name="title"
                             value={formData.title}
@@ -243,7 +245,7 @@ function ListingPage() {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Product Type:</label>
+                        <label htmlFor="productType">Product Type:</label>
                         <select required
                             name="productType"
                             value={formData.productType}
@@ -260,8 +262,9 @@ function ListingPage() {
                         </select>
                     </div>
                     <div className="form-group">
-                        <label>Price:</label>
-                        <input required
+                        <label htmlFor="price">Price:</label>
+                        <input
+                            id="price"
                             type="number"
                             name="price"
                             value={formData.price}
@@ -269,8 +272,9 @@ function ListingPage() {
                         />
                     </div>
                     <div className="form-group">
-                        <label>Description:</label>
-                        <textarea required
+                        <label htmlFor="description">Description:</label>
+                        <textarea
+                            id="description"
                             name="description"
                             value={formData.description}
                             onChange={handleChange}

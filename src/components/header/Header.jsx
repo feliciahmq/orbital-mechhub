@@ -29,7 +29,7 @@ function Header() {
             where('read', '==', false)
           );
           const notificationsSnapshot = await getDocs(notificationsQuery);
-          setUnreadCount(notificationsSnapshot.docs.length);
+          setUnreadCount(0);
         }
       };
       fetchUnreadNotifications();

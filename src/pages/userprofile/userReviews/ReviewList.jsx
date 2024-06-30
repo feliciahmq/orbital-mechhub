@@ -11,11 +11,11 @@ function ReviewList({ heading, reviews, averageScore, numberOfReviews }) {
         let i;
         for (i = 1; i <= 5; i++) {
         if (i <= roundedScore) {
-            stars.push(<FaStar key={i} className="star-icon" />);
+            stars.push(<FaStar key={i} className="star-icon" data-testid="filled-star" />);
         } else if (i === Math.ceil(roundedScore) && roundedScore % 1 !== 0) {
-            stars.push(<FaStarHalf key={i} className="star-icon" />);
+            stars.push(<FaStarHalf key={i} className="star-icon" data-testid="half-star"/>);
         } else {
-            stars.push(<FaStar key={i} className="star-empty" />);
+            stars.push(<FaStar key={i} className="star-empty" data-testid="empty-star" />);
         }
         }
         return stars;

@@ -112,7 +112,7 @@ function NotificationsPage() {
 						<h2>Your Notifications</h2>
 						<ul>
 							{unreadNotifs.map(notification => (
-								<li key={notification.id} className={notification.read ? 'read' : 'unread'}>
+								<li key={notification.id} className={notification.read ? 'read' : 'unread'} data-testid="notification-item">
 									<p>
 										{notification.type === 'like'
 											? `${notification.username} liked your post "${notification.listingTitle}"!`

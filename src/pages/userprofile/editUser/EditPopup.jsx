@@ -105,19 +105,24 @@ function EditPopup({ onClose, onSubmit }) {
             <div className="popup">
                 <button className="close-button" onClick={onClose}>X</button>
                 <form onSubmit={handleUpdate} className='updateProfile'>
-                <div className="input-container"> 
-                    <div className="image-upload" style={{ backgroundImage: `url(${formData.image || "../../../assets/noImage.jpg"})` }}> 
-                        <input className='file-input' 
-                            type="file" 
-                            accept="image/*" 
-                            name="image" 
-                            onChange={uploadImage} /> 
+                    <div className="input-container"> 
+                        <div className="image-upload" style={{ backgroundImage: `url(${formData.image || "../../../assets/noImage.jpg"})` }}> 
+                            <input 
+                                className='file-input' 
+                                type="file" 
+                                accept="image/*" 
+                                name="image" 
+                                id="profile-picture"
+                                onChange={uploadImage}
+                                aria-label="Profile Picture"
+                            /> 
                         </div> 
-                        <label>Profile Picture</label> 
+                        <label htmlFor="profile-picture">Profile Picture</label> 
                     </div>
                     <div className="popup-group">
-                        <label>Username:</label>
+                        <label htmlFor="username">Username:</label>
                         <input 
+                            id="username"
                             type="text" 
                             name="username"
                             value={formData.username} 
@@ -125,8 +130,9 @@ function EditPopup({ onClose, onSubmit }) {
                         />
                     </div>
                     <div className="popup-group">
-                        <label>Email:</label>
+                        <label htmlFor="email">Email:</label>
                         <input 
+                            id="email"
                             type="text" 
                             name="email"
                             value={formData.email} 

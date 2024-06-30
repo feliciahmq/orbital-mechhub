@@ -4,6 +4,7 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 import { toast } from 'react-hot-toast';
 
 import defaultProfile from '../../assets/defaultProfile.jpg';
+import { useNavigate } from "react-router-dom";
 
 // Google Auth
 const provider = new GoogleAuthProvider();
@@ -13,7 +14,9 @@ const generateUsername = (email) => {
 }
 
 export const signInWithGoogle = async () => {
-    try {
+
+    const navigate = useNavigate();
+        try {
         const result = await signInWithPopup(auth, provider);
         const user = result.user;
         if (user) {
@@ -43,7 +46,7 @@ export const signInWithGoogle = async () => {
             } else {
                 toast.success("Login successfully.");
             }
-            window.location.href = `/profile/${user.uid}`;
+            navigate(`/profile/${user.uid}`);
         }
     } catch (error) {
         console.log("Google Sign-In Error: ", error);
