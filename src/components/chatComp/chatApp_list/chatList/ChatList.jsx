@@ -82,8 +82,10 @@ const ChatList = () => {
                         placeholder="Search" 
                         onChange={(e) => setInput(e.target.value)}/>
                 </div>
-                <img src={addMode ? "/chat-icons/minus.png" : "/chat-icons/plus.png"} alt="" className="add"
-                    onClick={() => setAddMode((prev) => !prev)} />
+                {!addMode && (
+                    <img src="/chat-icons/plus.png" alt="" className="add"
+                        onClick={() => setAddMode(true)} />
+                )}
             </div>
             {filteredChats.map((chat) => (
                 <div className="item" key={chat.chatId} 
@@ -106,7 +108,7 @@ const ChatList = () => {
                 </div>
             ))}
 
-            {addMode && <AddUser />}
+            {addMode && <AddUser closePopup={() => setAddMode(false)} />}
         </div>
     );
 };

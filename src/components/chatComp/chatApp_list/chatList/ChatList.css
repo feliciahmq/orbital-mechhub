@@ -10,7 +10,7 @@
         
         .searchBar {
             flex: 1;
-            background-color: #aeadad74;
+            background-color: #B09C9C;
             display: flex;
             align-items: center;
             gap: 20px;
@@ -34,7 +34,7 @@
         .add {
             width: 36px;
             height: 36px;
-            background-color: #aeadad74;
+            background-color: #B09C9C;
             padding: 10px;
             border-radius: 10px;
             cursor: pointer;
