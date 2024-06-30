@@ -162,7 +162,13 @@ function ProductCards({ productDetail }) {
     return (
         <div className="product" onClick={handleViewClick}>
             <div className={`product-image-container ${soldStatus ? 'sold' : ''}`}>
-                <img alt={productDetail.title} src={productDetail.image} className="product-image" />
+                <img 
+                    alt={productDetail.title} 
+                    src={productDetail.images && productDetail.images.length > 0 
+                        ? productDetail.images[0] 
+                        : productDetail.image || 'default-image-url.jpg'} 
+                    className="product-image" 
+                />
                 {soldStatus && <div className="sold-banner">Sold</div>}
             </div>
             <h4>{productDetail.title}</h4>
