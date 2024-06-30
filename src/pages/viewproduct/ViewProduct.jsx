@@ -124,7 +124,8 @@ function ProductPage() {
 					setOffers(offersData);
 
                     const acceptedOffer = offersData.find(offer => offer.accepted === 'true');
-                    if (acceptedOffer) {
+                    const userOffer = offersData.find(offer => offer.userID === currentUser.uid);
+                    if (acceptedOffer && userOffer) {
                         setOfferAccepted(true);
                     }
 				}
