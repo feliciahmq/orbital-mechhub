@@ -74,7 +74,7 @@ describe('LandingPage', () => {
         );
 
         expect(screen.getByText("My Keyboard Quit Its Job")).toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /View All Products/i })).toBeInTheDocument();
+        expect(screen.getByRole('button', { name: /View All Products/ })).toBeInTheDocument();
         expect(screen.getByText("Featured Products")).toBeInTheDocument();
 
         await waitFor(() => {

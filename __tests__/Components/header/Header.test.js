@@ -22,7 +22,18 @@ describe('Header', () => {
         });
     });
 
-    test('renders the logo and navigates to home on click', () => {
+    test('renders the logo', () => {
+        const { container } = render(
+            <Router>
+                <Header />
+            </Router>
+        );
+
+        const logo = container.querySelector('.MechHub_Logo');
+        expect(logo).toBeInTheDocument();
+    });
+
+    test('navigates to home on click', () => {
         const { container } = render(
             <Router>
                 <Header />
@@ -57,7 +68,7 @@ describe('Header', () => {
         expect(menu).toHaveClass('closed');
     });
 
-    test('renders profile and likes link when user is logged in', () => {
+    test('renders profile, chat, notification and likes link when user is logged in', () => {
         render(
             <Router>
                 <Header />

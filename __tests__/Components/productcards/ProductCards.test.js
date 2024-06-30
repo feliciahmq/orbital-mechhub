@@ -3,8 +3,7 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { useAuth } from '../../../src/Auth';
-import { useLikes } from '../../../src/components/Header/likecounter/LikeCounter'; 
-import { increaseLikeCount, decreaseLikeCount } from '../../../src/components/Header/likecounter/LikeCounter'; 
+import { useLikes } from '../../../src/components/header/likecounter/LikeCounter'; 
 import { db } from '../../../src/lib/firebaseConfig';
 import { doc, getDoc, addDoc, deleteDoc, updateDoc, getDocs, collection } from 'firebase/firestore';
 import '@testing-library/jest-dom';
@@ -12,30 +11,30 @@ import '@testing-library/jest-dom';
 jest.mock('../../../src/Auth');
 jest.mock('../../../src/components/header/likecounter/LikeCounter');
 jest.mock('firebase/firestore', () => {
-  return {
-    ...jest.requireActual('firebase/firestore'),
-    doc: jest.fn(),
-    getDoc: jest.fn(),
-    setDoc: jest.fn(),
-    updateDoc: jest.fn(),
-    deleteDoc: jest.fn(),
-    addDoc: jest.fn(),
-    collection: jest.fn(),
-    query: jest.fn(),
-    where: jest.fn(),
-    getDocs: jest.fn(),
-  };
+    return {
+        ...jest.requireActual('firebase/firestore'),
+        doc: jest.fn(),
+        getDoc: jest.fn(),
+        setDoc: jest.fn(),
+        updateDoc: jest.fn(),
+        deleteDoc: jest.fn(),
+        addDoc: jest.fn(),
+        collection: jest.fn(),
+        query: jest.fn(),
+        where: jest.fn(),
+        getDocs: jest.fn(),
+    };
 });
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: () => mockNavigate,
+}));
 
 const mockNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate,
-}));
+const mockUseLikes = require('../../../src/components/header/likecounter/LikeCounter').useLikes;
 
-
-const productDetail = {
+const mockListing = {
     id: 'product-id',
     title: 'Test Product',
     productType: 'Test Type',
@@ -73,16 +72,22 @@ beforeEach(() => {
         empty: false,
         docs: [{ id: 'like-id' }]
     });
+
+    mockUseLikes.mockReturnValue({
+        likesCount: 0,
+        increaseLikeCount: jest.fn(),
+        decreaseLikeCount: jest.fn(),
+    });
 });
 
 afterEach(() => {
     jest.clearAllMocks();
 });
 
-test('renders product details and handles user interactions', async () => {
+test('renders users information', async () => {
     render(
         <MemoryRouter>
-            <ProductCards productDetail={productDetail} />
+            <ProductCards productDetail={mockListing} />
         </MemoryRouter>
     );
 
@@ -95,10 +100,56 @@ test('renders product details and handles user interactions', async () => {
     expect(screen.getByText('Others')).toBeInTheDocument();
     expect(screen.getByText('$100')).toBeInTheDocument();
     expect(screen.getByText('testuser')).toBeInTheDocument();
+});
 
-    fireEvent.click(screen.getByText('Test Product'));
-    expect(mockNavigate).toHaveBeenCalledWith(`/product/${productDetail.id}`);
+test('navigates to listers profile when user information is clicked', async () => {
+    render(
+        <MemoryRouter>
+            <ProductCards productDetail={mockListing} />
+        </MemoryRouter>
+    );
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+    await waitFor(() => {
+        expect(screen.getByText('Test Product')).toBeInTheDocument();
+    });
 
     fireEvent.click(screen.getByText('testuser'));
-    expect(mockNavigate).toHaveBeenCalledWith(`/profile/${productDetail.userID}`);
+    expect(mockNavigate).toHaveBeenCalledWith(`/profile/${mockListing.userID}`);
 });
+    
+test('renders users information', async () => {
+    render(
+        <MemoryRouter>
+            <ProductCards productDetail={mockListing} />
+        </MemoryRouter>
+    );
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+    await waitFor(() => {
+        expect(screen.getByText('Test Product')).toBeInTheDocument();
+    });
+
+    expect(screen.getByText('Others')).toBeInTheDocument();
+    expect(screen.getByText('$100')).toBeInTheDocument();
+});
+
+test('navigates to listing information when card is clicked', async () => {
+    render(
+        <MemoryRouter>
+            <ProductCards productDetail={mockListing} />
+        </MemoryRouter>
+    );
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
+    await waitFor(() => {
+        expect(screen.getByText('Test Product')).toBeInTheDocument();
+    });
+
+    fireEvent.click(screen.getByText('Test Product'));
+    expect(mockNavigate).toHaveBeenCalledWith(`/product/${mockListing.id}`);
+});
+    

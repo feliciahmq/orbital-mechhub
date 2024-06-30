@@ -39,9 +39,9 @@ function UserReviews({ reviewDetails }) {
         const stars = [];
         for (let i = 1; i <= 5; i++) {
             if (i <= averageScore) {
-                stars.push(<FaStar key={i} className="star-icon" />);
+                stars.push(<FaStar key={i} className="star-icon" data-testid="filled-star" />);
             } else {
-                stars.push(<FaStar key={i} className="star-empty" />);
+                stars.push(<FaStar key={i} className="star-empty" data-testid="empty-star" />);
             }
         }
         return stars;
