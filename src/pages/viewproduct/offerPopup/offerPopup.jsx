@@ -25,7 +25,7 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
         try {
             await addDoc(collection(db, 'listings', listingID, 'offers'), {
                 userID: currentUser.uid,
-                offerPrice: offerData.offerPrice,
+                offerPrice: parseFloat(offerData.offerPrice).toFixed(2), // Ensure offerPrice is a valid decimal
                 comments: offerData.comments,
                 accepted: '',
                 timestamp: new Date()
@@ -55,10 +55,12 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
                     <div className="offer-popup-group">
                         <label>Offer Price:</label>
                         <input 
-                            type="number" 
+                            type="text" 
                             name="offerPrice"
                             value={offerData.offerPrice} 
                             onChange={handleChange} 
+                            pattern="^\d+(\.\d{1,2})?$" 
+                            title="Please enter a valid price with up to 2 decimal places"
                             required
                         />
                     </div>
