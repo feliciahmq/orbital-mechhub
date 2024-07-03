@@ -98,17 +98,21 @@ function Header() {
                         <>
                             <div className='header-icon'>
                                 <FaComment onClick={handleChats} cursor="pointer" />
+                                <span className='tooltip'>chats</span>
                             </div>
                             <div className='likes header-icon'>
                                 <FaHeart onClick={handleLikes} cursor="pointer" />
                                 {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
+                                <span className='tooltip'>likes</span>
                             </div>
                             <div className='notifs header-icon'>
                                 <FaBell onClick={handleNotifs} cursor="pointer" />
                                 {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
+                                <span className='tooltip'>notificaitons</span>
                             </div>
                             <div className='header-icon'>
                                 <FaUserAlt onClick={handleProfile} cursor="pointer" />
+                                <span className='tooltip'>profile</span>
                             </div>
                         </>
                     ) : (

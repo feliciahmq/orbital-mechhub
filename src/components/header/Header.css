@@ -60,6 +60,7 @@
         width: 36px;
         display: flex;
         justify-content: center;
+        position: relative;
     }
 
     .likes, .notifs {
@@ -70,7 +71,7 @@
         position: relative;
     }
 
-    .likes span {
+    .likes .notification-count {
         color: white;
         border-radius: 50%;
         width: 12px;
@@ -86,7 +87,7 @@
         right: -1px;
     }
 
-    .notifs span {
+    .notifs .notification-count {
         color: white;
         border-radius: 50%;
         width: 14px;
@@ -115,6 +116,33 @@
         flex: 1;
         display: flex;
         justify-content: center;
+    }
+
+    .tooltip {
+        display: flex;
+        visibility: hidden;
+        position: absolute;
+        z-index: 2;
+        width: 100px;
+        color: white;
+        font-size: 12px;
+        background-color: black;
+        border-radius: 2px;
+        padding: 8px;
+        top: 25px;
+        left: 50%;
+        margin-left: -50px;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .header-icon:hover .tooltip {
+        visibility: visible;
+    }
+    
+    .tooltip::before {
+        top: -5%;
+        left: 45%;
     }
 
     @media screen and (max-width: 768px) {
