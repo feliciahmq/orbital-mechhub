@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc, setDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
 import { useAuth } from '../../Auth';
 import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
@@ -244,13 +244,32 @@ function ProductPage() {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-
+        
         try {
+            const likesQuery = query(collection(db, 'Likes'), where('listingID', '==', listingID));
+            const likesSnapshot = await getDocs(likesQuery);
+
+            const deletePromises = likesSnapshot.docs.map(async (likeDoc) => {
+                const likeData = likeDoc.data();
+
+                await deleteDoc(doc(db, 'Likes', likeDoc.id));
+    
+                const userLikeCountDoc = doc(db, 'Users', likeData.userID, 'likeCount', 'counter');
+                const userLikeCountSnap = await getDoc(userLikeCountDoc);
+                if (userLikeCountSnap.exists()) {
+                    const currentCount = userLikeCountSnap.data().count;
+                    await setDoc(userLikeCountDoc, { count: Math.max(currentCount - 1, 0) });
+                }
+            });
+
+            await Promise.all(deletePromises);
             await deleteDoc(doc(db, 'listings', listingID));
+            
             toast.success('Listing Successfully Deleted!');
             navigate('/');
         } catch (err) {
             console.log('Error: ' + err.message);
+            toast.error('Error deleting listing: ' + err.message);
         }
     };
 
