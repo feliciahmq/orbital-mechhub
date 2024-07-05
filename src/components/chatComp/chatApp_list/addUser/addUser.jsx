@@ -1,14 +1,16 @@
-import { arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { addDoc, arrayUnion, collection, doc, getDoc, getDocs, query, updateDoc, where } from "firebase/firestore";
 import "./addUser.css"
 import { db } from "../../../../lib/firebaseConfig";
 import { useState } from "react";
 import { useUserStore } from "../../../../lib/userStore";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 const addUser = ({ closePopup }) => {
 	const [user, setUser] = useState(null);
 	const [error, setError] = useState("");
 	const { currentUser } = useUserStore();
+	const navigate = useNavigate();
 
 	const handleSearch = async e => {
 		e.preventDefault();
@@ -35,15 +37,17 @@ const addUser = ({ closePopup }) => {
 	};
 
 	const handleAdd = async () => {
-		
 		const chatRef = collection(db, "Chats");
 		const userChatsRef = collection(db, "UserChats");
 
 		try {
 			const currentUserChatsDoc = await getDoc(doc(userChatsRef, currentUser.id)); 
-			const existingChat = currentUserChatsDoc.data().chats.find( chat => chat.receiverId === user.id ); 
+			const existingChats = currentUserChatsDoc.exists() && currentUserChatsDoc.data().chats ? currentUserChatsDoc.data().chats : [];
+			const existingChat = existingChats.find( chat => chat.receiverId === user.id ); 
+
 			if (existingChat) { 
 				toast.error("A chat with this user already exists.");
+				navigate(`/chat/${currentUser.id}/${existingChat.chatId}`);
 				return; 
       		} 
 
@@ -52,6 +56,9 @@ const addUser = ({ closePopup }) => {
 				messages: [],
 			});
 	
+			if (!newChatRef.id) {
+                throw new Error("Failed to create new chat");
+            }
 
 			await updateDoc(doc(userChatsRef, user.id), {
 				chats: arrayUnion({
@@ -72,6 +79,7 @@ const addUser = ({ closePopup }) => {
 			});
 
     		closePopup();
+			navigate(`/chat/${currentUser.id}/${newChatRef.chatId}`);
 
 		} catch (err) {
 		  console.log(err);
