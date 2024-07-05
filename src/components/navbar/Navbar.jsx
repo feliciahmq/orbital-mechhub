@@ -5,7 +5,7 @@ import { useLikes } from '../header/likecounter/LikeCounter';
 import { FaComment, FaHeart, FaBell, FaQuestionCircle } from 'react-icons/fa';
 import { FaHouse } from 'react-icons/fa6';
 import { FaComments } from 'react-icons/fa6';
-import { query, collection, where, getDocs } from 'firebase/firestore';
+import { query, collection, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
 
 import './Navbar.css';

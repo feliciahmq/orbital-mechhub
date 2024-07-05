@@ -80,8 +80,7 @@
                 cursor: pointer;
                 position: absolute;
                 top: 0;
-                left: 0;
-                
+                left: 0; 
             }
     
             .uploaded-listing-pictures {
