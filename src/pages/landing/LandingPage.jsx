@@ -3,10 +3,9 @@ import { collection, getDocs, query, where, getDoc, doc } from "firebase/firesto
 import { db } from "../../lib/firebaseConfig";
 import { useAuth } from '../../Auth'; 
 
-import Header from '../../components/header/Header';
+import Format from '../../components/format/Format';
 import ProductList from '../../components/productcards/ProductList';
 import Banner from "./banner/LandingBanner";
-import ListingButton from '../../components/listingpopup/Button';
 import './LandingPage.css';
 
 function LandingPage() {
@@ -73,22 +72,22 @@ function LandingPage() {
     }, []);
 
     return (
-        <div className='landing-page'>
-            <div className='header-section'>
-                <header className="header-container">
-                    <Header />
-                    <Banner />
-                </header>
+        <Format content={
+            <div className='landing-page'>
+                <div className='header-section'>
+                    <header className="header-container">
+                        <Banner />
+                    </header>
+                </div>
+                <div className='main'>
+                    <section>
+                        <div>
+                            <ProductList heading="Featured Products" products={listings} />
+                        </div>
+                    </section>
+                </div>
             </div>
-            <div className='main'>
-                <section>
-                    <div>
-                        <ProductList heading="Featured Products" products={listings} />
-                    </div>
-                    {currentUser && <ListingButton />}
-                </section>
-            </div>
-        </div>
+        } />
     );
 }
 

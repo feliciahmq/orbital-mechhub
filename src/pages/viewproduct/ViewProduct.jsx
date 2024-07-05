@@ -11,7 +11,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Header from '../../components/header/Header';
+import Format from '../../components/format/Format';
 import OfferPopup from './offerPopup/offerPopup';
 import ViewOffers from './viewOffers/viewOffers';
 import './ViewProduct.css';
@@ -333,8 +333,8 @@ function ProductPage() {
     };
 
     return (
-        <div className='content'>
-            <Header />
+        <Format content={
+        <div>
             {listing && (
                 <div className="listing-container">
                     <div className='listing-options'>
@@ -433,6 +433,7 @@ function ProductPage() {
                 />
             )}
         </div>
+        } />
     );
 }
 

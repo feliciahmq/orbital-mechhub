@@ -4,6 +4,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from "/src/lib/firebaseConfig";
 import { useUserStore } from '../../lib/userStore.js';
 
+import Format from '../../components/format/Format.jsx';
 import Chat from "../../components/chatComp/chatApp_chat/Chat.jsx";
 import Detail from "../../components/chatComp/chatApp_detail/Detail.jsx";
 import List from "../../components/chatComp/chatApp_list/List.jsx";
@@ -37,25 +38,27 @@ const ChatApp = () => {
 	}
 
 	return (
-		<>
-		<Header className='chat-header'/>
-		<div className='chat-page'>
-		{currentUser ? ( 
+		<Format content={
 			<>
-				<div className='chat-container'>
-					<div className='inner-container'>
-					<List/>
-					{chatId && <Chat/>}
-					{chatId && <Detail/>}
+			<Header className='chat-header'/>
+			<div className='chat-page'>
+			{currentUser ? ( 
+				<>
+					<div className='chat-container'>
+						<div className='inner-container'>
+						<List/>
+						{chatId && <Chat/>}
+						{chatId && <Detail/>}
+						</div>
 					</div>
-				</div>
-			</> 
-			) : (
-			<LoginSignupForm />
-		)}
-		</div>
-		</>
-	);``
+				</> 
+				) : (
+				<LoginSignupForm />
+			)}
+			</div>
+			</>
+		} />
+	);
 };
 
 export default ChatApp;

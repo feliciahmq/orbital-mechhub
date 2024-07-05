@@ -8,6 +8,8 @@ import 'firebase/compat/firestore';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
+import Navbar from '../../components/navbar/Navbar';
+import Format from '../../components/format/Format';
 import ReviewList from './userReviews/ReviewList';
 import EditPopup from './editUser/EditPopup';
 import Header from '../../components/header/Header';
@@ -223,93 +225,91 @@ function UserProfile() {
 	};
 
 	return (
-		<div className='content'>
-		<Header />
-		{userInfo ? (
-			<>
-			<div className="profile-container">
-				<div className='profile-info-container'>
-					<div className='profile-info'>
-						<div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic || defaultProfilePic})` }} />
-						<p>@{userInfo.username}</p>
-						<p className='join-date'><FaCalendarAlt /> Joined {userInfo.signUpDate}</p>
-						<div className='follow-info'>
-							<div className='follow-count'>
-								<h5>{followCount}</h5>
-								<p>Followers</p>
-							</div>
-							<div className='follow-count'>
-								<h5>{followingCount}</h5>
-								<p>Following</p>
-							</div>
-						</div>
-					</div>
-					<div className='profile-buttons'>
-						{currentUser?.uid === userID ? (
-							<>
-								<button className="edit-profile" onClick={handleOpenPopup}>
-									Edit Profile
-								</button>
-								{isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
-								<button className="logout" onClick={handleLogout}>
-									Logout
-								</button>
-							</>
-						) : (
-							followUser ? (
-								<button className='unfollow' onClick={handleUserUnFollow}>Unfollow</button>
-							) : (
-								<button className='follow' onClick={handleUserFollow}>Follow</button>
-							)
-						)}
-					</div>
-				</div>
-				<div className="profile-toggle">
-					<div
-						className={`toggle ${!viewReviews ? 'active' : ''}`}
-						onClick={() => setViewReviews(false)}
-					>
-						Listings
-					</div>
-					<div
-						className={`toggle ${viewReviews ? 'active' : ''}`}
-						onClick={() => setViewReviews(true)}
-					>
-						Reviews
-					</div>
-				</div>
-				<ListingButton />
-			</div>
-			<div className="user-content">
-				{viewReviews ? (
-					<div className="user-reviews">
-						{userReviews.length > 0 ? (
-							<ReviewList
-								heading={`${userInfo.username}'s Reviews`}
-								reviews={userReviews} averageScore={averageScore} numberOfReviews={numberOfReviews}
-							/>
-						) : (
-							<h2>This user has no reviews ( ˘･з･)</h2>
-						)}
-					</div>
-				) : (
-					<div className="users-listings">
-						{userListings.length > 0 ? (
-							<ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
-						) : (
-							<h2>This user has no listings ( ˘･з･)</h2>
-						)}
-					</div>
-					)}
-				</div>
-			</>
-		) : (
-			<div>
-				<p>No user found.</p>
-				<button onClick={handleLoginNavigation}>Login</button>
-			</div>
-		)}
-		</div>
+		<Format content={
+            userInfo ? (
+                <>
+                    <div className="profile-container">
+                        <div className='profile-info-container'>
+                            <div className='profile-info'>
+                                <div className="profile-pic" style={{ backgroundImage: `url(${userInfo.profilePic || defaultProfilePic})` }} />
+                                <p>@{userInfo.username}</p>
+                                <p className='join-date'><FaCalendarAlt /> Joined {userInfo.signUpDate}</p>
+                                <div className='follow-info'>
+                                    <div className='follow-count'>
+                                        <h5>{followCount}</h5>
+                                        <p>Followers</p>
+                                    </div>
+                                    <div className='follow-count'>
+                                        <h5>{followingCount}</h5>
+                                        <p>Following</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className='profile-buttons'>
+                                {currentUser?.uid === userID ? (
+                                    <>
+                                        <button className="edit-profile" onClick={handleOpenPopup}>
+                                            Edit Profile
+                                        </button>
+                                        {isPopupOpen && <EditPopup onClose={handleClosePopup} onSubmit={handleSubmit} />}
+                                        <button className="logout" onClick={handleLogout}>
+                                            Logout
+                                        </button>
+                                    </>
+                                ) : (
+                                    followUser ? (
+                                        <button className='unfollow' onClick={handleUserUnFollow}>Unfollow</button>
+                                    ) : (
+                                        <button className='follow' onClick={handleUserFollow}>Follow</button>
+                                    )
+                                )}
+                            </div>
+                        </div>
+                        <div className="profile-toggle">
+                            <div
+                                className={`toggle ${!viewReviews ? 'active' : ''}`}
+                                onClick={() => setViewReviews(false)}
+                            >
+                                Listings
+                            </div>
+                            <div
+                                className={`toggle ${viewReviews ? 'active' : ''}`}
+                                onClick={() => setViewReviews(true)}
+                            >
+                                Reviews
+                            </div>
+                        </div>
+                    </div>
+                    <div className="user-content">
+                        {viewReviews ? (
+                            <div className="user-reviews">
+                                {userReviews.length > 0 ? (
+                                    <ReviewList
+                                        heading={`${userInfo.username}'s Reviews`}
+                                        reviews={userReviews} averageScore={averageScore} numberOfReviews={numberOfReviews}
+                                    />
+                                ) : (
+                                    <h2>This user has no reviews ( ˘･з･)</h2>
+                                )}
+                            </div>
+                        ) : (
+                            <div className="users-listings">
+                                {userListings.length > 0 ? (
+                                    <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
+                                ) : (
+                                    <h2>This user has no listings ( ˘･з･)</h2>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </>
+            ) : (
+                <div>
+                    <p>No user found.</p>
+                    <button onClick={handleLoginNavigation}>Login</button>
+                </div>
+            )
+        } />
 	);  
 }
 

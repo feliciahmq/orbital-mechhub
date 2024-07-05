@@ -8,6 +8,7 @@ import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "fire
 import { query, collection, where, getDocs, doc, setDoc } from "firebase/firestore";
 import { signInWithGoogle } from './GoogleAuth';
 
+import Format from '../../components/format/Format';
 import './LoginSignupForm.css';
 import Header from '../../components/header/Header';
 

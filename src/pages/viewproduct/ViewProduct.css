@@ -2,7 +2,6 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
     background-color: white;
     height: 540px;
     justify-content: center;
@@ -66,14 +65,14 @@
             height: auto;
             border: 1px solid rgb(240, 240, 240);
             max-height: 410px;
-            overflow: visible; /* Allow buttons to be visible */
+            overflow: visible;
 
             .listing-images {
                 display: flex !important;
                 justify-content: center;
                 align-items: center;
                 height: 400px;
-                position: relative; /* Make sure buttons are positioned correctly */
+                position: relative; 
 
                 img {
                     max-width: 100%;

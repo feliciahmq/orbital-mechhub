@@ -4,7 +4,7 @@ import { db } from '../../lib/firebaseConfig';
 import { useAuth } from '../../Auth';
 import { useLocation } from 'react-router-dom';
 
-import Header from '../../components/header/Header';
+import Format from '../../components/format/Format';
 import ProductList from '../../components/productcards/ProductList';
 import ListingButton from '../../components/listingpopup/Button';
 import ProductFilter from './filter/productFilter';
@@ -149,25 +149,22 @@ function SearchPage() {
     }, [searchQuery, products]);
 
     return (
-        <div className='content'>
-            <header>
-                <Header />
-            </header>
-            <section className='main'>
-                <div className='product-filter'>
-                    <ProductFilter 
-                        minPrice={minPrice} 
-                        maxPrice={maxPrice} 
-                        onFilterChange={filterProducts} 
-                        onSortChange={setSortOrder} 
-                    />
-                </div>
-                <div className='listing'>
-                    <ProductList heading="Products" products={filteredProducts} />
-                </div>
-                {currentUser && <ListingButton />}
-            </section>
-        </div>
+        <Format content={
+            <div>
+                    <div className='product-filter'>
+                        <ProductFilter 
+                            minPrice={minPrice} 
+                            maxPrice={maxPrice} 
+                            onFilterChange={filterProducts} 
+                            onSortChange={setSortOrder} 
+                        />
+                    </div>
+                    <div className='listing'>
+                        <ProductList heading="Products" products={filteredProducts} />
+                    </div>
+
+            </div>
+        } />
     );
 }
 
