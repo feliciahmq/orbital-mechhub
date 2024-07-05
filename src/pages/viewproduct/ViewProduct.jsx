@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc, setDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
 import { useAuth } from '../../Auth';
-import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaStar, FaStarHalf, FaComment } from "react-icons/fa";
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { useLikes } from '../../components/header/likecounter/LikeCounter';
 import { toast } from 'react-hot-toast';
@@ -269,6 +269,50 @@ function ProductPage() {
         return stars;
     };
 
+    const handleStartChat = async () => {
+        const chatRef = collection(db, "Chats");
+        const userChatsRef = collection(db, "UserChats");
+
+        try {
+			const currentUserChatsDoc = await getDoc(doc(userChatsRef, currentUser.uid)); 
+            const existingChats = currentUserChatsDoc.exists() && currentUserChatsDoc.data().chats ? currentUserChatsDoc.data().chats : [];
+			const existingChat = existingChats.find( chat => chat.receiverId === user.id ); 
+			if (existingChat) { 
+				navigate(`/chat/${currentUser.uid}`);
+			    return; 
+      		} 
+
+            const newChatRef = await addDoc(chatRef, {
+                createdAt: new Date(),
+                messages: [],
+            });
+    
+      
+			await updateDoc(doc(userChatsRef, user.id), {
+				chats: arrayUnion({
+                    chatId: newChatRef.id,
+                    lastMessage: "",
+                    receiverId: currentUser.uid,
+                    updatedAt: Date.now(),
+				}),
+			});
+
+			await updateDoc(doc(userChatsRef, currentUser.uid), {
+				chats: arrayUnion({
+                    chatId: newChatRef.id,
+                    lastMessage: "",
+                    receiverId: user.id,
+                    updatedAt: Date.now(),
+				}),
+			});
+
+    		navigate(`/chat/${currentUser.uid}`);
+
+		} catch (err) {
+		  console.log(err);
+		}
+    };
+
     const handleOpenPopup = () => {
         setIsPopupOpen(true);
     };
@@ -394,6 +438,9 @@ function ProductPage() {
                             onClick={handleUsernameClick}
                         />
                         <h4 onClick={handleUsernameClick}>{user.username}</h4>
+                        {currentUser?.uid !== listing?.userID && (
+                            <FaComment onClick={handleStartChat} className="chat-icon" />
+                        )}
                     </div>
                     <div className="user-reviews">
                         <div className="stars" onClick={handleUsernameClick}>

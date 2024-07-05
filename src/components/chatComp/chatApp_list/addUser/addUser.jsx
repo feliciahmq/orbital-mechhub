@@ -28,9 +28,9 @@ const addUser = ({ closePopup }) => {
 			setError("User not found.");
 		}
 		} catch (err) {
-		console.log(err);
-		setUser(null); 
-		setError("User not found.");
+			console.log(err);
+			setUser(null); 
+			setError("User not found.");
 		}
 	};
 
@@ -40,44 +40,43 @@ const addUser = ({ closePopup }) => {
 		const userChatsRef = collection(db, "UserChats");
 
 		try {
-      const currentUserChatsDoc = await getDoc(doc(userChatsRef, currentUser.id)); 
-      const existingChat = currentUserChatsDoc.data().chats.find( chat => chat.receiverId === user.id ); 
-      if (existingChat) { 
-        toast.error("A chat with this user already exists.");
-        return; 
-      } 
+			const currentUserChatsDoc = await getDoc(doc(userChatsRef, currentUser.id)); 
+			const existingChat = currentUserChatsDoc.data().chats.find( chat => chat.receiverId === user.id ); 
+			if (existingChat) { 
+				toast.error("A chat with this user already exists.");
+				return; 
+      		} 
 
-		  const newChatRef = doc(chatRef);
+			const newChatRef = await addDoc(chatRef, {
+				createdAt: new Date(),
+				messages: [],
+			});
+	
 
-      await setDoc(newChatRef, {
-        createdAt: new Date(),
-        messages:[],
-      });
+			await updateDoc(doc(userChatsRef, user.id), {
+				chats: arrayUnion({
+					chatId: newChatRef.id,
+					lastMessage: "",
+					receiverId: currentUser.id,
+					updatedAt: Date.now(),
+				}),
+			});
 
-      await updateDoc(doc(userChatsRef, user.id), {
-        chats: arrayUnion({
-        chatId: newChatRef.id,
-        lastMessage: "",
-        receiverId: currentUser.id,
-        updatedAt: Date.now(),
-        }),
-      });
+			await updateDoc(doc(userChatsRef, currentUser.id), {
+				chats: arrayUnion({
+					chatId: newChatRef.id,
+					lastMessage: "",
+					receiverId: user.id,
+					updatedAt: Date.now(),
+				}),
+			});
 
-      await updateDoc(doc(userChatsRef, currentUser.id), {
-        chats: arrayUnion({
-        chatId: newChatRef.id,
-        lastMessage: "",
-        receiverId: user.id,
-        updatedAt: Date.now(),
-        }),
-      });
-
-    closePopup();
+    		closePopup();
 
 		} catch (err) {
 		  console.log(err);
 		}
-	}
+	};
 
 	return (
 		<div className="addUser">
