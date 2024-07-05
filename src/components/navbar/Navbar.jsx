@@ -16,21 +16,44 @@ function Navbar() {
     const { currentUser } = useAuth();
     const { likeCount } = useLikes();
     const [unreadCount, setUnreadCount] = useState(0);
+    const [chatUnreadCount, setChatUnreadCount] = useState(0);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
-      const fetchUnreadNotifications = async () => {
-        if (currentUser) {
-          const notificationsQuery = query(
-            collection(db, 'Notifications'),
-            where('recipientID', '==', currentUser.uid),
-            where('read', '==', false)
-          );
-          const notificationsSnapshot = await getDocs(notificationsQuery);
-          setUnreadCount(notificationsSnapshot.docs.length);
-        }
-      };
-      fetchUnreadNotifications();
+        const fetchUnreadNotifications = async () => {
+            if (currentUser) {
+                const notificationsQuery = query(
+                    collection(db, 'Notifications'),
+                    where('recipientID', '==', currentUser.uid),
+                    where('read', '==', false)
+                );
+                const notificationsSnapshot = await getDocs(notificationsQuery);
+                setUnreadCount(notificationsSnapshot.docs.length);
+            }
+        };
+        const fetchUnreadChat = async () => {
+            if (currentUser) {
+                const userChatsQuery = query(
+                    collection(db, 'UserChats'),
+                    where('users', 'array-contains', currentUser.uid)
+                );
+                onSnapshot(userChatsQuery, (snapshot) => {
+                    let unreadMessages = 0;
+                    snapshot.docs.forEach((doc) => {
+                        const chatData = doc.data();
+                        chatData.messages.forEach((message) => {
+                            if (message.senderId !== currentUser.uid && !message.isSeen) {
+                                unreadMessages++;
+                            }
+                        });
+                    });
+                    setChatUnreadCount(unreadMessages);
+                });
+            }
+        };
+
+        fetchUnreadNotifications();
+        fetchUnreadChat();
     }, [currentUser]);
 
     useEffect(() => {
@@ -75,6 +98,7 @@ function Navbar() {
                         <div className='navbar-icon' onClick={handleChats}>
                             <FaComment />
                             <p>Chats</p>
+                            {chatUnreadCount > 0 && <span className="notification-count">{chatUnreadCount}</span>}
                             <span className='tooltip'>Chats</span>
                         </div>
                         <div className='likes navbar-icon' onClick={handleLikes}>

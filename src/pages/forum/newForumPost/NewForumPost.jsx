@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../../../Auth";
-
-import Header from "../../../components/header/Header";
+import Format from '../../../components/format/Format';
 import './NewForumPost.css';
 
 function NewForumPost() {
@@ -15,6 +14,10 @@ function NewForumPost() {
         poll: { question: '', options: [''] }
     });
 
+    const [poll, setPoll] = useState(0);
+
+    const availableTags = ["Questions", "Modding", "Reviews", "Showcase"];
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -25,9 +28,13 @@ function NewForumPost() {
         setFormData({ ...formData, media: files });
     };
 
-    const handleTagsChange = (e) => {
-        const selectedTags = Array.from(e.target.selectedOptions, option => option.value);
-        setFormData({ ...formData, tags: selectedTags });
+    const handleTagClick = (tag) => {
+        setFormData((prevFormData) => {
+            const tags = prevFormData.tags.includes(tag)
+                ? prevFormData.tags.filter((t) => t !== tag)
+                : [...prevFormData.tags, tag];
+            return { ...prevFormData, tags };
+        });
     };
 
     const handlePollOptionChange = (index, value) => {
@@ -92,45 +99,79 @@ function NewForumPost() {
     };
 
     return (
-        <>
-            <Header />
-            <div className="new-forum-post">
-                <form onSubmit={handleSubmit}>
-                    <div>
-                        <label>Title</label>
-                        <input type="text" name="title" value={formData.title} onChange={handleInputChange} required />
-                    </div>
-                    <div>
-                        <label>Media</label>
-                        <input type="file" accept="image/*,video/*" multiple onChange={handleMediaChange} />
-                    </div>
-                    <div>
-                        <label>Description</label>
-                        <textarea name="description" value={formData.description} onChange={handleInputChange} required />
-                    </div>
-                    <div>
-                        <label>Tags</label>
-                        <select multiple name="tags" value={formData.tags} onChange={handleTagsChange}>
-                            <option value="mechanical">Mechanical</option>
-                            <option value="keycaps">Keycaps</option>
-                            <option value="switches">Switches</option>
-                            <option value="modding">Modding</option>
-                            <option value="reviews">Reviews</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label>Poll Question</label>
-                        <input type="text" name="pollQuestion" value={formData.poll.question} onChange={(e) => setFormData({ ...formData, poll: { ...formData.poll, question: e.target.value } })} />
-                        <label>Poll Options</label>
-                        {formData.poll.options.map((option, index) => (
-                            <input key={index} type="text" value={option} onChange={(e) => handlePollOptionChange(index, e.target.value)} />
-                        ))}
-                        <button type="button" onClick={addPollOption}>Add Option</button>
-                    </div>
-                    <button type="submit">Submit</button>
-                </form>
-            </div>
-        </>
+        <Format content={
+            <>
+                <div className="forum-form">
+                    <h2>Create Forum Post</h2>
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label>Title</label>
+                            <input 
+                                type="text" 
+                                name="title" 
+                                value={formData.title} 
+                                onChange={handleInputChange} 
+                                required 
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Add Tags</label>
+                            <div className="tags-container">
+                                {availableTags.map((tag) => (
+                                    <button 
+                                        type="button" 
+                                        key={tag} 
+                                        className={`tag-button ${formData.tags.includes(tag) ? 'selected' : ''}`}
+                                        onClick={() => handleTagClick(tag)}
+                                    >
+                                        {tag}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                        <div className="form-group">
+                            <label>Media</label>
+                            <input 
+                                type="file" 
+                                accept="image/*,video/*" 
+                                multiple 
+                                onChange={handleMediaChange} 
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Text</label>
+                            <textarea 
+                                name="description" 
+                                value={formData.description} 
+                                onChange={handleInputChange} 
+                                required 
+                            />
+                        </div>
+                        
+                       
+                            {poll > 0 ? (
+                                <div>
+                                    <label>Poll Question</label>
+                                    <input 
+                                        type="text" 
+                                        name="pollQuestion" 
+                                        value={formData.poll.question} 
+                                        onChange={(e) => setFormData({ ...formData, poll: { ...formData.poll, question: e.target.value } })} 
+                                    />
+                                    <label>Poll Options</label>
+                                    {formData.poll.options.map((option, index) => (
+                                        <input key={index} type="text" value={option} onChange={(e) => handlePollOptionChange(index, e.target.value)} />
+                                    ))}
+                                    <button type="button" onClick={addPollOption}>Add Option</button>
+                                </div>
+                            ) : (
+                                <></>
+                            )}
+                        <button className="submit" type="submit">Submit</button>
+                    </form>
+                </div>
+            </>
+        } />
     );
 }
 
