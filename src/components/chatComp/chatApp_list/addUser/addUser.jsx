@@ -1,8 +1,9 @@
-import { arrayUnion, collection, doc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
+import { arrayUnion, collection, doc, getDoc, getDocs, query, setDoc, updateDoc, where } from "firebase/firestore";
 import "./addUser.css"
 import { db } from "../../../../lib/firebaseConfig";
 import { useState } from "react";
 import { useUserStore } from "../../../../lib/userStore";
+import toast from "react-hot-toast";
 
 const addUser = ({ closePopup }) => {
 	const [user, setUser] = useState(null);
@@ -39,34 +40,42 @@ const addUser = ({ closePopup }) => {
 		const userChatsRef = collection(db, "UserChats");
 
 		try {
-		const newChatRef = doc(chatRef);
+      const currentUserChatsDoc = await getDoc(doc(userChatsRef, currentUser.id)); 
+      const existingChat = currentUserChatsDoc.data().chats.find( chat => chat.receiverId === user.id ); 
+      if (existingChat) { 
+        toast.error("A chat with this user already exists.");
+        return; 
+      } 
 
-		await setDoc(newChatRef, {
-			createdAt: new Date(),
-			messages:[],
-		});
+		  const newChatRef = doc(chatRef);
 
-		await updateDoc(doc(userChatsRef, user.id), {
-			chats: arrayUnion({
-			chatId: newChatRef.id,
-			lastMessage: "",
-			receiverId: currentUser.id,
-			updatedAt: Date.now(),
-			}),
-		});
+      await setDoc(newChatRef, {
+        createdAt: new Date(),
+        messages:[],
+      });
 
-		await updateDoc(doc(userChatsRef, currentUser.id), {
-			chats: arrayUnion({
-			chatId: newChatRef.id,
-			lastMessage: "",
-			receiverId: user.id,
-			updatedAt: Date.now(),
-			}),
-		});
+      await updateDoc(doc(userChatsRef, user.id), {
+        chats: arrayUnion({
+        chatId: newChatRef.id,
+        lastMessage: "",
+        receiverId: currentUser.id,
+        updatedAt: Date.now(),
+        }),
+      });
+
+      await updateDoc(doc(userChatsRef, currentUser.id), {
+        chats: arrayUnion({
+        chatId: newChatRef.id,
+        lastMessage: "",
+        receiverId: user.id,
+        updatedAt: Date.now(),
+        }),
+      });
 
     closePopup();
+
 		} catch (err) {
-		console.log(err);
+		  console.log(err);
 		}
 	}
 
@@ -90,7 +99,7 @@ const addUser = ({ closePopup }) => {
 		) : (
 			error && 
 			<div className="error">
-			{error}
+			  {error}
 			</div>
 		)}
 		</div>
