@@ -194,6 +194,11 @@ const Chat = () => {
                     placeholder={(isCurrentUserBlocked || isReceiverBlocked) ? "You cannot send a message" : "Type a message"}
                     value={text} 
                     onChange={e=>setText(e.target.value)} 
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleSendText();
+                        }
+                    }}
                     disabled={isCurrentUserBlocked || isReceiverBlocked} 
                 />
                 <div className="emoji">
@@ -219,6 +224,11 @@ const Chat = () => {
                         <input
                             placeholder="Add a message to this image."
                             value={imgMsg}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSendImg();
+                                }
+                            }}
                             onChange={(e) => setImgMsg(e.target.value)}
                         />
                         <button onClick={handleSendImg}>Send Image</button>
