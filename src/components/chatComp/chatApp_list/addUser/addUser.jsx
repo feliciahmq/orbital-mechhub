@@ -47,7 +47,7 @@ const addUser = ({ closePopup }) => {
 
 			if (existingChat) { 
 				toast.error("A chat with this user already exists.");
-				navigate(`/chat/${currentUser.id}/${existingChat.chatId}`);
+				navigate(`/chat/${currentUser.id}/${existingChat.id}`);
 				return; 
       		} 
 
@@ -79,7 +79,7 @@ const addUser = ({ closePopup }) => {
 			});
 
     		closePopup();
-			navigate(`/chat/${currentUser.id}/${newChatRef.chatId}`);
+			navigate(`/chat/${currentUser.id}/${newChatRef.id}`);
 
 		} catch (err) {
 		  console.log(err);

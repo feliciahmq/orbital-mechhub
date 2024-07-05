@@ -278,7 +278,7 @@ function ProductPage() {
             const existingChats = currentUserChatsDoc.exists() && currentUserChatsDoc.data().chats ? currentUserChatsDoc.data().chats : [];
 			const existingChat = existingChats.find( chat => chat.receiverId === user.id ); 
 			if (existingChat) { 
-				navigate(`/chat/${currentUser.uid}/${existingChat.chatId}`);
+				navigate(`/chat/${currentUser.uid}/${existingChat.id}`);
 			    return; 
       		} 
 
@@ -306,7 +306,7 @@ function ProductPage() {
 				}),
 			});
 
-    		navigate(`/chat/${currentUser.uid}/${newChatRef.chatId}`);
+    		navigate(`/chat/${currentUser.uid}/${newChatRef.id}`);
 
 		} catch (err) {
 		  console.log(err);
