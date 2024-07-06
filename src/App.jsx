@@ -38,7 +38,6 @@ return (
 		<Route path="/chat" element={<Chat />} />
 		<Route path="/chat/:userID" element={<Chat />} />
 		<Route path="/forum" element={<ForumPage />} />
-		<Route path="/forum/:postID" element={<ForumPage />} />
 		<Route path="/newforumpost" element={<NewForumPost />} />
 		</Routes>
 	</Router>

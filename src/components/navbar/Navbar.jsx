@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../Auth';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLikes } from '../header/likecounter/LikeCounter';
-import { FaComment, FaHeart, FaBell, FaQuestionCircle } from 'react-icons/fa';
-import { FaHouse } from 'react-icons/fa6';
-import { FaComments } from 'react-icons/fa6';
-import { FaKeyboard } from 'react-icons/fa6';
+import { FaComment, FaHeart, FaBell, FaQuestionCircle,  FaCopyright } from 'react-icons/fa';
+import { FaHouse, FaComments, FaKeyboard } from 'react-icons/fa6';
 import { query, collection, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
 
+import Mechhub_Logo_small from "../../assets/Logo/MH_logo.png";
 import './Navbar.css';
 
 function Navbar() {
@@ -146,6 +145,14 @@ function Navbar() {
                         <p>Help</p>
                     </div>
                 </ul>
+            </div>
+            <div className='footer'>
+                <img 
+                    src={Mechhub_Logo_small}
+                    className='MechHub_logo_footer'
+                />
+                <FaCopyright stroke='black' fill='white' strokeWidth={25} className='copyright'/>
+                <p>2024 MechHub</p>
             </div>
         </nav>
     );
