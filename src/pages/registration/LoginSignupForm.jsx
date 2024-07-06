@@ -18,6 +18,8 @@ function LoginSignUpForm() {
     const [showLogin, setShowLogin] = useState(true);
     const [signUpVisible, setSignUpVisible] = useState(false);
     const [loginVisible, setLoginVisible] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmPWVisible, setConfirmPWVisible] = useState(false);
 
     const toggleSignUpPassword = () => {
         setSignUpVisible(!signUpVisible);
@@ -25,6 +27,10 @@ function LoginSignUpForm() {
 
     const toggleLoginPassword = () => {
         setLoginVisible(!loginVisible);
+    };
+
+    const toggleConfirmPWPassword = () => {
+        setConfirmPWVisible(!confirmPWVisible);
     };
 
     // navigate
@@ -51,6 +57,11 @@ function LoginSignUpForm() {
 
         if (username.trim() === "" || signupEmail.trim() === "" || signupPassword.trim() === "") {
             toast.error("All fields are required.");
+            return;
+        }
+
+        if (signupPassword != confirmPassword) {
+            toast.error("Password and confirm password should be the same.");
             return;
         }
 
@@ -158,7 +169,16 @@ function LoginSignUpForm() {
                                     <div className="password">
                                         <input type={signUpVisible ? "text" : "password"} placeholder="Password"
                                             value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required />
-                                        <p onClick={toggleSignUpPassword}>{signUpVisible ? <FaEyeSlash /> : <FaEye />}</p>
+                                        <p onClick={toggleSignUpPassword}>
+                                            {signUpVisible ? <FaEyeSlash /> : <FaEye />}
+                                        </p>
+                                    </div>
+                                    <div className="password">
+                                        <input type={confirmPWVisible ? "text" : "password"} placeholder="Confirm Password"
+                                            value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                                        <p onClick={toggleConfirmPWPassword}>
+                                            {confirmPWVisible ? <FaEyeSlash /> : <FaEye />}
+                                        </p>
                                     </div>
                                     <button type="submit">Sign up</button>
                                 </form>
@@ -178,7 +198,9 @@ function LoginSignUpForm() {
                                     <div className="password">
                                         <input type={loginVisible ? "text" : "password"} placeholder="Password"
                                             value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
-                                        <p onClick={toggleLoginPassword}>{loginVisible ? <FaEyeSlash /> : <FaEye />}</p>
+                                        <p onClick={toggleLoginPassword}>
+                                            {loginVisible ? <FaEyeSlash /> : <FaEye />}
+                                        </p>
                                     </div>
                                     <button type="submit">Log in</button>
                                 </form>
