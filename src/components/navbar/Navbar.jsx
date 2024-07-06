@@ -5,6 +5,7 @@ import { useLikes } from '../header/likecounter/LikeCounter';
 import { FaComment, FaHeart, FaBell, FaQuestionCircle } from 'react-icons/fa';
 import { FaHouse } from 'react-icons/fa6';
 import { FaComments } from 'react-icons/fa6';
+import { FaKeyboard } from 'react-icons/fa6';
 import { query, collection, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
 
@@ -137,6 +138,7 @@ function Navbar() {
                 <h1>Resources</h1>
                 <ul className='closed'>
                     <div className='navbar-icon'>
+                        <FaKeyboard />
                         <p>Keyboard Guide</p>
                     </div>
                     <div className='navbar-icon'>
