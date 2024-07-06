@@ -3,6 +3,7 @@ import { useAuth } from '../../../Auth';
 import { db } from '../../../lib/firebaseConfig';
 import { collection, addDoc, doc, getDoc, getDocs, query } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -24,7 +25,8 @@ const loadFormData = () => {
 };
 
 function NewForumPost() {
-    const currentUser = useAuth();
+    const { currentUser } = useAuth();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: '',
         media: [],
