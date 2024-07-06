@@ -171,7 +171,6 @@ function UserProfile() {
 			}
 			setFollowUser(true);
 			setFollowCount((prevCount) => prevCount + 1);
-			setFollowingCount((prevCount) => prevCount + 1);
 
 			await addDoc(collection(db, 'Notifications'), {
 				recipientID: userID,
@@ -187,7 +186,7 @@ function UserProfile() {
 			}
 		}
 		} else {
-		console.log('You cannot follow yourself');
+			console.log('You cannot follow yourself');
 		}
 	};
 
@@ -211,7 +210,6 @@ function UserProfile() {
 			await deleteDoc(followingDocRef);
 			setFollowUser(false);
 			setFollowCount((prevCount) => prevCount - 1);
-			setFollowingCount((prevCount) => prevCount - 1);
 			console.log('Successfully unfollowed the user');
 			} else {
 			console.log('You are not following this user');

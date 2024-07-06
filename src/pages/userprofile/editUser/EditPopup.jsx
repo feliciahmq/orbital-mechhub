@@ -46,6 +46,11 @@ function EditPopup({ onClose, onSubmit }) {
                 profilePicUrl = await getDownloadURL(storageRef);
             }
 
+            if (formData.username.trim() === "" || formData.email.trim() === "" || profilePicUrl.trim() === "") {
+                toast.error("All fields are required.");
+                return;
+            }
+
             await updateDoc(userDocRef, {
                 profilePic: profilePicUrl,
                 username: formData.username,
