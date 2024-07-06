@@ -23,9 +23,10 @@
     }
     .main {
         position: absolute;
-        top: 450px;
+        top: 400px;
         left: 0; 
         right: 0;
+        padding-bottom: 40px;
     }
     h2 {
         text-align: center;
