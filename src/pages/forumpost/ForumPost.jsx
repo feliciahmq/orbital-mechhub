@@ -2,9 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Auth';
 import { db } from '../../lib/firebaseConfig';
-import { FaRegHeart, FaHeart, FaStar, FaStarHalf, FaShare } from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaStar, FaStarHalf, FaShare, FaPoll } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
 import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc, setDoc } from 'firebase/firestore';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import Format from '../../components/format/Format';
 import './ForumPost.css';
@@ -233,77 +236,136 @@ function ForumPostPage() {
         "Showcase": "#FF9800",  
     };
 
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        centerMode: true,
+        centerPadding: '0',
+    };
+
     return (
         <Format content={
-            <div className='forum-post'>
-                {user && (
-                    <div className='forum-user-container'>
-                        <div className='user-details'>
-                            <img className='userpic'
-                                src={user.profilePic}
-                                alt={user.username}
-                                onClick={handleUsernameClick}
-                            />
-                            <h4 onClick={handleUsernameClick}>{user.username}</h4>
+            <div className='forum-post-page'>
+                <div className='forum-post'>
+                    {user && (
+                        <div className='forum-user-container'>
+                            <div className='forum-user-details'>
+                                <img className='userpic'
+                                    src={user.profilePic}
+                                    alt={user.username}
+                                    onClick={handleUsernameClick}
+                                />
+                                <h4 onClick={handleUsernameClick}>{user.username}</h4>
+                            </div>
+                            <p>{timeSincePost(post.postDate)}</p>
+                        </div>
+                    )}
+                    <div className="forum-header">
+                        <h1>{post.title}</h1>
+                        <div className="forum-tags">
+                            {post.tags.map((tag, index) => (
+                                <span
+                                    key={index}
+                                    className="forum-tag"
+                                    style={{ backgroundColor: tagColors[tag] || '#000' }}
+                                >
+                                    {tag}
+                                </span>
+                            ))}
                         </div>
                     </div>
-                )}
-                <div className="forum-header">
-                    <h1>{post.title}</h1>
-                    <div className="forum-tags">
-                        {post.tags.map((tag, index) => (
-                            <span
-                                key={index}
-                                className="forum-tag"
-                                style={{ backgroundColor: tagColors[tag] || '#000' }}
-                            >
-                                {tag}
-                            </span>
-                        ))}
+                    {post.media && post.media.length > 0 ? (
+                        <div className='forum-media'>
+                            <Slider {...settings}>
+                                {post.media.map((media, index) => (
+                                    <div key={index} className='post-media'>
+                                        {media.startsWith('data:image') || media.match(/\.(jpeg|jpg|gif|png)$/) ? (
+                                            <img src={media} alt={`media-${index}`} />
+                                        ) : (
+                                            <video controls>
+                                                <source src={media} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        )}
+                                    </div>
+                                ))}
+                            </Slider>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                    <div className='forum-content'>
+                        <p style={{ wordBreak: 'break-word' }}>{post.description}</p>
                     </div>
-                </div>
-                <div className='forum-stats'>
-                    <p>{timeSincePost(post.postDate)}</p>
-                </div>
-                {post.media && (
-                    <div className='forum-media'>
-                        {post.media.map((mediaItem, index) => (
-                            <img key={index} src={mediaItem.url} alt={`media-${index}`} />
-                        ))}
-                    </div>
-                )}
-                <div className='forum-content'>
-                    <p>{post.content}</p>
-                </div>
-                {post.poll && (
-                    <div className='poll'>
-                        <h3>{post.poll.question}</h3>
-                        {post.poll.options.map((option, index) => (
-                            <div key={index} onClick={() => handlePollVote(index)}>
-                                {option}
-                                {showResults && (
-                                    <span>
-                                        {((post.poll.votes[index]?.length || 0) / getTotalVotes() * 100).toFixed(2)}%
-                                    </span>
-                                )}
-                            </div>
-                        ))}
-                    </div>
-                )}
-                <div className="forum-post-actions">
-                    <div className="like-button" onClick={isLiked ? handleUnlike : handleLike}>
-                        {isLiked ? (
-                            <FaHeart onClick={handleUnlike} color="red" /> 
-                        ) : (
-                            <FaRegHeart onClick={handleLike} fill="grey"/> 
+                    {!post.poll.question == "" ? (
+                    <div className="forum-poll">
+                        <div className="poll-title">
+                            <FaPoll fill="grey"/>
+                            <h3>{post.poll.question}</h3>
+                        </div>
+                        {post.poll.options.map((option, index) => {
+                            const voteCount = (post.poll.votes && post.poll.votes[index]) ? post.poll.votes[index].length : 0;
+                            const percentage = showResults ? (voteCount / getTotalVotes() * 100).toFixed(1) : 0;
+                            return (
+                                <div className="poll-option" key={index}>
+                                    <p>{option}</p>
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handlePollVote(index);
+                                        }}
+                                        disabled={selectedPollOption !== null}
+                                        className={selectedPollOption === index ? 'selected' : ''}
+                                    >
+                                        {showResults && (
+                                            <>
+                                                <div 
+                                                    className="poll-results-bar" 
+                                                    style={{ width: `${percentage}%` }}
+                                                ></div>
+                                                <span className="poll-results-text">
+                                                    {`${voteCount} votes, ${percentage}%`}
+                                                </span>
+                                            </>
+                                        )}
+                                        {!showResults && 'Vote'}
+                                    </button>
+                                </div>
+                            );
+                        })}
+                        {!showResults && !currentUser && (
+                            <p className="poll-message">Log in to vote in this poll.</p>
                         )}
-                        <span>{likeCount}</span>
+                        {!showResults && currentUser && (
+                            <p className="poll-message">Vote to see the results.</p>
+                        )}
                     </div>
-                    <div>
-                        <FaCommentDots fill="grey"/>
-                    </div>
-                    <div className="share-button" onClick={handleShare}>
-                        <FaShare />
+                ) : (
+                    <></>
+                )}
+                    <div className="forum-footer">
+                        <div className="footer-left">
+                            <div className="forum-card-like forum-card-icon">
+                                {isLiked ? (
+                                    <FaHeart onClick={handleUnlike} color="red" /> 
+                                ) : (
+                                    <FaRegHeart onClick={handleLike} fill="grey"/> 
+                                )}
+                                <span>{likeCount}</span>
+                                <span className="tooltip">Like Post</span>
+                            </div>
+                            <div className="forum-card-comment forum-card-icon">
+                                <FaCommentDots fill="grey"/>
+                            </div>
+                        </div>
+                        <div className="forum-card-share forum-card-icon" onClick={handleShare}>
+                            <FaShare fill="grey"/>
+                            <span className="tooltip">Share Post</span>
+                        </div>
                     </div>
                 </div>
                 <div className='forum-comments'>
@@ -319,6 +381,7 @@ function ForumPostPage() {
                     <div className='comments-list'>
                         {comments.map(comment => (
                             <div key={comment.id} className='comment'>
+
                                 <div className='comment-content'>
                                     <p>{comment.content}</p>
                                 </div>

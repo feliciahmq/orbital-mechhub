@@ -111,6 +111,16 @@
         }
     }
 
+    .forum-content {
+        max-width: 100%;
+        word-break: break-word; 
+    }
+    
+    .forum-content p {
+        max-width: 100%;
+        word-break: break-word;
+    }
+
     .forum-footer {
         display: flex;
         flex-direction: row;
