@@ -3,6 +3,7 @@ import { useUserStore } from './userStore';
 
 export const useChatStore = create((set) => ({
     chatId: null,
+    setChatId: (id) => set({ chatId: id }),
     user: null,
     isCurrentUserBlocked: false,
     isReceiverBlocked: false,

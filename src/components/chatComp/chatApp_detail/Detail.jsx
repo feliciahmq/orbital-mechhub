@@ -4,6 +4,7 @@ import { useChatStore } from '../../../lib/chatStore';
 import { useUserStore } from '../../../lib/userStore';
 import { db } from '../../../lib/firebaseConfig';
 import './Detail.css';
+import { useNavigate } from 'react-router-dom';
 
 const Detail = () => {
     const { chatId, user, isCurrentUserBlocked, isReceiverBlocked, changeBlock } = useChatStore();
@@ -11,6 +12,8 @@ const Detail = () => {
     const [photos, setPhotos] = useState([]);
     const [showPhotos, setShowPhotos] = useState(false);
     const [icon, setIcon] = useState("/chat-icons/arrowDown.png");
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!chatId) return;
@@ -49,9 +52,13 @@ const Detail = () => {
         setIcon(showPhotos ? "/chat-icons/arrowDown.png" : "/chat-icons/arrowUp.png");
     };
 
+    const handleProfileClick = () => {
+        navigate(`/profile/${user?.id}`);
+    }
+
     return (
         <div className='detail'>
-        <div className="user">
+        <div className="user" onClick={handleProfileClick}>
             <img src={user?.profilePic || "/chat-icons/avatar.png"} alt="" />
             <h2>{user?.username}</h2>
         </div>

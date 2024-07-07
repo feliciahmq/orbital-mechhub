@@ -96,6 +96,21 @@ body {
 		width: 100%;
 	}
 
+	.password {
+		display: flex;
+		align-items: center;
+		position: relative;
+		width: 100%;
+	}
+
+	.password p {
+		position: absolute;
+		right: 0;
+		cursor: pointer;
+		padding-top: 14px;
+		padding-right: 10px;
+	}
+
 	.container {
 		background-color: #fff;
 		border-radius: 10px;

@@ -7,6 +7,7 @@ import { auth, db } from "../../lib/firebaseConfig";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { query, collection, where, getDocs, doc, setDoc } from "firebase/firestore";
 import { signInWithGoogle } from './GoogleAuth';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import './LoginSignupForm.css';
 import Header from '../../components/header/Header';
@@ -15,6 +16,22 @@ function LoginSignUpForm() {
     const [rightPanelActive, setRightPanelActive] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [showLogin, setShowLogin] = useState(true);
+    const [signUpVisible, setSignUpVisible] = useState(false);
+    const [loginVisible, setLoginVisible] = useState(false);
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [confirmPWVisible, setConfirmPWVisible] = useState(false);
+
+    const toggleSignUpPassword = () => {
+        setSignUpVisible(!signUpVisible);
+    };
+
+    const toggleLoginPassword = () => {
+        setLoginVisible(!loginVisible);
+    };
+
+    const toggleConfirmPWPassword = () => {
+        setConfirmPWVisible(!confirmPWVisible);
+    };
 
     // navigate
     const navigate = useNavigate();
@@ -40,6 +57,11 @@ function LoginSignUpForm() {
 
         if (username.trim() === "" || signupEmail.trim() === "" || signupPassword.trim() === "") {
             toast.error("All fields are required.");
+            return;
+        }
+
+        if (signupPassword != confirmPassword) {
+            toast.error("Password and confirm password should be the same.");
             return;
         }
 
@@ -144,8 +166,20 @@ function LoginSignUpForm() {
                                         value={username} onChange={(e) => setUsername(e.target.value)} required />
                                     <input type="email" placeholder="Email"
                                         value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required />
-                                    <input type="password" placeholder="Password"
-                                        value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required />
+                                    <div className="password">
+                                        <input type={signUpVisible ? "text" : "password"} placeholder="Password"
+                                            value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required />
+                                        <p onClick={toggleSignUpPassword}>
+                                            {signUpVisible ? <FaEyeSlash /> : <FaEye />}
+                                        </p>
+                                    </div>
+                                    <div className="password">
+                                        <input type={confirmPWVisible ? "text" : "password"} placeholder="Confirm Password"
+                                            value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                                        <p onClick={toggleConfirmPWPassword}>
+                                            {confirmPWVisible ? <FaEyeSlash /> : <FaEye />}
+                                        </p>
+                                    </div>
                                     <button type="submit">Sign up</button>
                                 </form>
                             </div>
@@ -161,8 +195,13 @@ function LoginSignUpForm() {
                                     <span>or use your email</span>
                                     <input type="email" placeholder="Email"
                                         value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
-                                    <input type="password" placeholder="Password"
-                                        value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+                                    <div className="password">
+                                        <input type={loginVisible ? "text" : "password"} placeholder="Password"
+                                            value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+                                        <p onClick={toggleLoginPassword}>
+                                            {loginVisible ? <FaEyeSlash /> : <FaEye />}
+                                        </p>
+                                    </div>
                                     <button type="submit">Log in</button>
                                 </form>
                             </div>

@@ -35,6 +35,7 @@ return (
 		<Route path="/notifications/:userID" element={<NotificationsPage />} />
 		<Route path="/chat" element={<Chat />} />
 		<Route path="/chat/:userID" element={<Chat />} />
+		<Route path="/chat/:userID/:chatID" element={<Chat />} />
 		</Routes>
 	</Router>
 	</LikeCountProvider>
