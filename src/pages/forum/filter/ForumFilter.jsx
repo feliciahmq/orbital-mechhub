@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../Auth';
 
+import SearchBar from '../../../components/searchbar/Searchbar';
 import './ForumFilter.css';
 
 function ForumFilter({ onFilterChange }) {
@@ -27,31 +28,34 @@ function ForumFilter({ onFilterChange }) {
     }, [selectedTags, sortOrder]);
 
     return (
-        <div className='filter-container'>
-            <div className='filter-group'>
-                <label>Tags</label>
-                <div className="tags-container">
-                    {availableTags.map((tag) => (
-                        <button 
-                            type="button" 
-                            key={tag} 
-                            className={`tag-button ${selectedTags.includes(tag) ? 'selected' : ''}`}
-                            onClick={() => handleTagClick(tag)}
-                            data-tag={tag}
-                        >
-                            {tag}
-                        </button>
-                    ))}
+        <div className='forum-filter'>
+            <div className='forum-filter-container'>
+                <div className='forum-filter-group'>
+                    <label>Tags</label>
+                    <div className="tags-container">
+                        {availableTags.map((tag) => (
+                            <button 
+                                type="button" 
+                                key={tag} 
+                                className={`tag-button-filter ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                                onClick={() => handleTagClick(tag)}
+                                data-tag={tag}
+                            >
+                                {tag}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div className="filter-group">
+                    <label>Sort By:</label>
+                    <select value={sortOrder} onChange={handleSortChange}>
+                        <option value="">None</option>
+                        <option value="new">New</option>
+                        <option value="featured">Featured</option>
+                    </select>
                 </div>
             </div>
-            <div className="filter-group">
-                <label>Sort By:</label>
-                <select value={sortOrder} onChange={handleSortChange}>
-                    <option value="">None</option>
-                    <option value="new">New</option>
-                    <option value="featured">Featured</option>
-                </select>
-            </div>
+            <SearchBar placeholder={"Search Forum Posts..."} />
         </div>
     );
 }

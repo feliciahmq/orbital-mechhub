@@ -7,7 +7,7 @@ import { useAuth } from '../../Auth';
 
 import './Searchbar.css';
 
-const SearchBar = () => {
+const SearchBar = ({placeholder}) => {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
     const { currentUser } = useAuth();
@@ -44,7 +44,7 @@ const SearchBar = () => {
                     className="search-bar-input"
                     value={query}
                     onChange={handleInputChange}
-                    placeholder="Search Products"
+                    placeholder={placeholder}
                 />
                 <button type="submit" className="search-bar-button">
                     <FaSearch />

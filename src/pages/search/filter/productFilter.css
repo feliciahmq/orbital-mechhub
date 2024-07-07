@@ -1,5 +1,5 @@
 .filter-container {
-    z-index: 100;
+    z-index: 90;
     width: 100%;
     position: absolute;
     top: 0;

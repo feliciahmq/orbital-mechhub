@@ -7,6 +7,7 @@ import { useChatStore } from '../../../lib/chatStore';
 import { useUserStore } from '../../../lib/userStore';
 import upload from '../../../lib/upload';
 import { formatDistanceToNow, isValid } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
     const [chat, setChat] = useState();
@@ -21,6 +22,7 @@ const Chat = () => {
 
     const { currentUser } = useUserStore();
     const { chatId, user, isCurrentUserBlocked, isReceiverBlocked } = useChatStore();
+    const navigate = useNavigate();
 
     const endRef = useRef(null);
 
@@ -147,10 +149,14 @@ const Chat = () => {
         setShowImg(false); 
     };
 
+    const handleProfileClick = () => {
+        navigate(`/profile/${user?.id}`);
+    }
+
     return (
         <div className='chat'>
             <div className="top">
-                <div className="user">
+                <div className="user" onClick={handleProfileClick}>
                     <img src={user?.profilePic || "/chat-icons/avatar.png"} alt="" />
                     <div className="texts">
                         <span>{user?.username}</span>
@@ -188,6 +194,11 @@ const Chat = () => {
                     placeholder={(isCurrentUserBlocked || isReceiverBlocked) ? "You cannot send a message" : "Type a message"}
                     value={text} 
                     onChange={e=>setText(e.target.value)} 
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                            handleSendText();
+                        }
+                    }}
                     disabled={isCurrentUserBlocked || isReceiverBlocked} 
                 />
                 <div className="emoji">
@@ -213,6 +224,11 @@ const Chat = () => {
                         <input
                             placeholder="Add a message to this image."
                             value={imgMsg}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleSendImg();
+                                }
+                            }}
                             onChange={(e) => setImgMsg(e.target.value)}
                         />
                         <button onClick={handleSendImg}>Send Image</button>

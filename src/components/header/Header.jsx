@@ -56,7 +56,7 @@ function Header() {
                 />
             )}
             <div className='header-searchbar'>
-                <SearchBar onSearch={(query) => navigate(`/search?query=${query}`)} />
+                <SearchBar placeholder={"Search Products..."} onSearch={(query) => navigate(`/search?query=${query}`)} />
             </div>
             {currentUser ? (
                 <>

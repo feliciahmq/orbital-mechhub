@@ -11,10 +11,12 @@ import List from "../../components/chatComp/chatApp_list/List.jsx";
 import Header from "../../components/header/Header";
 import LoginSignupForm from "../../pages/registration/LoginSignupForm.jsx";
 import { useChatStore } from '../../lib/chatStore.js';
+import { useParams } from 'react-router-dom';
 
 const ChatApp = () => {
+	const { userID, chatID } = useParams();
 	const { currentUser, isLoading, fetchUserInfo } = useUserStore();
-	const { chatId } = useChatStore();
+	const { chatId, setChatId } = useChatStore();
 
 	useEffect(() => {
 		const unSub = onAuthStateChanged(auth, (user) => {
@@ -30,7 +32,11 @@ const ChatApp = () => {
 		};
 	}, [fetchUserInfo]);
 
-	console.log(currentUser);
+	useEffect(() => {
+        if (userID && chatID) {
+            setChatId(chatID);
+        }
+    }, [userID, chatID, setChatId]);
 
 	if (isLoading) {
 		// return <LoadingPage />;

@@ -5,6 +5,7 @@ import { useUserStore } from '../../../../lib/userStore';
 import { doc, onSnapshot, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../../lib/firebaseConfig';
 import { useChatStore } from '../../../../lib/chatStore';
+import { useNavigate } from 'react-router-dom';
 
 const ChatList = () => {
     const [chats, setChats] = useState([]);
@@ -13,6 +14,8 @@ const ChatList = () => {
 
     const { currentUser } = useUserStore();
     const { changeChat } = useChatStore();
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!currentUser || !currentUser.id) {
@@ -63,6 +66,7 @@ const ChatList = () => {
                 chats: userChats,
             })
             changeChat(chat.chatId, chat.user);
+            navigate(`/chat/${currentUser.id}/${chat.chatId}`);
 
         } catch (err) {
             console.log(err);

@@ -87,7 +87,9 @@ function ForumPage() {
         <Format content={
             <div className='forum'>
                 <ForumFilter onFilterChange={handleFilterChange}/>
-                <ForumList heading="Forum" forums={filteredPosts} />
+                <div className='forum-main'>
+                    <ForumList heading="Forum" forums={filteredPosts} />
+                </div>
             </div>
         } />
     );

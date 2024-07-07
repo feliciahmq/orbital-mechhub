@@ -9,6 +9,7 @@
         align-items: center;
         gap: 20px;
         flex-grow: 1;
+        cursor: pointer;
 
         h2 {
             font-size: 18px; 
