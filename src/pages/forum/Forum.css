@@ -1,0 +1,9 @@
+.forum {
+    h2 {
+        text-align: center;
+        color: rgb(232, 139, 45);
+        margin: 10px;
+        position: relative;
+        line-height: 60px;
+    }
+}

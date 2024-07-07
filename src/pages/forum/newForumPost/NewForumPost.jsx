@@ -189,6 +189,7 @@ function NewForumPost() {
                 tags: [],
                 poll: { question: '', options: [''] }
             });
+            navigate(`/profile/${currentUser.uid}`);
         } catch (err) {
             console.log(err.message);
         }

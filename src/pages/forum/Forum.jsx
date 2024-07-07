@@ -33,7 +33,7 @@ function ForumPage() {
     return (
         <Format content={
             <div className='forum'>
-                <ForumList heading="forum" forums={forumPosts} />
+                <ForumList heading="Forum" forums={forumPosts} />
             </div>
         } />
     );

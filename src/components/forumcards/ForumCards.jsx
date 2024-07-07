@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Auth";
-import { FaPoll } from "react-icons/fa";
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { FaPoll, FaRegHeart, FaHeart, FaShare } from "react-icons/fa";
+import { FaCommentDots } from "react-icons/fa6";
+import { doc, getDoc, updateDoc, setDoc, getDocs, addDoc, collection, query, where, deleteDoc} from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
+
 import './ForumCards.css';
 
 function timeSincePost(postDate) {
@@ -37,6 +39,8 @@ function ForumCards({ forumDetail }) {
     const { currentUser } = useAuth();
     const [selectedPollOption, setSelectedPollOption] = useState(null);
     const [showResults, setShowResults] = useState(false);
+    const [isLiked, setIsLiked] = useState(false);
+    const [likeCount, setLikeCount] = useState(0);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -48,7 +52,24 @@ function ForumCards({ forumDetail }) {
             }
         };
 
+        const checkLikeStatus = async () => {
+            if (currentUser) {
+                const likesRef = collection(db, 'Forum', forumDetail.id, 'Likes');
+                const q = query(likesRef, where('userID', '==', currentUser.uid));
+                const querySnapshot = await getDocs(q);
+                setIsLiked(!querySnapshot.empty);
+            }
+        };
+
+        const getLikeCount = async () => {
+            const likesRef = collection(db, 'Forum', forumDetail.id, 'Likes');
+            const querySnapshot = await getDocs(likesRef);
+            setLikeCount(querySnapshot.size);
+        };
+
         fetchUser();
+        checkLikeStatus();
+        getLikeCount();
 
         if (currentUser) {
             if (currentUser.uid === forumDetail.userID) {
@@ -67,15 +88,64 @@ function ForumCards({ forumDetail }) {
                 }
             }
         }
-    }, [forumDetail.userID, forumDetail.poll, currentUser]);
+    }, [forumDetail.id, forumDetail.userID, forumDetail.poll, currentUser]);
 
     const handleViewClick = () => {
-        navigate(`/forum/${forumDetail.id}`);
+        trackClick();
+        navigate(`/forumpost/${forumDetail.id}`);
     };
 
     const handleUsernameClick = (e) => {
         e.stopPropagation();
         navigate(`/profile/${forumDetail.userID}`);
+    };
+
+    const handleLike = async (e) => {
+        e.stopPropagation();
+
+        if (!currentUser) {
+            alert("Please log in to like the forum.");
+            return;
+        }
+
+        try {
+            await addDoc(collection(db, 'Forum', forumDetail.id, 'Likes'), {
+                userID: currentUser.uid,
+                timestamp: new Date()
+            });
+            setIsLiked(true);
+            setLikeCount(prevCount => prevCount + 1);
+
+            await addDoc(collection(db, 'Notifications'), {
+                recipientID: forumDetail.userID,
+                senderID: currentUser.uid,
+                listingID: forumDetail.id,
+                type: 'forum-like',
+                read: false,
+                timestamp: new Date()
+            });
+        } catch (err) {
+            console.error("Error liking post:", err.message);
+        }
+    };
+
+    const handleUnlike = async (e) => {
+        e.stopPropagation(); 
+
+        try {
+            const likesRef = collection(db, 'Forum', forumDetail.id, 'Likes');
+            const q = query(likesRef, where('userID', '==', currentUser.uid));
+            const querySnapshot = await getDocs(q);
+            
+            querySnapshot.forEach(async (document) => {
+                await deleteDoc(doc(db, 'Forum', forumDetail.id, 'Likes', document.id));
+            });
+
+            setIsLiked(false);
+            setLikeCount(prevCount => prevCount - 1);
+        } catch (err) {
+            console.error("Error unliking post:", err.message);
+        }
     };
 
     const handlePollVote = async (optionIndex) => {
@@ -120,12 +190,73 @@ function ForumCards({ forumDetail }) {
         return <div>Loading...</div>;
     }
 
+    const getWeekStart = () => {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+        return new Date(now.setDate(diff)).setHours(0, 0, 0, 0); 
+    };
+
+    const handleShare = async (e) => {
+        e.stopPropagation(); 
+        
+        const shareUrl = `${window.location.origin}/forumpost/${forumDetail.id}`;
+        const shareTitle = forumDetail.title;
+        const shareText = "Check out this forum post!";
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: shareTitle,
+                    text: shareText,
+                    url: shareUrl,
+                });
+                console.log("Content shared successfully");
+            } catch (err) {
+                console.error("Error sharing content:", err);
+            }
+        } else {
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                alert("Link copied to clipboard!");
+            } catch (err) {
+                console.error("Error copying to clipboard:", err);
+            }
+        }
+    };
+
+    const trackClick = async () => {
+        if (currentUser.uid !== forumDetail.userID ) {
+            const weekStart = getWeekStart();
+            const clickCountDoc = doc(db, 'Forum', forumDetail.id, 'clickCount', weekStart.toString());
+            const clickCountDocSnapshot = await getDoc(clickCountDoc);
+
+            if (clickCountDocSnapshot.exists()) {
+                try {
+                    await updateDoc(clickCountDoc, {
+                        count: clickCountDocSnapshot.data().count + 1
+                    });
+                } catch (err) {
+                    console.error('Error updating click count: ', err);
+                }
+            } else {
+                try {
+                    await setDoc(clickCountDoc, {
+                        count: 1,
+                    });
+                } catch (err) {
+                    console.error('Error creating click count: ', err);
+                }
+            }
+        }
+    };
+
     const tagColors = {
         "Questions": "#FF4B2B",  
         "Modding": "#4CAF50",  
         "Reviews": "#2196F3",   
         "Showcase": "#FF9800",  
-      };
+    };
 
     return (
         <div className="forum-card" onClick={handleViewClick}>
@@ -137,7 +268,7 @@ function ForumCards({ forumDetail }) {
                 <span className="forum-date">{timeSincePost(forumDetail.postDate)}</span>
             </div>
             <div className="forum-header">
-                <h2>{forumDetail.title}</h2>
+                <h1>{forumDetail.title}</h1>
                 <div className="forum-tags">
                     {forumDetail.tags.map((tag, index) => (
                         <span 
@@ -163,7 +294,7 @@ function ForumCards({ forumDetail }) {
                     {forumDetail.media.length > 1 && <span className="media-count">+{forumDetail.media.length - 1}</span>}
                 </div>
             )}
-            <div className="forum-content">
+            <div className="forum-card-content">
                 {forumDetail.description.length > 200 ? (
                     <p>{forumDetail.description.slice(0, 200)}...</p>
                 ) : (
@@ -216,6 +347,26 @@ function ForumCards({ forumDetail }) {
             ) : (
                 <></>
             )}
+            <div className="forum-footer">
+                <div className="footer-left">
+                    <div className="forum-card-like forum-card-icon">
+                        {isLiked ? (
+                            <FaHeart onClick={handleUnlike} color="red" /> 
+                        ) : (
+                            <FaRegHeart onClick={handleLike} fill="grey"/> 
+                        )}
+                        <span>{likeCount}</span>
+                        <span className="tooltip">Like Post</span>
+                    </div>
+                    <div className="forum-card-comment forum-card-icon">
+                        <FaCommentDots fill="grey"/>
+                    </div>
+                </div>
+                <div className="forum-card-share forum-card-icon" onClick={handleShare}>
+                    <FaShare fill="grey"/>
+                    <span className="tooltip">Share Post</span>
+                </div>
+            </div>
         </div>
     );
 }

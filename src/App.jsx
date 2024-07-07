@@ -15,6 +15,7 @@ import ProductPage from "./pages/viewproduct/ViewProduct";
 import LikesPage from "./pages/likes/Likes";
 import ForumPage from "./pages/forum/Forum";
 import NewForumPost from "./pages/forum/newForumPost/NewForumPost";
+import ForumPostPage from "./pages/forumpost/ForumPost"
 
 const App = () => {
 return (
@@ -39,6 +40,7 @@ return (
 		<Route path="/chat/:userID" element={<Chat />} />
 		<Route path="/forum" element={<ForumPage />} />
 		<Route path="/newforumpost" element={<NewForumPost />} />
+		<Route path="/forumpost/:postID" element={<ForumPostPage />} />
 		</Routes>
 	</Router>
 	</LikeCountProvider>
