@@ -33,7 +33,8 @@
     }
 
    .forum-header { 
-    margin: 0 0 12px 0;
+        margin: 0 0 12px 0;
+
         h1 {
             margin: 0 0 8px 0;
             font-weight: 300;
@@ -232,6 +233,46 @@
             border-width: 5px;
             border-style: solid;
             border-color: transparent transparent black transparent; 
+        }
+    }
+}
+
+.forum-comments {
+    margin: 8px 0;
+
+    .comment-textarea {
+        display: flex;
+        gap: 4px;
+        
+        textarea {
+            font-size: 16px;
+            border-radius: 12px;
+            height: auto;
+            resize: vertical;
+            width: 100%;
+            background-color: #f0f0f0;
+            border-color: #dbdbdb;
+        }
+
+        .comment-button {
+            border: 2px solid #FF4B2B;
+            background-color: white;
+            color:#FF4B2B;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 12px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .comment-button:hover {
+            color: white;
+            background-color:#FF4B2B;
         }
     }
 }

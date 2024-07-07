@@ -86,6 +86,10 @@ function Navbar() {
         navigate(`/forum`);
     };
     
+    const handleKeyboardGuide = () => {
+        navigate(`/keyboardguide`);
+    };
+
     return (
         <nav className="navbar">
             <ul className="closed">
@@ -136,7 +140,7 @@ function Navbar() {
             <div className="resource">
                 <h1>Resources</h1>
                 <ul className='closed'>
-                    <div className='navbar-icon'>
+                    <div className='navbar-icon' onClick={handleKeyboardGuide}>
                         <FaKeyboard />
                         <p>Keyboard Guide</p>
                     </div>

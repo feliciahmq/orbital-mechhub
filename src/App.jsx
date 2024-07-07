@@ -16,6 +16,7 @@ import LikesPage from "./pages/likes/Likes";
 import ForumPage from "./pages/forum/Forum";
 import NewForumPost from "./pages/forum/newForumPost/NewForumPost";
 import ForumPostPage from "./pages/forumpost/ForumPost"
+import KeyboardGuidePage from "./pages/keyboardguide/KeyboardGuide";
 
 const App = () => {
 return (
@@ -41,6 +42,7 @@ return (
 		<Route path="/forum" element={<ForumPage />} />
 		<Route path="/newforumpost" element={<NewForumPost />} />
 		<Route path="/forumpost/:postID" element={<ForumPostPage />} />
+		<Route path="/keyboardguide" element={<KeyboardGuidePage />} />
 		</Routes>
 	</Router>
 	</LikeCountProvider>

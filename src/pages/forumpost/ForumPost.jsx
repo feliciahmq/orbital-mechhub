@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect , useRef} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Auth';
 import { db } from '../../lib/firebaseConfig';
-import { FaRegHeart, FaHeart, FaStar, FaStarHalf, FaShare, FaPoll } from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaReply, FaShare, FaPoll } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
 import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc, setDoc } from 'firebase/firestore';
 import Slider from "react-slick";
@@ -50,6 +50,7 @@ function ForumPostPage() {
     const [showResults, setShowResults] = useState(false);
     const [newComment, setNewComment] = useState('');
     const [replyingTo, setReplyingTo] = useState(null);
+    const commentTextareaRef = useRef(null);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -98,7 +99,25 @@ function ForumPostPage() {
         checkIfLiked();
         getLikeCount();
         fetchComments();
-    }, [postID, currentUser]);
+
+        if (currentUser) {
+            if (post && currentUser && currentUser.uid === post.userID) {
+                setShowResults(true);
+            } else if (post && post.poll && post.poll.votes) {
+                const hasVoted = Object.values(post.poll.votes).some(
+                    voters => voters.includes(currentUser.uid)
+                );
+                if (hasVoted) {
+                    setShowResults(true);
+                    setSelectedPollOption(
+                        Object.entries(post.poll.votes).find(
+                            ([, voters]) => voters.includes(currentUser.uid)
+                        )?.[0]
+                    );
+                }
+            }
+        }
+    }, [postID, currentUser, post]);
 
     const handleComment = async (e) => {
         e.preventDefault();
@@ -223,6 +242,11 @@ function ForumPostPage() {
 
     const handleUsernameClick = () => {
         navigate(`/profile/${post.userID}`);
+    };
+
+    const adjustTextareaHeight = (e) => {
+        e.target.style.height = 'auto';
+        e.target.style.height = `${e.target.scrollHeight}px`;
     };
 
     if (!post || !user) {
@@ -369,22 +393,33 @@ function ForumPostPage() {
                     </div>
                 </div>
                 <div className='forum-comments'>
-                    <h3>Comments</h3>
-                    <form onSubmit={handleComment}>
-                        <textarea
-                            value={newComment}
-                            onChange={(e) => setNewComment(e.target.value)}
-                            placeholder="Add a comment..."
-                        />
-                        <button type="submit">Comment</button>
-                    </form>
+                    {currentUser ? (
+                        <form onSubmit={handleComment} className='comment-textarea'>
+                            <textarea
+                                value={newComment}
+                                onChange={(e) => {
+                                    setNewComment(e.target.value);
+                                    adjustTextareaHeight(e);
+                                }}
+                                onInput={adjustTextareaHeight}
+                                placeholder={"Write a comment..."}
+                            />
+                            {newComment.trim() && (
+                                <button className='comment-button' type="submit">Submit</button>
+                            )}
+                        </form>
+                    ) : (
+                        <p>please log in to comment</p>
+                    )}
                     <div className='comments-list'>
                         {comments.map(comment => (
                             <div key={comment.id} className='comment'>
-
                                 <div className='comment-content'>
                                     <p>{comment.content}</p>
                                 </div>
+                                <div>
+                                    
+                                </div>    
                             </div>
                         ))}
                     </div>

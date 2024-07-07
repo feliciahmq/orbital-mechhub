@@ -1,0 +1,15 @@
+.tag-button.selected[data-tag="Questions"] {
+    background-color: #FF4B2B;
+}
+
+.tag-button.selected[data-tag="Modding"] {
+    background-color: #4CAF50;
+}
+
+.tag-button.selected[data-tag="Reviews"] {
+    background-color: #2196F3;
+}
+
+.tag-button.selected[data-tag="Showcase"] {
+    background-color: #FF9800;
+}

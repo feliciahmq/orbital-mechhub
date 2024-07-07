@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../../Auth';
 import { db } from '../../lib/firebaseConfig';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 
 import Format from '../../components/format/Format';
 import ForumFilter from './filter/ForumFilter';
@@ -12,15 +12,20 @@ import './Forum.css';
 function ForumPage() {
     const { currentUser } = useAuth();
     const [forumPosts, setForumPosts] = useState([]);
+    const [filteredPosts, setFilteredPosts] = useState([]);
 
     const fetchForumPosts = async () => {
         try {
             const forumCollection = await getDocs(collection(db, "Forum"));
             const forumData = await Promise.all(forumCollection.docs.map(async (doc) => {
                 const forum = { id: doc.id, ...doc.data() };
-                return {...forum};
+                const weeklyClicks = await getWeeklyClicks(doc.id);
+                const likes = await getLikes(doc.id);
+                const comments = await getComments(doc.id);
+                return {...forum, weeklyClicks, likes, comments};
             }));
             setForumPosts(forumData);
+            setFilteredPosts(forumData); // Initialize filtered posts with all posts
         } catch (err) {
             console.log(err);
         }
@@ -30,14 +35,62 @@ function ForumPage() {
         fetchForumPosts();
     }, []);
 
+    const getWeeklyClicks = async (forumID) => {
+        const weekStart = getWeekStart();
+        const clickCountDoc = await getDoc(doc(db, 'Forum', forumID, 'clickCount', weekStart.toString()));
+        return clickCountDoc.exists() ? clickCountDoc.data().count : 0;
+    };
+
+    const getLikes = async (forumID) => {
+        const likesCollection = collection(db, 'Forum', forumID, 'Likes');
+        const likesSnapshot = await getDocs(likesCollection);
+        return likesSnapshot.size;
+    };
+
+    const getComments = async (forumID) => {
+        const commentsCollection = collection(db, 'Forum', forumID, 'comments');
+        const commentsSnapshot = await getDocs(commentsCollection);
+        return commentsSnapshot.size;
+    };
+
+    const getWeekStart = () => {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
+        return new Date(now.setDate(diff)).setHours(0, 0, 0, 0);
+    };
+
+    const handleFilterChange = useCallback(({ tags, sortOrder }) => {
+        let filtered = forumPosts;
+
+        if (tags.length > 0) {
+            filtered = filtered.filter(post => 
+                tags.some(tag => post.tags.includes(tag))
+            );
+        }
+
+        if (sortOrder === 'new') {
+            filtered.sort((a, b) => new Date(b.postDate) - new Date(a.postDate));
+        } else if (sortOrder === 'featured') {
+            filtered.sort((a, b) => calculateFeaturedScore(b) - calculateFeaturedScore(a));
+        }
+
+        setFilteredPosts(filtered);
+    }, [forumPosts]);
+
+    const calculateFeaturedScore = (product) => {
+        const { weeklyClicks, likes, comments } = product;
+        return (weeklyClicks * 0.5) + (likes * 0.3) + (comments * 0.2);
+    };
+
     return (
         <Format content={
             <div className='forum'>
-                <ForumList heading="Forum" forums={forumPosts} />
+                <ForumFilter onFilterChange={handleFilterChange}/>
+                <ForumList heading="Forum" forums={filteredPosts} />
             </div>
         } />
     );
-
 }
 
 export default ForumPage;
