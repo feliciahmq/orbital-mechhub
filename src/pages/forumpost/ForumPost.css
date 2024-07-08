@@ -27,7 +27,6 @@
                 height: 24px;
                 width: 24px;
                 border-radius: 50%;
-                bottom: 4px;
             }
         }
     }
@@ -303,6 +302,86 @@
         }
 
         .comment-button:hover {
+            color: white;
+            background-color:#FF4B2B;
+        }
+    }
+}
+
+.comment {
+    border-left: 1px solid rgb(194, 194, 194);
+    margin: 16px;
+    padding: 8px;
+    
+    .comment-profile {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 4px;
+    }
+    .comment-profilepic {
+        position: relative;
+        height: 16px;
+        width: 16px;
+        border-radius: 50%;
+    }
+    .comment-username {
+        margin: 0;
+    }
+
+    .comment-content {
+        margin: 0;
+    }
+
+    .comment-reply-button {
+        border: 2px solid #FF4B2B;
+        background-color: white;
+        color:#FF4B2B;
+        font-weight: bold;
+        letter-spacing: 1px;
+        border-radius: 12px;
+        padding: 4px 8px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+        opacity: 0.9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .comment-reply-button:hover {
+        color: white;
+        background-color:#FF4B2B;
+    }
+
+    .comment-reply {
+        textarea {
+            font-size: 16px;
+            border-radius: 12px;
+            height: auto;
+            resize: vertical;
+            width: 100%;
+            background-color: #f0f0f0;
+            border-color: #dbdbdb;
+        }
+
+        .comment-reply-submit {
+            border: 2px solid #FF4B2B;
+            background-color: white;
+            color:#FF4B2B;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 12px;
+            padding: 4px 8px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    
+        .comment-reply-submit:hover {
             color: white;
             background-color:#FF4B2B;
         }

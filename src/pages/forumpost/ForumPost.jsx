@@ -1,4 +1,4 @@
-import React, { useState, useEffect , useRef} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Auth';
 import { db } from '../../lib/firebaseConfig';
@@ -37,6 +37,62 @@ function timeSincePost(postDate) {
     }
 }
 
+const Comment = ({ comment, postID, onReply, currentUser }) => {
+    const [user, setUser] = useState(null);
+    const [showReplyForm, setShowReplyForm] = useState(false);
+    const [replyContent, setReplyContent] = useState('');
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const userDoc = await getDoc(doc(db, 'Users', comment.userId));
+            if (userDoc.exists()) {
+                setUser(userDoc.data());
+            }
+        };
+        fetchUser();
+    }, [comment.userId]);
+
+    const handleReply = async (e) => {
+        e.preventDefault();
+        if (replyContent.trim() === '') return;
+        await onReply(comment.id, replyContent);
+        setReplyContent('');
+        setShowReplyForm(false);
+    };
+
+    const handleUsernameClick = () => {
+        navigate(`/profile/${user.userID}`);
+    };
+
+    return (
+        <div className="comment">
+            {user && ( 
+                <div className='comment-profile' onClick={handleUsernameClick}>
+                    <img className='comment-profilepic'>{user.profilePic}</img>
+                    <p className="comment-username">{user.username}</p>
+                </div>
+            )}
+            <p className='comment-content'>{comment.content}</p>
+            {currentUser && (
+                <button className='comment-reply-button' onClick={() => setShowReplyForm(!showReplyForm)}>Reply</button>
+            )}
+            {showReplyForm && (
+                <form className='comment-reply' onSubmit={handleReply}>
+                    <textarea 
+                        value={replyContent}
+                        onChange={(e) => setReplyContent(e.target.value)}
+                        placeholder="Write a reply..."
+                    />
+                    <button className='comment-reply-submit' type="submit">Submit Reply</button>
+                </form>
+            )}
+            {comment.replies && comment.replies.map(reply => (
+                <Comment key={reply.id} comment={reply} postID={postID} onReply={onReply} currentUser={currentUser} />
+            ))}
+        </div>
+    );
+};
+
 function ForumPostPage() {
     const { currentUser } = useAuth();
     const { postID } = useParams();
@@ -51,7 +107,7 @@ function ForumPostPage() {
     const [newComment, setNewComment] = useState('');
     const [replyingTo, setReplyingTo] = useState(null);
     const commentTextareaRef = useRef(null);
-    const [dropdownOpen, setDropdownOpen] = useState(false); 
+    const [dropdownOpen, setDropdownOpen] = useState(false);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -74,7 +130,13 @@ function ForumPostPage() {
         const fetchComments = async () => {
             const commentsQuery = query(collection(db, 'Forum', postID, 'Comments'));
             const commentsSnapshot = await getDocs(commentsQuery);
-            const commentsData = commentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            const commentsData = await Promise.all(commentsSnapshot.docs.map(async doc => {
+                const comment = { id: doc.id, ...doc.data() };
+                const repliesQuery = query(collection(db, 'Forum', postID, 'Comments', doc.id, 'Replies'));
+                const repliesSnapshot = await getDocs(repliesQuery);
+                comment.replies = repliesSnapshot.docs.map(replyDoc => ({ id: replyDoc.id, ...replyDoc.data() }));
+                return comment;
+            }));
             setComments(commentsData);
         };
 
@@ -101,10 +163,10 @@ function ForumPostPage() {
         getLikeCount();
         fetchComments();
 
-        if (currentUser) {
-            if (post && currentUser && currentUser.uid === post.userID) {
+        if (currentUser && post) {
+            if (currentUser.uid === post.userID) {
                 setShowResults(true);
-            } else if (post && post.poll && post.poll.votes) {
+            } else if (post.poll && post.poll.votes) {
                 const hasVoted = Object.values(post.poll.votes).some(
                     voters => voters.includes(currentUser.uid)
                 );
@@ -120,40 +182,51 @@ function ForumPostPage() {
         }
     }, [postID, currentUser, post]);
 
-    const handleComment = async (e) => {
+    const handleComment = async (e, commentId = null, content = null) => {
         e.preventDefault();
         if (!currentUser) {
             alert('Please log in to comment.');
             return;
         }
-        if (newComment.trim() === '') return;
+        const commentContent = content || newComment;
+        if (commentContent.trim() === '') return;
 
         const commentData = {
-            content: newComment,
+            content: commentContent,
             userId: currentUser.uid,
             timestamp: new Date()
         };
 
-        if (replyingTo) {
-            await addDoc(collection(db, 'Forum', postID, 'Comments', replyingTo, 'Replies'), commentData);
-        } else {
-            await addDoc(collection(db, 'Forum', postID, 'Comments'), commentData);
-            await addDoc(collection(db, 'Notifications'), {
-                recipientID: post.userID,
-                senderID: currentUser.uid,
-                listingID: postID,
-                type: 'forum-comment',
-                read: false,
-                timestamp: new Date()
-            });
-        }
+        try {
+            if (commentId) {
+                await addDoc(collection(db, 'Forum', postID, 'Comments', commentId, 'Replies'), commentData);
+            } else {
+                await addDoc(collection(db, 'Forum', postID, 'Comments'), commentData);
+                await addDoc(collection(db, 'Notifications'), {
+                    recipientID: post.userID,
+                    senderID: currentUser.uid,
+                    listingID: postID,
+                    type: 'forum-comment',
+                    read: false,
+                    timestamp: new Date()
+                });
+            }
 
-        setNewComment('');
-        setReplyingTo(null);
-        const commentsQuery = query(collection(db, 'Forum', postID, 'Comments'));
-        const commentsSnapshot = await getDocs(commentsQuery);
-        const commentsData = commentsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setComments(commentsData);
+            setNewComment('');
+            setReplyingTo(null);
+            const commentsQuery = query(collection(db, 'Forum', postID, 'Comments'));
+            const commentsSnapshot = await getDocs(commentsQuery);
+            const commentsData = await Promise.all(commentsSnapshot.docs.map(async doc => {
+                const comment = { id: doc.id, ...doc.data() };
+                const repliesQuery = query(collection(db, 'Forum', postID, 'Comments', doc.id, 'Replies'));
+                const repliesSnapshot = await getDocs(repliesQuery);
+                comment.replies = repliesSnapshot.docs.map(replyDoc => ({ id: replyDoc.id, ...replyDoc.data() }));
+                return comment;
+            }));
+            setComments(commentsData);
+        } catch (error) {
+            console.error("Error adding comment:", error);
+        }
     };
 
     const handleLike = async (e) => {
@@ -301,7 +374,7 @@ function ForumPostPage() {
     return (
         <Format content={
             <div className='forum-post-page'>
-                <div className='forum-post'>
+<div className='forum-post'>
                     {user && (
                         <div className='forum-user-container'>
                             <div className='forum-user-details'>
@@ -434,7 +507,7 @@ function ForumPostPage() {
                 </div>
                 <div className='forum-comments'>
                     {currentUser ? (
-                        <form onSubmit={handleComment} className='comment-textarea'>
+                        <form onSubmit={(e) => handleComment(e)} className='comment-textarea'>
                             <textarea
                                 value={newComment}
                                 onChange={(e) => {
@@ -449,18 +522,19 @@ function ForumPostPage() {
                             )}
                         </form>
                     ) : (
-                        <p>please log in to comment</p>
+                        <p>Please log in to comment</p>
                     )}
                     <div className='comments-list'>
                         {comments.map(comment => (
-                            <div key={comment.id} className='comment'>
-                                <div className='comment-content'>
-                                    <p>{comment.content}</p>
-                                </div>
-                                <div>
-                                    
-                                </div>    
-                            </div>
+                            <Comment 
+                                key={comment.id} 
+                                comment={comment} 
+                                postID={postID}
+                                onReply={async (commentId, content) => {
+                                    await handleComment({ preventDefault: () => {} }, commentId, content);
+                                }}
+                                currentUser={currentUser}
+                            />
                         ))}
                     </div>
                 </div>
