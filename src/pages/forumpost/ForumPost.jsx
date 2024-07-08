@@ -67,9 +67,14 @@ const Comment = ({ comment, postID, onReply, currentUser }) => {
     return (
         <div className="comment">
             {user && ( 
-                <div className='comment-profile' onClick={handleUsernameClick}>
-                    <img className='comment-profilepic'>{user.profilePic}</img>
-                    <p className="comment-username">{user.username}</p>
+                <div className='comment-header'>
+                    <div className='comment-profile' onClick={handleUsernameClick}>
+                        <img className='comment-profilepic'>{user.profilePic}</img>
+                        <p className="comment-username">{user.username}</p>
+                    </div>
+                    <div className='comment-time'>
+                        <p>{timeSincePost(post.postDate)}</p>
+                    </div>
                 </div>
             )}
             <p className='comment-content'>{comment.content}</p>
@@ -374,7 +379,7 @@ function ForumPostPage() {
     return (
         <Format content={
             <div className='forum-post-page'>
-<div className='forum-post'>
+                <div className='forum-post'>
                     {user && (
                         <div className='forum-user-container'>
                             <div className='forum-user-details'>

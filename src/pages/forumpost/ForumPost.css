@@ -312,6 +312,14 @@
     border-left: 1px solid rgb(194, 194, 194);
     margin: 16px;
     padding: 8px;
+
+    .comment-header {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
+        justify-content: space-between;
+    }
     
     .comment-profile {
         display: flex;
