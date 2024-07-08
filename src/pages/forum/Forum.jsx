@@ -6,7 +6,6 @@ import { collection, getDocs, getDoc, doc } from 'firebase/firestore';
 import Format from '../../components/format/Format';
 import ForumFilter from './filter/ForumFilter';
 import ForumList from '../../components/forumcards/ForumList';
-import ForumCards from '../../components/forumcards/ForumCards';
 import './Forum.css';
 
 function ForumPage() {
@@ -22,10 +21,10 @@ function ForumPage() {
                 const weeklyClicks = await getWeeklyClicks(doc.id);
                 const likes = await getLikes(doc.id);
                 const comments = await getComments(doc.id);
-                return {...forum, weeklyClicks, likes, comments};
+                return { ...forum, weeklyClicks, likes, comments };
             }));
             setForumPosts(forumData);
-            setFilteredPosts(forumData); // Initialize filtered posts with all posts
+            setFilteredPosts(forumData);
         } catch (err) {
             console.log(err);
         }
@@ -56,16 +55,24 @@ function ForumPage() {
     const getWeekStart = () => {
         const now = new Date();
         const dayOfWeek = now.getDay();
-        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
+        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
         return new Date(now.setDate(diff)).setHours(0, 0, 0, 0);
     };
 
-    const handleFilterChange = useCallback(({ tags, sortOrder }) => {
+    const handleFilterChange = useCallback(({ tags, sortOrder, searchQuery }) => {
         let filtered = forumPosts;
 
         if (tags.length > 0) {
-            filtered = filtered.filter(post => 
+            filtered = filtered.filter(post =>
                 tags.some(tag => post.tags.includes(tag))
+            );
+        }
+
+        if (searchQuery) {
+            const lowerCaseQuery = searchQuery.toLowerCase();
+            filtered = filtered.filter(post =>
+                post.title.toLowerCase().includes(lowerCaseQuery) ||
+                post.description.toLowerCase().includes(lowerCaseQuery)
             );
         }
 
@@ -86,7 +93,7 @@ function ForumPage() {
     return (
         <Format content={
             <div className='forum'>
-                <ForumFilter onFilterChange={handleFilterChange}/>
+                <ForumFilter onFilterChange={handleFilterChange} />
                 <div className='forum-main'>
                     <ForumList heading="Forum" forums={filteredPosts} />
                 </div>

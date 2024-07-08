@@ -1,4 +1,5 @@
 .forum-filter {
+    align-items: center;
     display: flex;
     flex-direction: column;
     padding: 12px;
@@ -6,6 +7,7 @@
 }
 
 .forum-filter-container {
+    width: 100%;
     display: flex;
     justify-content: space-around;
     flex-direction: row;
@@ -51,4 +53,11 @@
 
 .tag-button-filter.selected[data-tag="Showcase"] {
     background-color: #FF9800;
+}
+
+.forum-searchbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    width: 800px;
 }

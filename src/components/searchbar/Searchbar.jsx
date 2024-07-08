@@ -7,34 +7,9 @@ import { useAuth } from '../../Auth';
 
 import './Searchbar.css';
 
-const SearchBar = ({placeholder}) => {
-    const [query, setQuery] = useState('');
+const SearchBar = ({placeholder, handleSearch, handleInputChange, query}) => {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
-
-    const handleInputChange = (e) => {
-        const value = e.target.value;
-        setQuery(value);
-    };
-
-    const handleSearch = async (e) => {
-        e.preventDefault();
-        await trackSearchHistory(query);
-        navigate(`/search?query=${query}`);
-    };
-
-    const trackSearchHistory = async (query) => {
-        if (currentUser && query) {
-            try {
-                await addDoc(collection(db, 'userHistory', currentUser.uid, 'searchHistory'), {
-                    query,
-                    timestamp: new Date().toISOString()
-                });
-            } catch (error) {
-                console.error('Error tracking search history:', error);
-            }
-        }
-    };
 
     return (
         <div className="search-bar-container">

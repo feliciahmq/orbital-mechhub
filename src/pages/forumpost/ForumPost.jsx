@@ -2,7 +2,7 @@ import React, { useState, useEffect , useRef} from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../Auth';
 import { db } from '../../lib/firebaseConfig';
-import { FaRegHeart, FaHeart, FaReply, FaShare, FaPoll } from "react-icons/fa";
+import { FaRegHeart, FaHeart, FaReply, FaShare, FaPoll, FaEllipsisV } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
 import { doc, getDoc, addDoc, collection, deleteDoc, query, where, getDocs, updateDoc, setDoc } from 'firebase/firestore';
 import Slider from "react-slick";
@@ -51,6 +51,7 @@ function ForumPostPage() {
     const [newComment, setNewComment] = useState('');
     const [replyingTo, setReplyingTo] = useState(null);
     const commentTextareaRef = useRef(null);
+    const [dropdownOpen, setDropdownOpen] = useState(false); 
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -137,6 +138,14 @@ function ForumPostPage() {
             await addDoc(collection(db, 'Forum', postID, 'Comments', replyingTo, 'Replies'), commentData);
         } else {
             await addDoc(collection(db, 'Forum', postID, 'Comments'), commentData);
+            await addDoc(collection(db, 'Notifications'), {
+                recipientID: post.userID,
+                senderID: currentUser.uid,
+                listingID: postID,
+                type: 'forum-comment',
+                read: false,
+                timestamp: new Date()
+            });
         }
 
         setNewComment('');
@@ -235,6 +244,20 @@ function ForumPostPage() {
         }
     };
 
+    const handleDelete = async (e) => {
+        e.preventDefault();
+
+        try {
+            await deleteDoc(doc(db, 'Forum', postID));
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const handleEditClick = () => {
+        navigate(`/newforumpost/${postID}`);
+    };
+
     const getTotalVotes = () => {
         if (!post.poll || !post.poll.votes) return 0;
         return Object.values(post.poll.votes).reduce((sum, voters) => sum + voters.length, 0);
@@ -247,6 +270,10 @@ function ForumPostPage() {
     const adjustTextareaHeight = (e) => {
         e.target.style.height = 'auto';
         e.target.style.height = `${e.target.scrollHeight}px`;
+    };
+
+    const handleOptionsClick = () => {
+        setDropdownOpen(!dropdownOpen);
     };
 
     if (!post || !user) {
@@ -285,7 +312,20 @@ function ForumPostPage() {
                                 />
                                 <h4 onClick={handleUsernameClick}>{user.username}</h4>
                             </div>
-                            <p>{timeSincePost(post.postDate)}</p>
+                            <div className='far-right'>
+                                <p>{timeSincePost(post.postDate)}</p>
+                                {currentUser.uid === post.userID && (
+                                    <>
+                                        <FaEllipsisV onClick={handleOptionsClick} cursor='pointer'/>
+                                        {dropdownOpen && (
+                                            <div className="dropdown-content">
+                                                <button onClick={handleEditClick}>Edit Listing</button>  
+                                                <button className='delete' onClick={handleDelete}>Delete Listing</button>
+                                            </div>
+                                )}
+                                    </>
+                                )}
+                            </div>
                         </div>
                     )}
                     <div className="forum-header">

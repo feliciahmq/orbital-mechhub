@@ -10,6 +10,7 @@ import "./Header.css";
 
 function Header() {
     const navigate = useNavigate();
+    const [query, setQuery] = useState('');
     const { currentUser } = useAuth();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
@@ -40,6 +41,30 @@ function Header() {
         navigate('/newforumpost');
     }
 
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setQuery(value);
+    };
+
+    const trackSearchHistory = async (query) => {
+        if (currentUser && query) {
+            try {
+                await addDoc(collection(db, 'userHistory', currentUser.uid, 'searchHistory'), {
+                    query,
+                    timestamp: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error('Error tracking search history:', error);
+            }
+        }
+    };
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        await trackSearchHistory(query);
+        navigate(`/search?query=${query}`);
+    };
+
     return (
         <nav className='header'>
             {!isMobile ? (
@@ -56,7 +81,13 @@ function Header() {
                 />
             )}
             <div className='header-searchbar'>
-                <SearchBar placeholder={"Search Products..."} onSearch={(query) => navigate(`/search?query=${query}`)} />
+                <SearchBar 
+                    placeholder={"Search Products..."} 
+                    handleSearch={handleSearch} 
+                    onSearch={(query) => navigate(`/search?query=${query}`)} 
+                    query={query}
+                    handleInputChange={handleInputChange}    
+                />
             </div>
             {currentUser ? (
                 <>

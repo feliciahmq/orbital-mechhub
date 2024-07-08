@@ -10,7 +10,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Format from '../../components/format/Format';
-import Header from '../../components/header/Header';
 import './Listing.css';
 
 const saveFormData = (data) => {

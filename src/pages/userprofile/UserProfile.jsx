@@ -15,6 +15,7 @@ import EditPopup from './editUser/EditPopup';
 import Header from '../../components/header/Header';
 import ListingButton from '../../components/listingpopup/Button';
 import ProductList from '../../components/productcards/ProductList';
+import ForumList from '../../components/forumcards/ForumList';
 import './UserProfile.css';
 
 const defaultProfilePic = "/src/assets/defaultProfile.jpg"; 
@@ -27,12 +28,13 @@ function UserProfile() {
 	const [isPopupOpen, setIsPopupOpen] = useState(false);
 	const [userListings, setUserListings] = useState([]);
 	const [userReviews, setUserReviews] = useState([]);
-	const [viewReviews, setViewReviews] = useState(false);
+	const [viewToggle, setViewToggle] = useState('listing');
 	const [averageScore, setAverageScore] = useState(0);
 	const [numberOfReviews, setNumberOfReviews] = useState(0);
 	const [followUser, setFollowUser] = useState(false);
 	const [followCount, setFollowCount] = useState(0);
 	const [followingCount, setFollowingCount] = useState(0);
+	const [userForumPosts, setUserForumPosts] = useState([]);
 
 	const handleOpenPopup = () => {
 		setIsPopupOpen(true);
@@ -49,17 +51,33 @@ function UserProfile() {
 
 	const fetchUsersListings = async (username) => {
 		try {
-		const listingsCollection = collection(db, 'listings');
-		const data = await getDocs(listingsCollection);
-		const listingsData = data.docs.map((doc) => ({
-			id: doc.id,
-			...doc.data(),
-		}));
+			const listingsCollection = collection(db, 'listings');
+			const data = await getDocs(listingsCollection);
+			const listingsData = data.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}));
 
-		const userSpecificListings = listingsData.filter((listing) => listing.username === username);
-		setUserListings(userSpecificListings);
+			const userSpecificListings = listingsData.filter((listing) => listing.username === username);
+			setUserListings(userSpecificListings);
 		} catch (error) {
-		console.log(`Firebase: ${error}`);
+			console.log(`Firebase: ${error}`);
+		}
+	};
+
+	const fetchUserForumPosts = async (userID) => {
+		try {
+			const forumCollection = collection(db, 'Forum');
+			const data = await getDocs(forumCollection);
+			const forumData = data.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}))
+
+			const userForum = forumData.filter((post) => post.userID === userID);
+			setUserForumPosts(userForum);
+		} catch (err) {
+			console.log(err);
 		}
 	};
 
@@ -105,6 +123,7 @@ function UserProfile() {
 			userData.signUpDate = new Date(userData.signUpDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long' });
 			setUserInfo(userData);
 			fetchUsersListings(userData.username);
+			fetchUserForumPosts(userData.id);
 			fetchUserReviews();
 			const isFollowing = await fetchFollowStatus();
 			setFollowUser(isFollowing);
@@ -190,6 +209,8 @@ function UserProfile() {
 		}
 	};
 
+	// to create a forum posts seciton and allow users to pin to the top
+
 	const handleUserUnFollow = async () => {
 		if (currentUser?.uid !== userID) {
 		const followDocRef = doc(db, 'Users', userID, 'followers', currentUser.uid);
@@ -265,41 +286,57 @@ function UserProfile() {
                         </div>
                         <div className="profile-toggle">
                             <div
-                                className={`toggle ${!viewReviews ? 'active' : ''}`}
-                                onClick={() => setViewReviews(false)}
+                                className={`toggle ${!viewToggle == "listing" ? 'active' : ''}`}
+                                onClick={() => setViewToggle('listing')}
                             >
                                 Listings
                             </div>
                             <div
-                                className={`toggle ${viewReviews ? 'active' : ''}`}
-                                onClick={() => setViewReviews(true)}
+                                className={`toggle ${viewToggle == 'review' ? 'active' : ''}`}
+                                onClick={() => setViewToggle('review')}
                             >
                                 Reviews
                             </div>
+							<div
+                                className={`toggle ${viewToggle == 'forum' ? 'active' : ''}`}
+                                onClick={() => setViewToggle('forum')}
+                            >
+                                Forum Posts
+                            </div>
                         </div>
                     </div>
-                    <div className="user-content">
-                        {viewReviews ? (
-                            <div className="user-reviews">
-                                {userReviews.length > 0 ? (
-                                    <ReviewList
-                                        heading={`${userInfo.username}'s Reviews`}
-                                        reviews={userReviews} averageScore={averageScore} numberOfReviews={numberOfReviews}
-                                    />
-                                ) : (
-                                    <h2>This user has no reviews ( ˘･з･)</h2>
-                                )}
-                            </div>
-                        ) : (
-                            <div className="users-listings">
-                                {userListings.length > 0 ? (
-                                    <ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
-                                ) : (
-                                    <h2>This user has no listings ( ˘･з･)</h2>
-                                )}
-                            </div>
-                        )}
-                    </div>
+					<div className="user-content">
+						{viewToggle === "listing" ? (
+							<div className="user-reviews">
+								{userReviews.length > 0 ? (
+									<ReviewList
+									heading={`${userInfo.username}'s Reviews`}
+									reviews={userReviews}
+									averageScore={averageScore}
+									numberOfReviews={numberOfReviews}
+									/>
+								) : (
+									<h2>This user has no reviews ( ˘･з･)</h2>
+								)}
+							</div>
+						) : viewToggle === "review" ? (
+							<div className="users-listings">
+								{userListings.length > 0 ? (
+									<ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
+								) : (
+									<h2>This user has no listings ( ˘･з･)</h2>
+								)}
+							</div>
+						) : (
+							<div className="users-forum-posts">
+								{userForumPosts.length > 0 ? (
+									<ForumList heading={`${userInfo.username}'s Forum Posts`} forums={userForumPosts} />
+								) : (
+									<h2>This user has no forum posts ( ˘･з･)</h2>
+								)}
+							</div>
+						)}
+					</div>
                 </>
             ) : (
                 <div>

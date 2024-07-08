@@ -3,7 +3,7 @@ import { useAuth } from '../../../Auth';
 import { db } from '../../../lib/firebaseConfig';
 import { collection, addDoc, doc, getDoc, getDocs, query } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -26,6 +26,7 @@ const loadFormData = () => {
 
 function NewForumPost() {
     const { currentUser } = useAuth();
+    const { postID } = useParams();
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: '',
@@ -40,11 +41,36 @@ function NewForumPost() {
     const availableTags = ["Questions", "Modding", "Reviews", "Showcase"];
 
     useEffect(() => {
-        const savedData = loadFormData();
-        if (savedData) {
-            setFormData(savedData);
+        if (postID) {
+            const fetchPostData = async () => {
+                try {
+                    const postDoc = await getDoc(doc(db, 'Forum', postID));
+                    if (postDoc.exists()) {
+                        const data = {
+                            title: postDoc.data().title || '',
+                            media: postDoc.data().media || [],
+                            description: postDoc.data().description || '',
+                            postDate: postDoc.data().postDate || '',
+                            tags: postDoc.data().tags || [],
+                            poll: postDoc.data().poll || { question: '', options: [''] }
+                        }
+                        setFormData(data);
+                    } else {
+                        alert('Listing not found');
+                        navigate('/');
+                    }
+                } catch (err) {
+                    console.log('err fetch post')
+                }
+            }
+            fetchPostData();
+        } else {
+            const savedData = loadFormData();
+            if (savedData) {
+                setFormData(savedData);
+            }
         }
-    }, []);
+    }, [postID]);
 
     useEffect(() => {
         const handleBeforeUnload = (e) => {
@@ -219,7 +245,7 @@ function NewForumPost() {
         <Format content={
             <>
                 <div className="forum-form">
-                    <h2>Create Forum Post</h2>
+                    <h2>{postID ? 'Edit Forum Post' : 'Create Forum Post'}</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-group">
                         <button className="poll-button" type="button" onClick={togglePoll}>

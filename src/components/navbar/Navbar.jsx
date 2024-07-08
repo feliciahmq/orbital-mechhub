@@ -12,7 +12,6 @@ import './Navbar.css';
 
 function Navbar() {
     const navigate = useNavigate();
-    const [menuOpen, setMenuOpen] = useState(false);
     const { currentUser } = useAuth();
     const { likeCount } = useLikes();
     const [unreadCount, setUnreadCount] = useState(0);
@@ -31,29 +30,8 @@ function Navbar() {
                 setUnreadCount(notificationsSnapshot.docs.length);
             }
         };
-        const fetchUnreadChat = async () => {
-            if (currentUser) {
-                const userChatsQuery = query(
-                    collection(db, 'UserChats'),
-                    where('users', 'array-contains', currentUser.uid)
-                );
-                onSnapshot(userChatsQuery, (snapshot) => {
-                    let unreadMessages = 0;
-                    snapshot.docs.forEach((doc) => {
-                        const chatData = doc.data();
-                        chatData.messages.forEach((message) => {
-                            if (message.senderId !== currentUser.uid && !message.isSeen) {
-                                unreadMessages++;
-                            }
-                        });
-                    });
-                    setChatUnreadCount(unreadMessages);
-                });
-            }
-        };
 
         fetchUnreadNotifications();
-        fetchUnreadChat();
     }, [currentUser]);
 
     useEffect(() => {

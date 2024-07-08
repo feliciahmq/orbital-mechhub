@@ -41,6 +41,7 @@ return (
 			<Route path="/chat/:userID/:chatID" element={<Chat />} />
 			<Route path="/forum" element={<ForumPage />} />
 			<Route path="/newforumpost" element={<NewForumPost />} />
+			<Route path="/newforumpost/:postID" element={<NewForumPost />} />
 			<Route path="/forumpost/:postID" element={<ForumPostPage />} />
 			<Route path="/keyboardguide" element={<KeyboardGuidePage />} />
 		</Routes>
