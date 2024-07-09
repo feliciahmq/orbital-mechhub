@@ -139,7 +139,7 @@
             display: inline-block;
         }
 
-        .forum-card-like {
+        .forum-card-like, .forum-card-comment {
             display: flex;
             align-items: center;
             gap: 2px;

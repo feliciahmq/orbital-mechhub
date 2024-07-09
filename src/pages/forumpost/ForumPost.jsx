@@ -37,7 +37,7 @@ function timeSincePost(postDate) {
     }
 }
 
-const Comment = ({ comment, postID, onReply, currentUser }) => {
+const Comment = ({ comment, postID, onReply, currentUser, depth = 0, parentId = '' }) => {
     const [user, setUser] = useState(null);
     const [showReplyForm, setShowReplyForm] = useState(false);
     const [replyContent, setReplyContent] = useState('');
@@ -55,7 +55,8 @@ const Comment = ({ comment, postID, onReply, currentUser }) => {
     const handleReply = async (e) => {
         e.preventDefault();
         if (replyContent.trim() === '') return;
-        await onReply(comment.id, replyContent);
+        const replyId = parentId ? `${parentId}-${comment.id}` : comment.id;
+        await onReply(replyId, replyContent, depth + 1);
         setReplyContent('');
         setShowReplyForm(false);
     };
@@ -65,15 +66,19 @@ const Comment = ({ comment, postID, onReply, currentUser }) => {
     };
 
     return (
-        <div className="comment">
+        <div className="comment" style={{ marginLeft: `${12}px`, marginBottom: `${12}px`, marginTop: `${12}px` }}>
             {user && ( 
                 <div className='comment-header'>
                     <div className='comment-profile' onClick={handleUsernameClick}>
-                        <img className='comment-profilepic'>{user.profilePic}</img>
+                        <img 
+                            className='comment-profilepic' 
+                            src={user.profilePic} 
+                            alt={`${user.username}'s profile picture`}
+                        />
                         <p className="comment-username">{user.username}</p>
                     </div>
                     <div className='comment-time'>
-                        <p>{timeSincePost(post.postDate)}</p>
+                        <p>{timeSincePost(comment.timestamp)}</p>
                     </div>
                 </div>
             )}
@@ -92,7 +97,15 @@ const Comment = ({ comment, postID, onReply, currentUser }) => {
                 </form>
             )}
             {comment.replies && comment.replies.map(reply => (
-                <Comment key={reply.id} comment={reply} postID={postID} onReply={onReply} currentUser={currentUser} />
+                <Comment 
+                    key={reply.id} 
+                    comment={reply} 
+                    postID={postID} 
+                    onReply={onReply} 
+                    currentUser={currentUser} 
+                    depth={depth + 1} 
+                    parentId={parentId ? `${parentId}-${comment.id}` : comment.id}
+                />
             ))}
         </div>
     );
@@ -113,6 +126,7 @@ function ForumPostPage() {
     const [replyingTo, setReplyingTo] = useState(null);
     const commentTextareaRef = useRef(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [commentCount, setCommentCount] = useState(0);
 
     useEffect(() => {
         const fetchPost = async () => {
@@ -133,15 +147,7 @@ function ForumPostPage() {
         }
 
         const fetchComments = async () => {
-            const commentsQuery = query(collection(db, 'Forum', postID, 'Comments'));
-            const commentsSnapshot = await getDocs(commentsQuery);
-            const commentsData = await Promise.all(commentsSnapshot.docs.map(async doc => {
-                const comment = { id: doc.id, ...doc.data() };
-                const repliesQuery = query(collection(db, 'Forum', postID, 'Comments', doc.id, 'Replies'));
-                const repliesSnapshot = await getDocs(repliesQuery);
-                comment.replies = repliesSnapshot.docs.map(replyDoc => ({ id: replyDoc.id, ...replyDoc.data() }));
-                return comment;
-            }));
+            const commentsData = await fetchCommentsRecursively(postID);
             setComments(commentsData);
         };
 
@@ -187,7 +193,13 @@ function ForumPostPage() {
         }
     }, [postID, currentUser, post]);
 
-    const handleComment = async (e, commentId = null, content = null) => {
+    const countCommentsAndReplies = (comments) => {
+        return comments.reduce((total, comment) => {
+            return total + 1 + (comment.replies ? countCommentsAndReplies(comment.replies) : 0);
+        }, 0);
+    };
+
+    const handleComment = async (e, commentId = null, content = null, depth = 0) => {
         e.preventDefault();
         if (!currentUser) {
             alert('Please log in to comment.');
@@ -195,18 +207,33 @@ function ForumPostPage() {
         }
         const commentContent = content || newComment;
         if (commentContent.trim() === '') return;
-
+    
         const commentData = {
             content: commentContent,
             userId: currentUser.uid,
             timestamp: new Date()
         };
-
+    
         try {
+            let commentRef;
             if (commentId) {
-                await addDoc(collection(db, 'Forum', postID, 'Comments', commentId, 'Replies'), commentData);
+                const replyChain = commentId.split('-');
+                let currentRef = collection(db, 'Forum', postID, 'Comments');
+                for (let i = 0; i < replyChain.length; i++) {
+                    if (i === replyChain.length - 1) {
+                        currentRef = doc(currentRef, replyChain[i]);
+                    } else {
+                        currentRef = collection(currentRef, replyChain[i], 'Replies');
+                    }
+                }
+                commentRef = collection(currentRef, 'Replies');
             } else {
-                await addDoc(collection(db, 'Forum', postID, 'Comments'), commentData);
+                commentRef = collection(db, 'Forum', postID, 'Comments');
+            }
+    
+            const newCommentRef = await addDoc(commentRef, commentData);
+    
+            if (!commentId) {
                 await addDoc(collection(db, 'Notifications'), {
                     recipientID: post.userID,
                     senderID: currentUser.uid,
@@ -216,22 +243,36 @@ function ForumPostPage() {
                     timestamp: new Date()
                 });
             }
-
+    
             setNewComment('');
             setReplyingTo(null);
-            const commentsQuery = query(collection(db, 'Forum', postID, 'Comments'));
-            const commentsSnapshot = await getDocs(commentsQuery);
-            const commentsData = await Promise.all(commentsSnapshot.docs.map(async doc => {
-                const comment = { id: doc.id, ...doc.data() };
-                const repliesQuery = query(collection(db, 'Forum', postID, 'Comments', doc.id, 'Replies'));
-                const repliesSnapshot = await getDocs(repliesQuery);
-                comment.replies = repliesSnapshot.docs.map(replyDoc => ({ id: replyDoc.id, ...replyDoc.data() }));
-                return comment;
-            }));
-            setComments(commentsData);
+            
+            const updatedComments = await fetchCommentsRecursively(postID);
+            setComments(updatedComments);
+            setCommentCount(countCommentsAndReplies(updatedComments));
         } catch (error) {
             console.error("Error adding comment:", error);
         }
+    };
+
+    const fetchCommentsRecursively = async (postID, parentRef = null) => {
+        const commentsQuery = parentRef 
+            ? query(collection(parentRef, 'Replies'))
+            : query(collection(db, 'Forum', postID, 'Comments'));
+        const commentsSnapshot = await getDocs(commentsQuery);
+        
+        const fetchedComments = await Promise.all(commentsSnapshot.docs.map(async doc => {
+            const comment = { id: doc.id, ...doc.data() };
+            comment.replies = await fetchCommentsRecursively(postID, doc.ref);
+            return comment;
+        }));
+    
+        if (!parentRef) {
+            const totalCount = countCommentsAndReplies(fetchedComments);
+            setCommentCount(totalCount);
+        }
+    
+        return fetchedComments;
     };
 
     const handleLike = async (e) => {
@@ -245,7 +286,7 @@ function ForumPostPage() {
         try {
             await addDoc(collection(db, 'Forum', postID, 'Likes'), {
                 userID: currentUser.uid,
-                timestamp: new Date()
+                timestamp: new Date().toISOString()
             });
             setIsLiked(true);
             setLikeCount(prevCount => prevCount + 1);
@@ -256,7 +297,7 @@ function ForumPostPage() {
                 listingID: postID,
                 type: 'forum-like',
                 read: false,
-                timestamp: new Date()
+                timestamp: new Date().toISOString()
             });
         } catch (err) {
             console.error("Error liking post:", err.message);
@@ -502,6 +543,7 @@ function ForumPostPage() {
                             </div>
                             <div className="forum-card-comment forum-card-icon">
                                 <FaCommentDots fill="grey"/>
+                                <span>{commentCount}</span>
                             </div>
                         </div>
                         <div className="forum-card-share forum-card-icon" onClick={handleShare}>

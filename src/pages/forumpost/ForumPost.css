@@ -225,7 +225,7 @@
             display: inline-block;
         }
 
-        .forum-card-like {
+        .forum-card-like, .forum-card-comment {
             display: flex;
             align-items: center;
             gap: 2px;
@@ -310,7 +310,6 @@
 
 .comment {
     border-left: 1px solid rgb(194, 194, 194);
-    margin: 16px;
     padding: 8px;
 
     .comment-header {
@@ -323,6 +322,7 @@
     
     .comment-profile {
         display: flex;
+        cursor: pointer;
         flex-direction: row;
         align-items: center;
         gap: 4px;
@@ -339,6 +339,7 @@
 
     .comment-content {
         margin: 0;
+        padding-bottom: 8px;
     }
 
     .comment-reply-button {
@@ -363,6 +364,8 @@
     }
 
     .comment-reply {
+        margin: 8px 0;
+
         textarea {
             font-size: 16px;
             border-radius: 12px;

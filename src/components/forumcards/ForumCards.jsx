@@ -41,6 +41,7 @@ function ForumCards({ forumDetail }) {
     const [showResults, setShowResults] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
     const [likeCount, setLikeCount] = useState(0);
+    const [commentCount, setCommentCount] = useState(0);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -50,6 +51,22 @@ function ForumCards({ forumDetail }) {
             if (userDocSnap.exists()) {
                 setUser(userDocSnap.data());
             }
+        };
+
+        const fetchAndCountComments = async () => {
+            const commentsRef = collection(db, 'Forum', forumDetail.id, 'Comments');
+            const commentsSnapshot = await getDocs(commentsRef);
+            
+            const fetchedComments = await Promise.all(commentsSnapshot.docs.map(async doc => {
+                const comment = { id: doc.id, ...doc.data() };
+                const repliesRef = collection(db, 'Forum', forumDetail.id, 'Comments', doc.id, 'Replies');
+                const repliesSnapshot = await getDocs(repliesRef);
+                comment.replies = repliesSnapshot.docs.map(replyDoc => ({ id: replyDoc.id, ...replyDoc.data() }));
+                return comment;
+            }));
+        
+            const totalCount = countCommentsAndReplies(fetchedComments);
+            setCommentCount(totalCount);
         };
 
         const checkLikeStatus = async () => {
@@ -70,6 +87,7 @@ function ForumCards({ forumDetail }) {
         fetchUser();
         checkLikeStatus();
         getLikeCount();
+        fetchAndCountComments();
 
         if (currentUser) {
             if (currentUser.uid === forumDetail.userID) {
@@ -251,6 +269,12 @@ function ForumCards({ forumDetail }) {
         }
     };
 
+    const countCommentsAndReplies = (comments) => {
+        return comments.reduce((total, comment) => {
+            return total + 1 + (comment.replies ? countCommentsAndReplies(comment.replies) : 0);
+        }, 0);
+    };
+
     const tagColors = {
         "Questions": "#FF4B2B",  
         "Modding": "#4CAF50",  
@@ -360,6 +384,7 @@ function ForumCards({ forumDetail }) {
                     </div>
                     <div className="forum-card-comment forum-card-icon">
                         <FaCommentDots fill="grey"/>
+                        <span>{commentCount}</span>
                     </div>
                 </div>
                 <div className="forum-card-share forum-card-icon" onClick={handleShare}>
@@ -370,4 +395,5 @@ function ForumCards({ forumDetail }) {
         </div>
     );
 }
+
 export default ForumCards;
