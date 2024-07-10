@@ -1,0 +1,35 @@
+.divbar {
+    position: absolute;
+    border: 1px solid #ccc;
+    background-color: white;
+    border-radius: 5px;
+    padding: 4px;
+    box-shadow: 0 2px 4px rgba(100, 100, 100, 0.1);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+
+    a {
+        font-size: 12px;
+        text-decoration: none;
+        color: black;
+        padding: 4px;
+    }
+    a:hover{
+        color: red;
+    }
+}
+
+.guide-header {
+    display: flex;
+    flex-direction: column;
+    h1 {
+        font-size: 28px;
+        font-weight: 600;
+        margin: 8px 0 4px;
+    }
+    p {
+        margin: 0;
+        font-size: 12px;
+    }
+}
