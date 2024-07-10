@@ -127,71 +127,65 @@ function ForumPostPage() {
     const commentTextareaRef = useRef(null);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [commentCount, setCommentCount] = useState(0);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        const fetchPost = async () => {
-            const postDoc = await getDoc(doc(db, 'Forum', postID));
+        const fetchData = async () => {
+            if (isLoaded) return;
 
-            if (postDoc.exists()) {
-                const postData = postDoc.data();
-                setPost(postData);
+            try {
+                const postDoc = await getDoc(doc(db, 'Forum', postID));
 
-                const userDocRef = doc(db, 'Users', postData.userID);
-                const userDocSnap = await getDoc(userDocRef);
-                if (userDocSnap.exists()) {
-                    setUser(userDocSnap.data());
+                if (postDoc.exists()) {
+                    const postData = postDoc.data();
+                    setPost(postData);
+
+                    const userDocRef = doc(db, 'Users', postData.userID);
+                    const userDocSnap = await getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        setUser(userDocSnap.data());
+                    }
+
+                    const commentsData = await fetchCommentsRecursively(postID);
+                    setComments(commentsData);
+
+                    if (currentUser) {
+                        const likesQuery = query(
+                            collection(db, 'Forum', postID, 'Likes'),
+                            where('userID', '==', currentUser.uid)
+                        );
+                        const likesSnapshot = await getDocs(likesQuery);
+                        setIsLiked(!likesSnapshot.empty);
+                    }
+
+                    const likesSnapshot = await getDocs(collection(db, 'Forum', postID, 'Likes'));
+                    setLikeCount(likesSnapshot.size);
+
+                    if (currentUser && postData.poll && postData.poll.votes) {
+                        const hasVoted = Object.values(postData.poll.votes).some(
+                            voters => voters.includes(currentUser.uid)
+                        );
+                        if (hasVoted) {
+                            setShowResults(true);
+                            setSelectedPollOption(
+                                Object.entries(postData.poll.votes).find(
+                                    ([, voters]) => voters.includes(currentUser.uid)
+                                )?.[0]
+                            );
+                        }
+                    }
+
+                    setIsLoaded(true);
+                } else {
+                    console.log('There is no such post');
                 }
-            } else {
-                console.log('There is no such post');
+            } catch (error) {
+                console.error("Error fetching data:", error);
             }
-        }
-
-        const fetchComments = async () => {
-            const commentsData = await fetchCommentsRecursively(postID);
-            setComments(commentsData);
         };
 
-        const checkIfLiked = async () => {
-            if (currentUser) {
-                const likesQuery = query(
-                    collection(db, 'Forum', postID, 'Likes'),
-                    where('userID', '==', currentUser.uid)
-                );
-                const likesSnapshot = await getDocs(likesQuery);
-                if (!likesSnapshot.empty) {
-                    setIsLiked(true);
-                }
-            }
-        };
-
-        const getLikeCount = async () => {
-            const likesSnapshot = await getDocs(collection(db, 'Forum', postID, 'Likes'));
-            setLikeCount(likesSnapshot.size);
-        };
-
-        fetchPost();
-        checkIfLiked();
-        getLikeCount();
-        fetchComments();
-
-        if (currentUser && post) {
-            if (currentUser.uid === post.userID) {
-                setShowResults(true);
-            } else if (post.poll && post.poll.votes) {
-                const hasVoted = Object.values(post.poll.votes).some(
-                    voters => voters.includes(currentUser.uid)
-                );
-                if (hasVoted) {
-                    setShowResults(true);
-                    setSelectedPollOption(
-                        Object.entries(post.poll.votes).find(
-                            ([, voters]) => voters.includes(currentUser.uid)
-                        )?.[0]
-                    );
-                }
-            }
-        }
-    }, [postID, currentUser, post]);
+        fetchData();
+    }, [postID, currentUser, isLoaded]);
 
     const countCommentsAndReplies = (comments) => {
         return comments.reduce((total, comment) => {
@@ -211,7 +205,7 @@ function ForumPostPage() {
         const commentData = {
             content: commentContent,
             userId: currentUser.uid,
-            timestamp: new Date()
+            timestamp: new Date().toISOString()
         };
     
         try {
@@ -240,7 +234,7 @@ function ForumPostPage() {
                     listingID: postID,
                     type: 'forum-comment',
                     read: false,
-                    timestamp: new Date()
+                    timestamp: new Date().toISOString()
                 });
             }
     

@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../Auth";
 import { FaPoll, FaRegHeart, FaHeart, FaShare } from "react-icons/fa";
 import { FaCommentDots } from "react-icons/fa6";
-import { doc, getDoc, updateDoc, setDoc, getDocs, addDoc, collection, query, where, deleteDoc} from 'firebase/firestore';
+import { doc, getDoc, updateDoc, setDoc, getDocs, addDoc, collection, query, where, deleteDoc } from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
 
 import './ForumCards.css';
 
 function timeSincePost(postDate) {
-    const now = new Date();
+    const now = new Date().toISOString();
     const posted = new Date(postDate);
     const diffInSeconds = Math.floor((now - posted) / 1000);
 
@@ -40,54 +40,58 @@ function ForumCards({ forumDetail }) {
     const [selectedPollOption, setSelectedPollOption] = useState(null);
     const [showResults, setShowResults] = useState(false);
     const [isLiked, setIsLiked] = useState(false);
-    const [likeCount, setLikeCount] = useState(0);
+    const [likeCount, setLikeCount] = useState(forumDetail.likeCount || 0);
     const [commentCount, setCommentCount] = useState(0);
 
-    useEffect(() => {
-        const fetchUser = async () => {
+    const fetchUser = useCallback(async () => {
+        if (!user) {
             const userDocRef = doc(db, 'Users', forumDetail.userID);
             const userDocSnap = await getDoc(userDocRef);
-
             if (userDocSnap.exists()) {
                 setUser(userDocSnap.data());
             }
-        };
+        }
+    }, [forumDetail.userID, user]);
 
-        const fetchAndCountComments = async () => {
-            const commentsRef = collection(db, 'Forum', forumDetail.id, 'Comments');
-            const commentsSnapshot = await getDocs(commentsRef);
-            
-            const fetchedComments = await Promise.all(commentsSnapshot.docs.map(async doc => {
-                const comment = { id: doc.id, ...doc.data() };
-                const repliesRef = collection(db, 'Forum', forumDetail.id, 'Comments', doc.id, 'Replies');
-                const repliesSnapshot = await getDocs(repliesRef);
-                comment.replies = repliesSnapshot.docs.map(replyDoc => ({ id: replyDoc.id, ...replyDoc.data() }));
-                return comment;
-            }));
+    const checkLikeStatus = useCallback(async () => {
+        if (currentUser && !isLiked) {
+            const likesRef = collection(db, 'Forum', forumDetail.id, 'Likes');
+            const q = query(likesRef, where('userID', '==', currentUser.uid));
+            const querySnapshot = await getDocs(q);
+            setIsLiked(!querySnapshot.empty);
+        }
+    }, [currentUser, forumDetail.id, isLiked]);
+
+    const countCommentsAndReplies = (comments) => {
+        return comments.reduce((total, comment) => {
+            return total + 1 + (comment.replies ? countCommentsAndReplies(comment.replies) : 0);
+        }, 0);
+    };
+
+    const fetchCommentsRecursively = async (postID, parentRef = null) => {
+        const commentsQuery = parentRef 
+            ? query(collection(parentRef, 'Replies'))
+            : query(collection(db, 'Forum', postID, 'Comments'));
+        const commentsSnapshot = await getDocs(commentsQuery);
         
+        const fetchedComments = await Promise.all(commentsSnapshot.docs.map(async doc => {
+            const comment = { id: doc.id, ...doc.data() };
+            comment.replies = await fetchCommentsRecursively(postID, doc.ref);
+            return comment;
+        }));
+    
+        if (!parentRef) {
             const totalCount = countCommentsAndReplies(fetchedComments);
             setCommentCount(totalCount);
-        };
+        }
+    
+        return fetchedComments;
+    };
 
-        const checkLikeStatus = async () => {
-            if (currentUser) {
-                const likesRef = collection(db, 'Forum', forumDetail.id, 'Likes');
-                const q = query(likesRef, where('userID', '==', currentUser.uid));
-                const querySnapshot = await getDocs(q);
-                setIsLiked(!querySnapshot.empty);
-            }
-        };
-
-        const getLikeCount = async () => {
-            const likesRef = collection(db, 'Forum', forumDetail.id, 'Likes');
-            const querySnapshot = await getDocs(likesRef);
-            setLikeCount(querySnapshot.size);
-        };
-
+    useEffect(() => {
         fetchUser();
         checkLikeStatus();
-        getLikeCount();
-        fetchAndCountComments();
+        fetchCommentsRecursively(forumDetail.id);
 
         if (currentUser) {
             if (currentUser.uid === forumDetail.userID) {
@@ -106,7 +110,7 @@ function ForumCards({ forumDetail }) {
                 }
             }
         }
-    }, [forumDetail.id, forumDetail.userID, forumDetail.poll, currentUser]);
+    }, [forumDetail, currentUser, fetchUser, checkLikeStatus]);
 
     const handleViewClick = () => {
         trackClick();
@@ -129,10 +133,14 @@ function ForumCards({ forumDetail }) {
         try {
             await addDoc(collection(db, 'Forum', forumDetail.id, 'Likes'), {
                 userID: currentUser.uid,
-                timestamp: new Date()
+                timestamp: new Date().toISOString()
             });
             setIsLiked(true);
             setLikeCount(prevCount => prevCount + 1);
+            const forumRef = doc(db, 'Forum', forumDetail.id);
+            await updateDoc(forumRef, {
+                likeCount: likeCount + 1
+            });
 
             await addDoc(collection(db, 'Notifications'), {
                 recipientID: forumDetail.userID,
@@ -140,7 +148,7 @@ function ForumCards({ forumDetail }) {
                 listingID: forumDetail.id,
                 type: 'forum-like',
                 read: false,
-                timestamp: new Date()
+                timestamp: new Date().toISOString()
             });
         } catch (err) {
             console.error("Error liking post:", err.message);
@@ -161,6 +169,11 @@ function ForumCards({ forumDetail }) {
 
             setIsLiked(false);
             setLikeCount(prevCount => prevCount - 1);
+
+            const forumRef = doc(db, 'Forum', forumDetail.id);
+            await updateDoc(forumRef, {
+                likeCount: likeCount - 1
+            });
         } catch (err) {
             console.error("Error unliking post:", err.message);
         }
@@ -209,7 +222,7 @@ function ForumCards({ forumDetail }) {
     }
 
     const getWeekStart = () => {
-        const now = new Date();
+        const now = new Date().toISOString();
         const dayOfWeek = now.getDay();
         const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
         return new Date(now.setDate(diff)).setHours(0, 0, 0, 0); 
@@ -267,12 +280,6 @@ function ForumCards({ forumDetail }) {
                 }
             }
         }
-    };
-
-    const countCommentsAndReplies = (comments) => {
-        return comments.reduce((total, comment) => {
-            return total + 1 + (comment.replies ? countCommentsAndReplies(comment.replies) : 0);
-        }, 0);
     };
 
     const tagColors = {
