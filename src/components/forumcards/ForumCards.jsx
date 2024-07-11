@@ -33,7 +33,7 @@ function timeSincePost(postDate) {
     }
 }
 
-function ForumCards({ forumDetail }) {
+function ForumCards({ forumDetail, descriptionLength = 200 }) {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const { currentUser } = useAuth();
@@ -326,8 +326,8 @@ function ForumCards({ forumDetail }) {
                 </div>
             )}
             <div className="forum-card-content">
-                {forumDetail.description.length > 200 ? (
-                    <p>{forumDetail.description.slice(0, 200)}...</p>
+                {forumDetail.description.length > descriptionLength ? (
+                    <p>{forumDetail.description.slice(0, descriptionLength)}...</p>
                 ) : (
                     <p>{forumDetail.description}</p>
                 )}
