@@ -284,9 +284,9 @@ function UserProfile() {
                                 )}
                             </div>
                         </div>
-                        <div className="profile-toggle">
+<div className="profile-toggle">
                             <div
-                                className={`toggle ${!viewToggle == "listing" ? 'active' : ''}`}
+                                className={`toggle ${viewToggle == "listing" ? 'active' : ''}`}
                                 onClick={() => setViewToggle('listing')}
                             >
                                 Listings
@@ -306,27 +306,27 @@ function UserProfile() {
                         </div>
                     </div>
 					<div className="user-content">
-						{viewToggle === "listing" ? (
-							<div className="user-reviews">
-								{userReviews.length > 0 ? (
-									<ReviewList
-									heading={`${userInfo.username}'s Reviews`}
-									reviews={userReviews}
-									averageScore={averageScore}
-									numberOfReviews={numberOfReviews}
-									/>
-								) : (
-									<h2>This user has no reviews ( ˘･з･)</h2>
-								)}
-							</div>
-						) : viewToggle === "review" ? (
-							<div className="users-listings">
-								{userListings.length > 0 ? (
-									<ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
-								) : (
-									<h2>This user has no listings ( ˘･з･)</h2>
-								)}
-							</div>
+					{viewToggle === "listing" ? (
+						<div className="users-listings">
+							{userListings.length > 0 ? (
+								<ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
+							) : (
+								<h2>This user has no listings ( ˘･з･)</h2>
+							)}
+						</div>
+					) : viewToggle === "review" ? (
+						<div className="user-reviews">
+							{userReviews.length > 0 ? (
+								<ReviewList
+								heading={`${userInfo.username}'s Reviews`}
+								reviews={userReviews}
+								averageScore={averageScore}
+								numberOfReviews={numberOfReviews}
+								/>
+							) : (
+								<h2>This user has no reviews ( ˘･з･)</h2>
+							)}
+						</div>
 						) : (
 							<div className="users-forum-posts">
 								{userForumPosts.length > 0 ? (
