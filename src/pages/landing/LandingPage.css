@@ -34,7 +34,7 @@
         margin: 20px 40px;
         position: relative;
         line-height: 60px;
-      }
+    }
       
     h2::after {
         content: " ";
