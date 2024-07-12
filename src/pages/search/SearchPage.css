@@ -11,12 +11,8 @@
 
 .listing {
     position: absolute;
-    top: 28px;
-    right: 0;
-    left: 0;
-    padding-left: 244px;
+    top: 100px;
     height: fit-content ;
-    width: calc(100vw);
     background-color: white;
 
     h2 {

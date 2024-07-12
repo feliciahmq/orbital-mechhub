@@ -10,23 +10,29 @@ export const useAuth = () => useContext(AuthContext);
 export const AuthProvider = ({ children }) => {
     const { fetchUserInfo } = useUserStore();
     const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setCurrentUser(user);
-                fetchUserInfo(user.uid);
-            } else {
-                setCurrentUser(null);
-                fetchUserInfo(null);
-            }
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        if (user) {
+            setCurrentUser(user);
+            await fetchUserInfo(user.uid);
+        } else {
+            setCurrentUser(null);
+            await fetchUserInfo(null);
+        }
+        setLoading(false);
         });
         return unsubscribe;
     }, [fetchUserInfo]);
 
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <AuthContext.Provider value={{ currentUser, useUserStore }}>
-            {children}
+        {children}
         </AuthContext.Provider>
     );
 };

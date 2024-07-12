@@ -1,14 +1,12 @@
 .banner {
     left: 0;
-    top: 12px;
     padding: 24px 12px;
-    margin: 40px auto;
     width: 100%;
     height: 400px;
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background: linear-gradient(180deg, white, #ff9282);
+    background:  #ff9282;
     position: absolute;
 
     .button-go-brr {

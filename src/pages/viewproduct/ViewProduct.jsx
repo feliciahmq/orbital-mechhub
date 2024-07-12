@@ -11,7 +11,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Header from '../../components/header/Header';
+import Format from '../../components/format/Format';
 import OfferPopup from './offerPopup/offerPopup';
 import ViewOffers from './viewOffers/viewOffers';
 import './ViewProduct.css';
@@ -244,13 +244,32 @@ function ProductPage() {
 
     const handleDelete = async (e) => {
         e.preventDefault();
-
+        
         try {
+            const likesQuery = query(collection(db, 'Likes'), where('listingID', '==', listingID));
+            const likesSnapshot = await getDocs(likesQuery);
+
+            const deletePromises = likesSnapshot.docs.map(async (likeDoc) => {
+                const likeData = likeDoc.data();
+
+                await deleteDoc(doc(db, 'Likes', likeDoc.id));
+    
+                const userLikeCountDoc = doc(db, 'Users', likeData.userID, 'likeCount', 'counter');
+                const userLikeCountSnap = await getDoc(userLikeCountDoc);
+                if (userLikeCountSnap.exists()) {
+                    const currentCount = userLikeCountSnap.data().count;
+                    await setDoc(userLikeCountDoc, { count: Math.max(currentCount - 1, 0) });
+                }
+            });
+
+            await Promise.all(deletePromises);
             await deleteDoc(doc(db, 'listings', listingID));
+            
             toast.success('Listing Successfully Deleted!');
             navigate('/');
         } catch (err) {
             console.log('Error: ' + err.message);
+            toast.error('Error deleting listing: ' + err.message);
         }
     };
 
@@ -358,8 +377,8 @@ function ProductPage() {
     };
 
     return (
-        <div className='content'>
-            <Header />
+        <Format content={
+        <div>
             {listing && (
                 <div className="listing-container">
                     <div className='listing-options'>
@@ -461,6 +480,7 @@ function ProductPage() {
                 />
             )}
         </div>
+        } />
     );
 }
 

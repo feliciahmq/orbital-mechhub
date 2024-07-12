@@ -6,7 +6,7 @@ import { useAuth } from '../../Auth';
 import { FaStar } from "react-icons/fa";
 import { toast } from 'react-hot-toast';
 
-import Header from "../../components/header/Header";
+import Format from '../../components/format/Format';
 import './Review.css';
 
 function ReviewPage() {
@@ -143,56 +143,57 @@ function ReviewPage() {
     };
     
     return (
-        <div>
-        <Header />
-        <div className='review-container'>
-            <h2>Leave a Review</h2>
-            <form className='review-form' onSubmit={handleReview}>
-            <h5>you may add an image of the product here:</h5>
-            <div className='review-image'>
-                <input className='file-input'
-                    type="file"
-                    accept="image/*"
-                    name="image"
-                    onChange={uploadImage}
-                />
-                {formData.image && (
-                    <div
-                        className="uploaded-listing-picture"
-                        style={{ backgroundImage: `url(${formData.image})` }}
-                    ></div>
-                )}
-            </div>
-            <div className='review-stars'>
-                <h5>rate your experience:</h5>
-                <div className='stars'>
-                    {Array(5).fill(0).map((_, index) => (
-                    <FaStar
-                        key={index}
-                        size={24}
-                        onClick={() => handleClick(index + 1)}
-                        onMouseOver={() => handleMouseOver(index + 1)}
-                        onMouseLeave={handleMouseLeave}
-                        color={(hoverValue || currentValue) > index ? '#FF4B2B' : '#a9a9a9'}
-                        style={{
-                        marginRight: 10,
-                        cursor: "pointer"
-                        }}
+        <Format content={
+            <div>
+                <div className='review-container'>
+                    <h2>Leave a Review</h2>
+                    <form className='review-form' onSubmit={handleReview}>
+                    <h5>you may add an image of the product here:</h5>
+                    <div className='review-image'>
+                        <input className='file-input'
+                            type="file"
+                            accept="image/*"
+                            name="image"
+                            onChange={uploadImage}
+                        />
+                        {formData.image && (
+                            <div
+                                className="uploaded-listing-picture"
+                                style={{ backgroundImage: `url(${formData.image})` }}
+                            ></div>
+                        )}
+                    </div>
+                    <div className='review-stars'>
+                        <h5>rate your experience:</h5>
+                        <div className='stars'>
+                            {Array(5).fill(0).map((_, index) => (
+                            <FaStar
+                                key={index}
+                                size={24}
+                                onClick={() => handleClick(index + 1)}
+                                onMouseOver={() => handleMouseOver(index + 1)}
+                                onMouseLeave={handleMouseLeave}
+                                color={(hoverValue || currentValue) > index ? '#FF4B2B' : '#a9a9a9'}
+                                style={{
+                                marginRight: 10,
+                                cursor: "pointer"
+                                }}
+                            />
+                            ))}
+                        </div>
+                    </div>
+                    <textarea
+                        className="details"
+                        name="details"
+                        placeholder="What's your experience?"
+                        value={formData.details}
+                        onChange={handleChange}
                     />
-                    ))}
+                    <button className='review-submit' type="submit">Submit Review</button>
+                    </form>
                 </div>
             </div>
-            <textarea
-                className="details"
-                name="details"
-                placeholder="What's your experience?"
-                value={formData.details}
-                onChange={handleChange}
-            />
-            <button className='review-submit' type="submit">Submit Review</button>
-            </form>
-        </div>
-        </div>
+        } />
     );
 }
 

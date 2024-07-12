@@ -23,9 +23,10 @@
     }
     .main {
         position: absolute;
-        top: 450px;
+        top: 400px;
         left: 0; 
         right: 0;
+        padding-bottom: 40px;
     }
     h2 {
         text-align: center;
@@ -44,5 +45,55 @@
         position: absolute;
         left: 50%;
         transform: translate(-50%);
-      }
+    }
+    
+    .landing-featured {
+        .forum-list {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            flex-direction: row;
+        }
+        .forum-info {
+            .forum-date {
+                font-size: 12px;
+            }
+        }
+        .forum-card {
+            width: 400px;
+            height: 320px;
+        }
+
+        .forum-header {
+            h1 {
+                font-size: 22px;
+            }
+        }
+
+        .forum-tag {
+            font-size: 14px;
+            padding: 2px 8px;
+        }
+
+        .forum-media {
+            img {
+                height: 100px;
+            }
+        }
+
+        .forum-card-content {
+            font-size: 16px;
+        }
+
+        .poll-title {
+            h3 {
+                font-size: 16px;
+            }
+        }
+        .poll-option {
+            button, p {
+                display: none;
+            }
+        }
+    }
 }

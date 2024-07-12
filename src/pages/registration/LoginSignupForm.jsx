@@ -9,6 +9,7 @@ import { query, collection, where, getDocs, doc, setDoc } from "firebase/firesto
 import { signInWithGoogle } from './GoogleAuth';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
+import Format from '../../components/format/Format';
 import './LoginSignupForm.css';
 import Header from '../../components/header/Header';
 

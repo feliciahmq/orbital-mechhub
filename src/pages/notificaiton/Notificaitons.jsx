@@ -3,7 +3,7 @@ import { collection, query, where, getDocs, updateDoc, doc, getDoc, deleteDoc } 
 import { db } from '../../lib/firebaseConfig';
 import { useAuth } from '../../Auth';
 
-import Header from '../../components/header/Header';
+import Format from '../../components/format/Format';
 import './Notifications.css';
 
 function timeSincePost(postDate) {
@@ -104,43 +104,44 @@ function NotificationsPage() {
 	const unreadNotifs = notifications.filter(notification => !notification.read);
 
 	return (
-		<div className='content'>
-			<Header />
-			<div className='notifications-container'>
-				{unreadNotifs.length > 0 ? (
-					<>
-						<h2>Your Notifications</h2>
-						<ul>
-							{unreadNotifs.map(notification => (
-								<li key={notification.id} className={notification.read ? 'read' : 'unread'}>
-									<p>
-										{notification.type === 'like'
-											? `${notification.username} liked your post "${notification.listingTitle}"!`
-											: notification.type === 'sold'
-												? `The listing "${notification.listingTitle}" was sold`
-												: notification.type === 'follow' 
-													? `${notification.username} started following you!`
-													: notification.type === 'list' 
-														?`${notification.username} just posted "${notification.listingTitle}"!`
-														: notification.type === 'offer'
-															?`${notification.username} made an offer for "${notification.listingTitle}"!`
-															: notification.type === 'offer_accepted'
-																? `${notification.username} accepted your offer!`
-																: notification.typr === 'offer_rejected' 
-																	? `${notification.username} rejected your offer`
-																	: `${notification.username} just left you a review!`}
-									</p>
-									<button onClick={() => markAsRead(notification.id)}>Mark as read</button>
-									<h5>{timeSincePost(notification.timestamp)}</h5>
-								</li>
-							))}
-						</ul>
-					</>
-				) : (
-					<h2>You have no notifications at the moment ( ˘･з･)</h2>
-				)}
+		<Format content={
+			<div className='content'>
+				<div className='notifications-container'>
+					{unreadNotifs.length > 0 ? (
+						<>
+							<h2>Your Notifications</h2>
+							<ul>
+								{unreadNotifs.map(notification => (
+									<li key={notification.id} className={notification.read ? 'read' : 'unread'}>
+										<p>
+											{notification.type === 'like'
+												? `${notification.username} liked your post "${notification.listingTitle}"!`
+												: notification.type === 'sold'
+													? `The listing "${notification.listingTitle}" was sold`
+													: notification.type === 'follow' 
+														? `${notification.username} started following you!`
+														: notification.type === 'list' 
+															?`${notification.username} just posted "${notification.listingTitle}"!`
+															: notification.type === 'offer'
+																?`${notification.username} made an offer for "${notification.listingTitle}"!`
+																: notification.type === 'offer_accepted'
+																	? `${notification.username} accepted your offer!`
+																	: notification.typr === 'offer_rejected' 
+																		? `${notification.username} rejected your offer`
+																		: `${notification.username} just left you a review!`}
+										</p>
+										<button onClick={() => markAsRead(notification.id)}>Mark as read</button>
+										<h5>{timeSincePost(notification.timestamp)}</h5>
+									</li>
+								))}
+							</ul>
+						</>
+					) : (
+						<h2>You have no notifications at the moment ( ˘･з･)</h2>
+					)}
+				</div>
 			</div>
-		</div>
+		} />
 	);
 }
 

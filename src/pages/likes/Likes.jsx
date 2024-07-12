@@ -3,7 +3,7 @@ import { db } from '../../lib/firebaseConfig';
 import { collection, getDocs, query, where, doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '../../Auth';
 
-import Header from '../../components/header/Header';
+import Format from '../../components/format/Format';
 import ProductList from '../../components/productcards/ProductList';
 import './Likes.css';
 
@@ -40,9 +40,8 @@ function LikesPage() {
   }, [currentUser]);
 
     return (
-
+        <Format content={
         <div className='content'>
-            <Header />
             <div className='liked-products'>
                 {likedProducts.length > 0 ? (
                     <ProductList heading='Liked Products' products={likedProducts} />
@@ -57,6 +56,7 @@ function LikesPage() {
                 <h3>this section is for stripe (◍•ᴗ•◍)❤</h3>
             </div>
         </div>
+        } />
     );
 }
 

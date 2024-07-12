@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../Auth';
-import { Link, useNavigate } from 'react-router-dom';
-import { useLikes } from './likecounter/LikeCounter';
-import { FaComment, FaHeart, FaUserAlt, FaBell } from 'react-icons/fa';
-import { query, collection, where, getDocs } from 'firebase/firestore';
-import { db } from '../../lib/firebaseConfig';
+import { FaUserAlt, FaPlus } from 'react-icons/fa';
 
 import SearchBar from '../searchbar/Searchbar';
 import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
@@ -13,27 +10,9 @@ import "./Header.css";
 
 function Header() {
     const navigate = useNavigate();
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [query, setQuery] = useState('');
     const { currentUser } = useAuth();
-    const [searchQuery, setSearchQuery] = useState('');
-    const { likeCount } = useLikes();
-    const [unreadCount, setUnreadCount] = useState(0);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-    useEffect(() => {
-      const fetchUnreadNotifications = async () => {
-        if (currentUser) {
-          const notificationsQuery = query(
-            collection(db, 'Notifications'),
-            where('recipientID', '==', currentUser.uid),
-            where('read', '==', false)
-          );
-          const notificationsSnapshot = await getDocs(notificationsQuery);
-          setUnreadCount(notificationsSnapshot.docs.length);
-        }
-      };
-      fetchUnreadNotifications();
-    }, [currentUser]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -46,32 +25,48 @@ function Header() {
         };
     }, []);
 
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
-    };
-
     const handleLogoClick = () => {
         navigate(`/`);
-    };
-
-    const handleChats = () => {
-        window.location.href = `/chat/${currentUser.uid}`;
-    };
-
-    const handleNotifs = () => {
-        navigate(`/notifications/${currentUser.uid}`);
     };
 
     const handleProfile = () => {
         navigate(`/profile/${currentUser.uid}`);
     };
 
-    const handleLikes = () => {
-        navigate(`/likes/${currentUser.uid}`);
+    const handleListing = () => {
+        navigate('/listing');
+    }
+
+    const handleForumPost = () => {
+        navigate('/newforumpost');
+    }
+
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setQuery(value);
+    };
+
+    const trackSearchHistory = async (query) => {
+        if (currentUser && query) {
+            try {
+                await addDoc(collection(db, 'userHistory', currentUser.uid, 'searchHistory'), {
+                    query,
+                    timestamp: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error('Error tracking search history:', error);
+            }
+        }
+    };
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        await trackSearchHistory(query);
+        navigate(`/search?query=${query}`);
     };
 
     return (
-        <nav className='navbar'>
+        <nav className='header'>
             {!isMobile ? (
                 <img 
                     src={MechHub_Logo} 
@@ -84,67 +79,37 @@ function Header() {
                     className="MechHub_Logo_Mobile"
                     onClick={handleLogoClick} 
                 />
-            )
-            }
+            )}
             <div className='header-searchbar'>
-                <SearchBar onSearch={setSearchQuery} />
+                <SearchBar 
+                    placeholder={"Search Products..."} 
+                    handleSearch={handleSearch} 
+                    onSearch={(query) => navigate(`/search?query=${query}`)} 
+                    query={query}
+                    handleInputChange={handleInputChange}    
+                />
             </div>
-            <div className="hamburger" onClick={toggleMenu}>
-                &#9776;
-            </div>
-            <ul className={menuOpen ? 'open' : 'closed'}>
-                {!isMobile ? (
-                    currentUser ? (
-                        <>
-                            <div className='header-icon'>
-                                <FaComment onClick={handleChats} cursor="pointer" />
+            {currentUser ? (
+                <>
+                    <div className='add-button'>
+                        <span><FaPlus fontWeight={100}/> Create</span>
+                        <div className='header-dropdown'>
+                            <div className='dropdown-option'>
+                                <p onClick={handleListing}>New Listing</p>
                             </div>
-                            <div className='likes header-icon'>
-                                <FaHeart onClick={handleLikes} cursor="pointer" />
-                                {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
+                            <div className='dropdown-option'>
+                                <p onClick={handleForumPost}>New Forum Post</p>
                             </div>
-                            <div className='notifs header-icon'>
-                                <FaBell onClick={handleNotifs} cursor="pointer" />
-                                {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
-                            </div>
-                            <div className='header-icon'>
-                                <FaUserAlt onClick={handleProfile} cursor="pointer" />
-                            </div>
-                        </>
-                    ) : (
-                        <li><Link to="/account">Register/ Login</Link></li>
-                    )
-                ) : (
-                    currentUser ? (
-                    <>
-                        <div className='header-dropdown' onClick={handleChats}>
-                            <FaComment cursor="pointer" />
-                            <p>Chats</p>
                         </div>
-                        <div className='header-dropdown' onClick={handleLikes}>
-                            <div className='likes'>
-                                <FaHeart cursor="pointer" />
-                                {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
-                            </div>
-                            <p>Likes</p>
-                        </div>
-                        <div className='header-dropdown' onClick={handleNotifs}>
-                            <div className='notifs'>
-                                <FaBell cursor="pointer" />
-                                {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
-                            </div>
-                            <p>notifications</p>
-                        </div>
-                        <div className='header-dropdown' onClick={handleProfile}>
-                            <FaUserAlt />
-                            <p>profile</p>
-                        </div>
-                    </>
-                    ) : (
-                         <li><Link to="/account">Register/ Login</Link></li>
-                    )
-                )}
-            </ul>
+                    </div>
+                    <div className='header-icon'>
+                        <FaUserAlt onClick={handleProfile} cursor="pointer" />
+                        <span className='tooltip'>profile</span>
+                    </div>
+            </>
+            ) : (
+                <li><Link to="/account">Register/ Login</Link></li>
+            )}
         </nav>
     );
 }

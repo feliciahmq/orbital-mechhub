@@ -161,7 +161,7 @@ function ProductCards({ productDetail }) {
 
     return (
         <div className="product" onClick={handleViewClick}>
-            <div className={`product-image-container ${soldStatus ? 'sold' : ''}`}>
+            <div className="product-image-container">
                 <img 
                     alt={productDetail.title} 
                     src={productDetail.images && productDetail.images.length > 0 

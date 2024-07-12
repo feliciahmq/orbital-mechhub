@@ -1,0 +1,63 @@
+.forum-filter {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding: 12px;
+    border-bottom: 1px solid rgb(240, 240, 240)
+}
+
+.forum-filter-container {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    padding-bottom: 16px
+}
+
+.forum-filter-group {
+    padding: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.forum-filter-group label {
+    margin-bottom: 5px;
+}
+
+.forum-filter-group select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+.tag-button-filter {
+    padding: 8px 16px;
+    background-color: #eeeeee;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.tag-button-filter.selected[data-tag="Questions"] {
+    background-color: #FF4B2B;
+}
+
+.tag-button-filter.selected[data-tag="Modding"] {
+    background-color: #4CAF50;
+}
+
+.tag-button-filter.selected[data-tag="Reviews"] {
+    background-color: #2196F3;
+}
+
+.tag-button-filter.selected[data-tag="Showcase"] {
+    background-color: #FF9800;
+}
+
+.forum-searchbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    width: 800px;
+}

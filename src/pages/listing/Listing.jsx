@@ -9,7 +9,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-import Header from '../../components/header/Header';
+import Format from '../../components/format/Format';
 import './Listing.css';
 
 const saveFormData = (data) => {
@@ -144,7 +144,7 @@ function ListingPage() {
                 status: 'available'
             });
             localStorage.removeItem('listingFormData');
-            navigate('/');
+            navigate(`/profile/${currentUser.uid}`);
         } catch (err) {
             console.log('Error: ' + err.message);
         }
@@ -204,82 +204,81 @@ function ListingPage() {
     };
 
     return (
-        <>
-            <div>
-                <Header />
-            </div>
-            <div className='listing-form'>
-                <h5 className='back-button' onClick={handleCancel}> <FaAngleLeft /> Go Back </h5>
-                <h2>{listingID ? 'Edit Listing' : 'Create Listing'}</h2>
-                <form onSubmit={handleSubmit}>
-                    <h1>Add 1 - 5 Images of the Listing</h1>
-                    <div className={`image-upload ${formData.images.length > 0 ? 'has-images' : ''}`}>
-                        <input className='file-input'
-                            type="file"
-                            accept="image/*"
-                            name="images"
-                            multiple
-                            onChange={uploadImage}
-                        />
-                        {formData.images.length > 0 && (
-                            <div className="uploaded-listing-pictures">
-                                <Slider {...settings}>
-                                    {formData.images.map((image, index) => (
-                                        <div key={index} className="uploaded-listing-picture">
-                                            <img src={image} alt={`Uploaded image ${index + 1}`} />
-                                        </div>
-                                    ))}
-                                </Slider>
-                            </div>
-                        )}
-                    </div>
-                    <div className="form-group">
-                        <label>Title:</label>
-                        <input required
-                            type="text"
-                            name="title"
-                            value={formData.title}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Product Type:</label>
-                        <select required
-                            name="productType"
-                            value={formData.productType}
-                            onChange={handleChange}
-                        >
-                            <option value='fullBuilds'>Full Builds</option>
-                            <option value='keycaps'>Keycaps</option>
-                            <option value='switches'>Switches</option>
-                            <option value='stabilisers'>Stabilisers</option>
-                            <option value='deskmats'>Deskmats</option>
-                            <option value='cables'>Cables</option>
-                            <option value='groupOrders'>Group Orders</option>
-                            <option value='others'>Others</option>
-                        </select>
-                    </div>
-                    <div className="form-group">
-                        <label>Price:</label>
-                        <input required
-                            type="number"
-                            name="price"
-                            value={formData.price}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label>Description:</label>
-                        <textarea required
-                            name="description"
-                            value={formData.description}
-                            onChange={handleChange}
-                        />
-                    </div>
-                    <button className='submit' type="submit">{listingID ? 'Update' : 'Submit'}</button>
-                </form>
-            </div>
-        </>
+        <Format content={
+            <>
+                <div className='listing-form'>
+                    <h5 className='back-button' onClick={handleCancel}> <FaAngleLeft /> Go Back </h5>
+                    <h2>{listingID ? 'Edit Listing' : 'Create Listing'}</h2>
+                    <form onSubmit={handleSubmit}>
+                        <h1>Add 1 - 5 Images of the Listing</h1>
+                        <div className={`image-upload ${formData.images.length > 0 ? 'has-images' : ''}`}>
+                            <input className='file-input'
+                                type="file"
+                                accept="image/*"
+                                name="images"
+                                multiple
+                                onChange={uploadImage}
+                            />
+                            {formData.images.length > 0 && (
+                                <div className="uploaded-listing-pictures">
+                                    <Slider {...settings}>
+                                        {formData.images.map((image, index) => (
+                                            <div key={index} className="uploaded-listing-picture">
+                                                <img src={image} alt={`Uploaded image ${index + 1}`} />
+                                            </div>
+                                        ))}
+                                    </Slider>
+                                </div>
+                            )}
+                        </div>
+                        <div className="form-group">
+                            <label>Title:</label>
+                            <input required
+                                type="text"
+                                name="title"
+                                value={formData.title}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Product Type:</label>
+                            <select required
+                                name="productType"
+                                value={formData.productType}
+                                onChange={handleChange}
+                            >
+                                <option value='fullBuilds'>Full Builds</option>
+                                <option value='keycaps'>Keycaps</option>
+                                <option value='switches'>Switches</option>
+                                <option value='stabilisers'>Stabilisers</option>
+                                <option value='deskmats'>Deskmats</option>
+                                <option value='cables'>Cables</option>
+                                <option value='groupOrders'>Group Orders</option>
+                                <option value='others'>Others</option>
+                            </select>
+                        </div>
+                        <div className="form-group">
+                            <label>Price:</label>
+                            <input required
+                                type="number"
+                                name="price"
+                                value={formData.price}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label>Description:</label>
+                            <textarea required
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                            />
+                        </div>
+                        <button className='submit' type="submit">{listingID ? 'Update' : 'Submit'}</button>
+                    </form>
+                </div>
+            </>
+        } />
     );
 }
 
