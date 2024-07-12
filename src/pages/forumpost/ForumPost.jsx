@@ -285,6 +285,11 @@ function ForumPostPage() {
             setIsLiked(true);
             setLikeCount(prevCount => prevCount + 1);
 
+            const forumRef = doc(db, 'Forum', postID);
+            await updateDoc(forumRef, {
+                likeCount: likeCount + 1
+            });
+
             await addDoc(collection(db, 'Notifications'), {
                 recipientID: post.userID,
                 senderID: currentUser.uid,
@@ -312,6 +317,11 @@ function ForumPostPage() {
 
             setIsLiked(false);
             setLikeCount(prevCount => prevCount - 1);
+
+            const forumRef = doc(db, 'Forum', postID);
+            await updateDoc(forumRef, {
+                likeCount: likeCount - 1
+            });
         } catch (err) {
             console.error("Error unliking post:", err.message);
         }
