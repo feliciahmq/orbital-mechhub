@@ -8,12 +8,9 @@ import 'firebase/compat/firestore';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
-import Navbar from '../../components/navbar/Navbar';
 import Format from '../../components/format/Format';
 import ReviewList from './userReviews/ReviewList';
 import EditPopup from './editUser/EditPopup';
-import Header from '../../components/header/Header';
-import ListingButton from '../../components/listingpopup/Button';
 import ProductList from '../../components/productcards/ProductList';
 import ForumList from '../../components/forumcards/ForumList';
 import './UserProfile.css';
@@ -35,19 +32,6 @@ function UserProfile() {
 	const [followCount, setFollowCount] = useState(0);
 	const [followingCount, setFollowingCount] = useState(0);
 	const [userForumPosts, setUserForumPosts] = useState([]);
-
-	const handleOpenPopup = () => {
-		setIsPopupOpen(true);
-	};
-
-	const handleClosePopup = () => {
-		setIsPopupOpen(false);
-	};
-
-	const handleSubmit = () => {
-		setIsPopupOpen(false);
-		fetchUserData();
-	};
 
 	const fetchUsersListings = async (username) => {
 		try {
@@ -153,10 +137,6 @@ function UserProfile() {
 		}
 	};
 
-	const handleLoginNavigation = () => {
-		navigate('/account');
-	};
-
 	const handleUserFollow = async () => {
 		if (currentUser?.uid !== userID) {
 		const followDocRef = doc(db, 'Users', userID, 'followers', currentUser.uid);
@@ -239,6 +219,24 @@ function UserProfile() {
 		} else {
 		console.log('You cannot unfollow yourself');
 		}
+	};
+
+	const handleOpenPopup = () => {
+		setIsPopupOpen(true);
+	};
+
+	const handleClosePopup = () => {
+		setIsPopupOpen(false);
+	};
+
+	const handleSubmit = () => {
+		setIsPopupOpen(false);
+		fetchUserData();
+	};
+
+
+	const handleLoginNavigation = () => {
+		navigate('/account');
 	};
 
 	return (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../Auth';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useLikes } from '../header/likecounter/LikeCounter';
 import { FaComment, FaHeart, FaBell, FaQuestionCircle,  FaCopyright } from 'react-icons/fa';
 import { FaHouse, FaComments, FaKeyboard } from 'react-icons/fa6';

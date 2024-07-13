@@ -63,6 +63,7 @@ function ProductPage() {
     const [offerAccepted, setOfferAccepted] = useState(false);
     const [similarListing, setSimilarListing] = useState([]);
 
+    //fetch user/ listing details
     useEffect(() => {
         const fetchListing = async () => {
             const listingDocRef = doc(db, 'listings', listingID);
@@ -193,6 +194,7 @@ function ProductPage() {
         }
     }, [listingID, currentUser]);
 
+    //handle like and unlike
     const handleLike = async (e) => {
         e.stopPropagation();
 
@@ -249,6 +251,7 @@ function ProductPage() {
         }
     };
 
+    //sell listing, delete listing
     const handleListingSold = async (e) => {
         e.preventDefault();
 
@@ -312,6 +315,7 @@ function ProductPage() {
         }
     };
 
+    // user profile stars
     const shownStars = (score) => {
         const stars = [];
         let i;
@@ -371,6 +375,7 @@ function ProductPage() {
 		}
     };
 
+    //ml suggestions
     const textToVector = (text) => {
         if (!text || typeof text !== 'string') {
             return tf.zeros([100]);
@@ -419,6 +424,7 @@ function ProductPage() {
         }
     };
 
+    // useState changes
     const handleOpenPopup = () => {
         setIsPopupOpen(true);
     };
@@ -452,6 +458,7 @@ function ProductPage() {
         setDropdownOpen(!dropdownOpen);
     };
 
+    // navigation
     const handleReviewUser = () => {
         navigate(`/review/${listingID}`);
     };
@@ -464,6 +471,7 @@ function ProductPage() {
         navigate(`/listing/${listingID}`);
     };
 
+    // slick carousel
     const settings = {
         dots: true,
         infinite: true,
@@ -581,7 +589,7 @@ function ProductPage() {
             )}
             <div className='viewproduct-footer'>
             {currentUser?.uid === listing?.userID ? (
-                <SellerDashboard />
+                <SellerDashboard listingID={listingID}/>
             ) : (
                 <ProductList heading={`Similar Listings`} products={similarListing} />
             )}

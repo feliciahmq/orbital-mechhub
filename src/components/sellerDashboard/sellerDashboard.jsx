@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import './sellerDashboard.css';
 
-function SellerDashboard() {
+function SellerDashboard({listingID}) {
 
 
     return (
