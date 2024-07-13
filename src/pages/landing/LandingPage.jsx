@@ -83,7 +83,7 @@ function LandingPage() {
                 return { ...forum, weeklyClicks, likes, comments };
             }));
             const sortedForum = sortForumByFeaturedScore(forumData);
-            setPosts(sortedForum.slice(0, 4));
+            setPosts(sortedForum.slice(0, 3));
         } catch (error) {
             console.error(`Firebase fetch error: ${error.message}`);
         }
