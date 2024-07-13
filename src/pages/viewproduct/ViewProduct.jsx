@@ -157,8 +157,7 @@ function ProductPage() {
                 const listingQuery = query(
                     collection(db, "listings"),
                     where('status', '==', 'available'),
-                    where('userID', '!=', currentUser.uid)
-                );
+                );                
         
                 const listingSnap = await getDocs(listingQuery);
                 const listings = listingSnap.docs

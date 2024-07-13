@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
 
 import LandingPage from "./pages/landing/LandingPage";
 import { AuthProvider } from './Auth';
@@ -20,6 +21,7 @@ import KeyboardGuidePage from "./pages/keyboardguide/KeyboardGuide";
 
 const App = () => {
 return (
+	
 	<AuthProvider>
 	<LikeCountProvider>
 	<Toaster />
