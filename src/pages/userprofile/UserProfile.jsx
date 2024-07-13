@@ -282,7 +282,7 @@ function UserProfile() {
                                 )}
                             </div>
                         </div>
-                        <div className="profile-toggle">
+<div className="profile-toggle">
                             <div
                                 className={`toggle ${viewToggle == "listing" ? 'active' : ''}`}
                                 onClick={() => setViewToggle('listing')}
@@ -325,7 +325,7 @@ function UserProfile() {
 								<h2>This user has no reviews ( ˘･з･)</h2>
 							)}
 						</div>
-					) : (
+						) : (
 							<div className="users-forum-posts">
 								{userForumPosts.length > 0 ? (
 									<ForumList heading={`${userInfo.username}'s Forum Posts`} forums={userForumPosts} />
