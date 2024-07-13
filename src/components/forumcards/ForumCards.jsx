@@ -9,7 +9,7 @@ import { db } from '../../lib/firebaseConfig';
 import './ForumCards.css';
 
 function timeSincePost(postDate) {
-    const now = new Date().toISOString();
+    const now = new Date();
     const posted = new Date(postDate);
     const diffInSeconds = Math.floor((now - posted) / 1000);
 
