@@ -8,7 +8,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import './SellerDashboard.css';
-import similarProducts from '../similarProductsRec/similarProductsRec';
+import SimilarProducts from '../similarProductsRec/similarProductsRec';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend);
 
@@ -126,12 +126,21 @@ function SellerDashboard({ listingID }) {
             range: priceRange,
             chartData: {
                 labels: listings.map(listing => listing.postDate),
-                datasets: [{
-                    label: 'Price',
-                    data: prices,
-                    borderColor: 'rgb(75, 192, 192)',
-                    tension: 0.1
-                }]
+                datasets: [
+                    {
+                        label: 'Price',
+                        data: prices,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    },
+                    {
+                        label: 'Average Price',
+                        data: new Array(prices.length).fill(avgPrice),
+                        borderColor: 'rgb(255, 99, 132)',
+                        borderDash: [5, 5],
+                        tension: 0
+                    }
+                ]
             }
         });
 
@@ -168,14 +177,14 @@ function SellerDashboard({ listingID }) {
                 labels: labels,
                 datasets: [
                     {
-                        // label: `Clicks per Week for ${listingData.title}`,
+                        label: `Clicks per Week for Your Listing`,
                         data: sortedClickCounts.map(item => item.count),
-                        backgroundColor: 'rgba(53, 162, 235, 0.5)',
+                        backgroundColor: 'rgba(255, 75, 43, 0.7)',
                     },
                     {
-                        // label: `Average Clicks per Week for ${listingData.productType}`,
+                        label: `Average Clicks per Week for ${listingData.productType}`,
                         data: sortedAvgClickCounts.map(item => item.averageCount),
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
                     }
                 ]
             }
@@ -216,10 +225,10 @@ function SellerDashboard({ listingID }) {
                 ]
             }
         });
-        console.log(marketData); // Log the data to check its structure
+        console.log(marketData);
     };
     if (!listingData || !priceData || !clickData || !offerData) {
-        return <div>Loading... or No data available</div>;
+        return <div>Loading...</div>;
     }
 
     const settings = {
@@ -262,6 +271,12 @@ function SellerDashboard({ listingID }) {
                 >
                     Time on Market
                 </div>
+                <div
+                    className={`toggle ${viewToggle === 'similarProducts' ? 'active' : ''}`}
+                    onClick={() => setViewToggle('similarProducts')}
+                >
+                    Similar Products
+                </div>
             </div>
             {viewToggle === 'price' && priceData && (
                 <div className="price-section">
@@ -277,6 +292,25 @@ function SellerDashboard({ listingID }) {
                                     title: {
                                         display: true,
                                         text: 'Price Trends'
+                                    },
+                                    legend: {
+                                        display: true,
+                                        position: 'top'
+                                    }
+                                },
+                                scales: {
+                                    y: {
+                                        beginAtZero: true,
+                                        title: {
+                                            display: true,
+                                            text: 'Price ($)'
+                                        }
+                                    },
+                                    x: {
+                                        title: {
+                                            display: true,
+                                            text: 'Date Posted'
+                                        }
                                     }
                                 }
                             }}
@@ -359,6 +393,9 @@ function SellerDashboard({ listingID }) {
                         }}
                     />
                 </div>
+            )}
+            {viewToggle === 'similarProducts' && (
+                <SimilarProducts listingID={listingID} />
             )}
         </div>
     );
