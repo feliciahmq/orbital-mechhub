@@ -33,7 +33,7 @@ function timeSincePost(postDate) {
     }
 }
 
-function ForumCards({ forumDetail, descriptionLength = 200 }) {
+function ForumCards({ forumDetail, descriptionLength = 100 }) {
     const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const { currentUser } = useAuth();

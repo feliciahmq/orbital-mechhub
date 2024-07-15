@@ -9,3 +9,9 @@
     padding: 20px;
     width: calc(100vw - 220px);
 }
+@media screen and (max-width: 768px) {
+    .main-content{
+        width: 100%;
+        padding-bottom: 200px;
+    }
+}

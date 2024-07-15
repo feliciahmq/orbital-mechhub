@@ -280,7 +280,7 @@ function UserProfile() {
                                 )}
                             </div>
                         </div>
-<div className="profile-toggle">
+						<div className="profile-toggle">
                             <div
                                 className={`toggle ${viewToggle == "listing" ? 'active' : ''}`}
                                 onClick={() => setViewToggle('listing')}
@@ -307,7 +307,7 @@ function UserProfile() {
 							{userListings.length > 0 ? (
 								<ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
 							) : (
-								<h2>This user has no listings ( ˘･з･)</h2>
+								<h2>This user has no listings <br />( ˘･з･)</h2>
 							)}
 						</div>
 					) : viewToggle === "review" ? (
@@ -320,7 +320,7 @@ function UserProfile() {
 								numberOfReviews={numberOfReviews}
 								/>
 							) : (
-								<h2>This user has no reviews ( ˘･з･)</h2>
+								<h2>This user has no reviews <br />( ˘･з･)</h2>
 							)}
 						</div>
 						) : (
@@ -328,7 +328,7 @@ function UserProfile() {
 								{userForumPosts.length > 0 ? (
 									<ForumList heading={`${userInfo.username}'s Forum Posts`} forums={userForumPosts} />
 								) : (
-									<h2>This user has no forum posts ( ˘･з･)</h2>
+									<h2>This user has no forum posts <br />( ˘･з･)</h2>
 								)}
 							</div>
 						)}

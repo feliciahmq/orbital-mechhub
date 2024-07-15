@@ -10,13 +10,12 @@ import { toast } from 'react-hot-toast';
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import * as tf from '@tensorflow/tfjs';
 
 import Format from '../../components/format/Format';
-import ProductList from '../../components/productcards/ProductList';
-import SellerDashboard from '../../components/sellerDashboard/sellerDashboard';
+import SellerDashboard from '../../components/sellerDashboard/SellerDashboard';
 import OfferPopup from './offerPopup/offerPopup';
 import ViewOffers from './viewOffers/viewOffers';
+import SimilarProducts from '../../components/similarProductsRec/similarProductsRec';
 import './ViewProduct.css';
 
 function timeSincePost(postDate) {
@@ -61,7 +60,6 @@ function ProductPage() {
     const [offers, setOffers] = useState([]);
     const [viewOffersPopupOpen, setViewOffersPopupOpen] = useState(false);
     const [offerAccepted, setOfferAccepted] = useState(false);
-    const [similarListing, setSimilarListing] = useState([]);
 
     //fetch user/ listing details
     useEffect(() => {
@@ -141,56 +139,9 @@ function ProductPage() {
             }
         };
 
-        const fetchSimilarListings = async (listingID) => {
-            if (!listingID) {
-                console.error('ListingID is undefined');
-                return;
-            }
-            try {
-                const thisListingDoc = await getDoc(doc(db, 'listings', listingID));
-                if (!thisListingDoc.exists()) {
-                    console.log('Current listing not found');
-                    return;
-                }
-        
-                const thisListing = thisListingDoc.data();
-                const listingQuery = query(
-                    collection(db, "listings"),
-                    where('status', '==', 'available'),
-                );                
-        
-                const listingSnap = await getDocs(listingQuery);
-                const listings = listingSnap.docs
-                    .map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    }))
-                    .filter(listing => listing.id !== listingID);
-                const similarListings = listings.map(listing => {
-                    try {
-                        return {
-                            ...listing,
-                            similarity: similarityScore(thisListing, listing)
-                        };
-                    } catch (error) {
-                        console.error('Error calculating similarity for listing:', listing.id, error);
-                        return { ...listing, similarity: 0 };
-                    }
-                });
-        
-                similarListings.sort((a, b) => b.similarity - a.similarity);
-                setSimilarListing(similarListings.slice(0, 4));
-            } catch (err) {
-                console.error('Error fetching similar listings:', err);
-            }
-        };
-
         fetchListing();
         checkIfLiked();
         fetchOffers();
-        if (listingID) {
-            fetchSimilarListings(listingID);
-        }
     }, [listingID, currentUser]);
 
     //handle like and unlike
@@ -256,7 +207,8 @@ function ProductPage() {
 
         try {
             await updateDoc(doc(db, 'listings', listingID), {
-                status: 'sold'
+                status: 'sold',
+                soldDate: new Date.toISOString()
             });
             setListingSold(true);
 
@@ -372,55 +324,6 @@ function ProductPage() {
 		} catch (err) {
 		  console.log(err);
 		}
-    };
-
-    //ml suggestions
-    const textToVector = (text) => {
-        if (!text || typeof text !== 'string') {
-            return tf.zeros([100]);
-        }
-        const words = text.toLowerCase().split(/\W+/).slice(0, 100);
-        const vector = new Array(100).fill(0);
-        words.forEach((word, index) => {
-            if (index < 100) {
-                vector[index] = 1;
-            }
-        });
-        return tf.tensor1d(vector);
-    };
-    
-    const cosineSimilarity = (vecA, vecB) => {
-        if (!vecA || !vecB || vecA.size !== vecB.size) {
-            return 0;
-        }
-        const dotProduct = tf.sum(tf.mul(vecA, vecB));
-        const magnitudeA = tf.norm(vecA);
-        const magnitudeB = tf.norm(vecB);
-        const magnitudes = tf.mul(magnitudeA, magnitudeB);
-        const similarity = tf.div(dotProduct, magnitudes);
-        return similarity.dataSync()[0] || 0;
-    };
-    
-    const similarityScore = (listing1, listing2) => {
-        try {
-            const titleVec1 = textToVector(listing1.title);
-            const titleVec2 = textToVector(listing2.title);
-            const titleSimilarity = cosineSimilarity(titleVec1, titleVec2);
-            
-            const descriptionVec1 = textToVector(listing1.description);
-            const descriptionVec2 = textToVector(listing2.description);
-            const descriptionSimilarity = cosineSimilarity(descriptionVec1, descriptionVec2);
-            
-            const price1 = parseFloat(listing1.price) || 0;
-            const price2 = parseFloat(listing2.price) || 0;
-            const priceDifference = Math.abs(price1 - price2) / Math.max(price1, price2, 1);
-            
-            const similarity = (0.4 * titleSimilarity) + (0.4 * descriptionSimilarity) + (0.2 * (1 - priceDifference));
-            return similarity;
-        } catch (error) {
-            console.error('Error calculating similarity:', error);
-            return 0;
-        }
     };
 
     // useState changes
@@ -590,7 +493,7 @@ function ProductPage() {
             {currentUser?.uid === listing?.userID ? (
                 <SellerDashboard listingID={listingID}/>
             ) : (
-                <ProductList heading={`Similar Listings`} products={similarListing} />
+                <SimilarProducts listingID={listingID} />
             )}
             </div>
         </div>

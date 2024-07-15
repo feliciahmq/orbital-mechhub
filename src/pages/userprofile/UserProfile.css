@@ -141,7 +141,7 @@
         line-height: 60px;
       }
       
-    h2::after {
+    /* h2::after {
         content: " ";
         background: #d55200;
         width: 80px;
@@ -150,7 +150,7 @@
         position: absolute;
         left: 50%;
         transform: translate(-50%);
-    }
+    } */
 }
 
 .profile-toggle {
