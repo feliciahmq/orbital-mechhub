@@ -13,7 +13,7 @@ import SimilarProducts from '../../components/recommendation/similarProducts/sim
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, BoxPlotController, BoxAndWiskers);
 
-export default function SellerDashboard({ listingID }) {
+function SellerDashboard({ listingID }) {
     const [listingData, setListingData] = useState(null);
     const [similarListings, setSameProductType] = useState([]);
     const [priceData, setPriceData] = useState(null);
@@ -544,3 +544,5 @@ export default function SellerDashboard({ listingID }) {
         </div>
     );
 };
+
+export default SellerDashboard;

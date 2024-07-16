@@ -12,10 +12,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import Format from '../../components/format/Format';
-import SellerDashboard from '../../components/sellerDashboard/SellerDashboard';
 import OfferPopup from './offerPopup/offerPopup';
 import ViewOffers from './viewOffers/viewOffers';
 import SimilarProducts from '../../components/recommendation/similarProducts/similarProductsRec';
+import SellerDashboard from '../../components/sellerDashboard/SellerDashboard';
 import './ViewProduct.css';
 
 function timeSincePost(postDate) {
