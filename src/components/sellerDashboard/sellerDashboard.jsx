@@ -4,9 +4,6 @@ import { doc, getDoc, collection, getDocs, query, where, orderBy } from "firebas
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, BarElement } from 'chart.js';
 import { BoxPlotController, BoxAndWiskers } from '@sgratzl/chartjs-chart-boxplot';
 import { Chart, Bar, Scatter, Line } from "react-chartjs-2";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
 
 import './SellerDashboard.css';
 import SimilarProducts from '../recommendation/similarProducts/similarProductsRec';

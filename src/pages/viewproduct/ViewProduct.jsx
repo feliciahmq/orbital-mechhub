@@ -15,7 +15,7 @@ import Format from '../../components/format/Format';
 import OfferPopup from './offerPopup/offerPopup';
 import ViewOffers from './viewOffers/viewOffers';
 import SimilarProducts from '../../components/recommendation/similarProducts/similarProductsRec';
-import SellerDashboard from '../../components/sellerDashboard/SellerDashboard';
+import SellerDashboard from '../../components/sellerDashboard/SellerDashboard.jsx';
 import './ViewProduct.css';
 
 function timeSincePost(postDate) {
