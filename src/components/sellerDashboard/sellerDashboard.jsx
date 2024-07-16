@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 import './SellerDashboard.css';
-import SimilarProducts from '../../components/recommendation/similarProducts/similarProductsRec';
+import SimilarProducts from '../recommendation/similarProducts/similarProductsRec';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, BoxPlotController, BoxAndWiskers);
 
