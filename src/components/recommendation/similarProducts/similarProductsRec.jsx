@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { db } from "../../lib/firebaseConfig";
+import { db } from "../../../lib/firebaseConfig";
 import { collection, getDoc, doc, getDocs, query, where } from "firebase/firestore";
 import * as tf from '@tensorflow/tfjs';
 
-import ProductList from "../productcards/ProductList";
+import ProductList from "../../productcards/ProductList";
 
 function SimilarProducts({listingID}) {
     const [similarListing, setSimilarListing] = useState([]);
