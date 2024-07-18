@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './lib/firebaseConfig';
 import { useUserStore } from './lib/userStore'; 
@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={{ currentUser, useUserStore }}>
-        {children}
+          {children}
         </AuthContext.Provider>
     );
 };
