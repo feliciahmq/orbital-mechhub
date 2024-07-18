@@ -5,9 +5,21 @@ import { useAuth } from '../../Auth';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { FaAngleLeft } from 'react-icons/fa6';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import Header from '../../components/header/Header';
 import './Listing.css';
+
+const saveFormData = (data) => {
+    localStorage.setItem('listingFormData', JSON.stringify(data));
+};
+
+const loadFormData = () => {
+    const savedData = localStorage.getItem('listingFormData');
+    return savedData ? JSON.parse(savedData) : null;
+};
 
 function ListingPage() {
     const { currentUser } = useAuth();
@@ -16,7 +28,7 @@ function ListingPage() {
 
     const [formData, setFormData] = useState({
         title: '',
-        image: '',
+        images: [], 
         productType: 'fullBuilds',
         price: '',
         description: '',
@@ -30,15 +42,17 @@ function ListingPage() {
                 try {
                     const listingDoc = await getDoc(doc(db, 'listings', listingID));
                     if (listingDoc.exists()) {
-                        setFormData({
+                        const data = {
                             title: listingDoc.data().title || "",
-                            image: listingDoc.data().image || "",
+                            images: listingDoc.data().images || [],
                             productType: listingDoc.data().productType || "fullBuilds",
                             price: listingDoc.data().price || "",
                             description: listingDoc.data().description || "",
                             postDate: listingDoc.data().postDate || "", 
                             status: listingDoc.data().status || 'available'
-                        });
+                        };
+                        setFormData(data);
+                        saveFormData(data);
                     } else {
                         toast.error('Listing not found');
                         navigate('/');
@@ -49,16 +63,22 @@ function ListingPage() {
                 }
             };
             fetchListing();
+        } else {
+            const savedData = loadFormData();
+            if (savedData) {
+                setFormData(savedData);
+            }
         }
     }, [listingID, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        console.log(`Updating ${name} to ${value}`);
-        setFormData({
+        const newFormData = {
             ...formData,
             [name]: value
-        });
+        };
+        setFormData(newFormData);
+        saveFormData(newFormData);
     };
 
     const handleSubmit = async (e) => {
@@ -116,13 +136,14 @@ function ListingPage() {
 
             setFormData({
                 title: '',
-                image: '',
+                images: [], 
                 productType: 'fullBuilds',
                 price: '',
                 description: '',
                 postDate: '',
                 status: 'available'
             });
+            localStorage.removeItem('listingFormData');
             navigate('/');
         } catch (err) {
             console.log('Error: ' + err.message);
@@ -131,24 +152,57 @@ function ListingPage() {
     };
 
     const uploadImage = (e) => {
-        const file = e.target.files[0];
-        if (file && file.type.includes('image')) {
-            const fileReader = new FileReader();
-            fileReader.onload = (fileReaderEvent) => {
-                setFormData({
-                    ...formData,
-                    image: fileReaderEvent.target.result
-                });
-            };
-            fileReader.readAsDataURL(file);
-        } else {
-            toast.error('Only Images Allowed');
+        const files = Array.from(e.target.files);
+        if (files.length + formData.images.length > 5) {
+            toast.error('Maximum 5 images allowed');
+            return;
         }
+        const imageFiles = files.filter(file => file.type.includes('image'));
+        if (imageFiles.length !== files.length) {
+            toast.error('Only Images Allowed');
+            return;
+        }
+
+        const fileReaders = imageFiles.map(file => {
+            return new Promise((resolve, reject) => {
+                const fileReader = new FileReader();
+                fileReader.onload = (fileReaderEvent) => {
+                    resolve(fileReaderEvent.target.result);
+                };
+                fileReader.onerror = reject;
+                fileReader.readAsDataURL(file);
+            });
+        });
+
+        Promise.all(fileReaders)
+            .then(imageUrls => {
+                const newFormData = {
+                    ...formData,
+                    images: [...formData.images, ...imageUrls]
+                };
+                setFormData(newFormData);
+                saveFormData(newFormData);
+            })
+            .catch(err => {
+                toast.error('Failed to read images');
+                console.error(err);
+            });
     };
 
     const handleCancel = () => {
         navigate(-1);
-    }
+    };
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        centerMode: true,
+        centerPadding: '0',
+    };
 
     return (
         <>
@@ -159,19 +213,25 @@ function ListingPage() {
                 <h5 className='back-button' onClick={handleCancel}> <FaAngleLeft /> Go Back </h5>
                 <h2>{listingID ? 'Edit Listing' : 'Create Listing'}</h2>
                 <form onSubmit={handleSubmit}>
-                    <h1>Add Image:</h1>
-                    <div className="image-upload">
+                    <h1>Add 1 - 5 Images of the Listing</h1>
+                    <div className={`image-upload ${formData.images.length > 0 ? 'has-images' : ''}`}>
                         <input className='file-input'
                             type="file"
                             accept="image/*"
-                            name="image"
+                            name="images"
+                            multiple
                             onChange={uploadImage}
                         />
-                        {formData.image && (
-                            <div
-                                className="uploaded-listing-picture"
-                                style={{ backgroundImage: `url(${formData.image})` }}
-                            ></div>
+                        {formData.images.length > 0 && (
+                            <div className="uploaded-listing-pictures">
+                                <Slider {...settings}>
+                                    {formData.images.map((image, index) => (
+                                        <div key={index} className="uploaded-listing-picture">
+                                            <img src={image} alt={`Uploaded image ${index + 1}`} />
+                                        </div>
+                                    ))}
+                                </Slider>
+                            </div>
                         )}
                     </div>
                     <div className="form-group">

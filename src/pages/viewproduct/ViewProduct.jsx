@@ -7,6 +7,9 @@ import { FaRegHeart, FaHeart, FaStar, FaStarHalf } from "react-icons/fa";
 import { FaEllipsisVertical } from 'react-icons/fa6';
 import { useLikes } from '../../components/header/likecounter/LikeCounter';
 import { toast } from 'react-hot-toast';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 import Header from '../../components/header/Header';
 import OfferPopup from './offerPopup/offerPopup';
@@ -53,7 +56,7 @@ function ProductPage() {
     const [listingSold, setListingSold] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [offers, setOffers] = useState([]);
-	const [selectedOffer, setSelectedOffer] = useState(null);
+    const [selectedOffer, setSelectedOffer] = useState(null);
     const [viewOffersPopupOpen, setViewOffersPopupOpen] = useState(false);
     const [offerAccepted, setOfferAccepted] = useState(false);
 
@@ -119,15 +122,16 @@ function ProductPage() {
                 const offersCollection = collection(db, 'listings', listingID, 'offers');
                 const offersSnap = await getDocs(offersCollection);
                 
-				if (!offersSnap.empty) {
-					const offersData = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-					setOffers(offersData);
+                if (!offersSnap.empty) {
+                    const offersData = offersSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    setOffers(offersData);
 
                     const acceptedOffer = offersData.find(offer => offer.accepted === 'true');
-                    if (acceptedOffer) {
+                    const userOffer = offersData.find(offer => offer.userID === currentUser.uid);
+                    if (acceptedOffer && userOffer) {
                         setOfferAccepted(true);
                     }
-				}
+                }
             } catch (err) {
                 console.log(err.message);
             }
@@ -254,13 +258,13 @@ function ProductPage() {
         const stars = [];
         let i;
         for (i = 1; i <= 5; i++) {
-			if (i <= score) {
-				stars.push(<FaStar key={i} className="star-icon" />);
-			} else if (i === Math.ceil(score) && score % 1 !== 0) {
-				stars.push(<FaStarHalf key={i} className="star-icon" />);
-			} else {
-				stars.push(<FaStar key={i} className="star-empty" />);
-			}
+            if (i <= score) {
+                stars.push(<FaStar key={i} className="star-icon" />);
+            } else if (i === Math.ceil(score) && score % 1 !== 0) {
+                stars.push(<FaStarHalf key={i} className="star-icon" />);
+            } else {
+                stars.push(<FaStar key={i} className="star-empty" />);
+            }
         }
         return stars;
     };
@@ -277,8 +281,7 @@ function ProductPage() {
         setIsPopupOpen(false);
     };
 
-	const handleViewOffers = () => {
-		console.log(offers)
+    const handleViewOffers = () => {
         setViewOffersPopupOpen(true);
     };
 
@@ -286,17 +289,28 @@ function ProductPage() {
         setViewOffersPopupOpen(false);
     };
 
-	const handleAcceptOffer = () => {
+    const handleAcceptOffer = () => {
         setIsPopupOpen(false);
         setOfferAccepted(true);
     };
 
-	const handleRejectOffer = () => {
+    const handleRejectOffer = () => {
         setIsPopupOpen(false);
     };
 
     const handleReviewUser = () => {
         navigate(`/review/${listingID}`);
+    };
+
+    const settings = {
+        dots: true,
+        infinite: true,
+        speed: 500,
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        centerMode: true,
+        centerPadding: '0',
     };
 
     return (
@@ -307,7 +321,7 @@ function ProductPage() {
                     <div className='listing-options'>
                         {currentUser?.uid === listing?.userID ? (
                             <>
-                                <FaEllipsisVertical className='listing-ellipsis' onClick={handleOptionsClick} cursor='pointer' />
+                                <FaEllipsisVertical data-testid="options-button" className='listing-ellipsis' onClick={handleOptionsClick} cursor='pointer' />
                                 {dropdownOpen && (
                                     <div className="dropdown-content">
                                         {!listingSold && 
@@ -346,14 +360,20 @@ function ProductPage() {
                         )}
                     </div>
                     <div className="listing-details">
-                        <img src={listing.image} alt={listing.title} />
+                        <Slider {...settings}>
+                            {(listing.images || [listing.image]).map((image, index) => (
+                                <div key={index} className='listing-images'>
+                                    <img src={image} alt={`Product image ${index + 1}`} />
+                                </div>
+                            ))}
+                        </Slider>
                         <div className="listing-text">
                             <h1>{listing.title}</h1>
                             <div className='like-button'>
                                 {isLiked ? (
-                                    <FaHeart onClick={handleUnLike} color="red" />
+                                    <FaHeart data-testid="unlike-button" onClick={handleUnLike} color="red" />
                                 ) : (
-                                    <FaRegHeart onClick={handleLike} />
+                                    <FaRegHeart data-testid="like-button" onClick={handleLike} />
                                 )}
                             </div>
                             <h2>${listing.price}</h2>
