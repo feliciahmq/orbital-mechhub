@@ -51,7 +51,8 @@
 
     .forum-media {
         padding: 12px 0 0;
-        img {max-height: 400px;}
+        img {max-height: 400px;
+            max-width: 400px;}
     }
 
     .forum-poll {
@@ -183,4 +184,8 @@
 .forum-card:hover {
     transform: translateY(-5px);
     box-shadow: 5px 5px 10px #ddd;
+}
+
+@media screen and (max-width: 996px) {
+
 }

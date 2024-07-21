@@ -8,12 +8,9 @@ import 'firebase/compat/firestore';
 import { FaCalendarAlt } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
-import Navbar from '../../components/navbar/Navbar';
 import Format from '../../components/format/Format';
 import ReviewList from './userReviews/ReviewList';
 import EditPopup from './editUser/EditPopup';
-import Header from '../../components/header/Header';
-import ListingButton from '../../components/listingpopup/Button';
 import ProductList from '../../components/productcards/ProductList';
 import ForumList from '../../components/forumcards/ForumList';
 import './UserProfile.css';
@@ -35,19 +32,6 @@ function UserProfile() {
 	const [followCount, setFollowCount] = useState(0);
 	const [followingCount, setFollowingCount] = useState(0);
 	const [userForumPosts, setUserForumPosts] = useState([]);
-
-	const handleOpenPopup = () => {
-		setIsPopupOpen(true);
-	};
-
-	const handleClosePopup = () => {
-		setIsPopupOpen(false);
-	};
-
-	const handleSubmit = () => {
-		setIsPopupOpen(false);
-		fetchUserData();
-	};
 
 	const fetchUsersListings = async (username) => {
 		try {
@@ -153,10 +137,6 @@ function UserProfile() {
 		}
 	};
 
-	const handleLoginNavigation = () => {
-		navigate('/account');
-	};
-
 	const handleUserFollow = async () => {
 		if (currentUser?.uid !== userID) {
 		const followDocRef = doc(db, 'Users', userID, 'followers', currentUser.uid);
@@ -209,8 +189,6 @@ function UserProfile() {
 		}
 	};
 
-	// to create a forum posts seciton and allow users to pin to the top
-
 	const handleUserUnFollow = async () => {
 		if (currentUser?.uid !== userID) {
 		const followDocRef = doc(db, 'Users', userID, 'followers', currentUser.uid);
@@ -241,6 +219,24 @@ function UserProfile() {
 		} else {
 		console.log('You cannot unfollow yourself');
 		}
+	};
+
+	const handleOpenPopup = () => {
+		setIsPopupOpen(true);
+	};
+
+	const handleClosePopup = () => {
+		setIsPopupOpen(false);
+	};
+
+	const handleSubmit = () => {
+		setIsPopupOpen(false);
+		fetchUserData();
+	};
+
+
+	const handleLoginNavigation = () => {
+		navigate('/account');
 	};
 
 	return (
@@ -284,7 +280,7 @@ function UserProfile() {
                                 )}
                             </div>
                         </div>
-<div className="profile-toggle">
+						<div className="profile-toggle">
                             <div
                                 className={`toggle ${viewToggle == "listing" ? 'active' : ''}`}
                                 onClick={() => setViewToggle('listing')}
@@ -311,7 +307,7 @@ function UserProfile() {
 							{userListings.length > 0 ? (
 								<ProductList heading={`${userInfo.username}'s Listings`} products={userListings} />
 							) : (
-								<h2>This user has no listings ( ˘･з･)</h2>
+								<h2>This user has no listings <br />( ˘･з･)</h2>
 							)}
 						</div>
 					) : viewToggle === "review" ? (
@@ -324,7 +320,7 @@ function UserProfile() {
 								numberOfReviews={numberOfReviews}
 								/>
 							) : (
-								<h2>This user has no reviews ( ˘･з･)</h2>
+								<h2>This user has no reviews <br />( ˘･з･)</h2>
 							)}
 						</div>
 						) : (
@@ -332,7 +328,7 @@ function UserProfile() {
 								{userForumPosts.length > 0 ? (
 									<ForumList heading={`${userInfo.username}'s Forum Posts`} forums={userForumPosts} />
 								) : (
-									<h2>This user has no forum posts ( ˘･з･)</h2>
+									<h2>This user has no forum posts <br />( ˘･з･)</h2>
 								)}
 							</div>
 						)}

@@ -2,21 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../Auth';
 import { useNavigate } from 'react-router-dom';
 import { useLikes } from '../header/likecounter/LikeCounter';
-import { FaComment, FaHeart, FaBell, FaQuestionCircle,  FaCopyright } from 'react-icons/fa';
-import { FaHouse, FaComments, FaKeyboard } from 'react-icons/fa6';
+import { FaComment, FaHeart, FaBell, FaQuestionCircle,  FaCopyright, FaPlus } from 'react-icons/fa';
+import { FaHouse, FaComments } from 'react-icons/fa6';
 import { query, collection, where, getDocs, onSnapshot } from 'firebase/firestore';
 import { db } from '../../lib/firebaseConfig';
 
 import Mechhub_Logo_small from "../../assets/Logo/MH_logo.png";
-import './Navbar.css';
+import './MobileNavbar.css';
 
-function Navbar() {
+function MobileNavbar() {
     const navigate = useNavigate();
     const { currentUser } = useAuth();
     const { likeCount } = useLikes();
     const [unreadCount, setUnreadCount] = useState(0);
     const [chatUnreadCount, setChatUnreadCount] = useState(0);
-    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
 
     useEffect(() => {
         const fetchUnreadNotifications = async () => {
@@ -52,51 +51,65 @@ function Navbar() {
     const handleForum = () => {
         navigate(`/forum`);
     };
-    
-    const handleKeyboardGuide = () => {
-        navigate(`/keyboardguide`);
-    };
+    const handleListing = () => {
+        navigate('/listing');
+    }
+
+    const handleForumPost = () => {
+        navigate('/newforumpost');
+    }
 
     return (
-        <nav className="navbar">
+        <nav className="mobile-navbar">
             <ul className="closed">
                 {currentUser ? (
                     <>
-                        <div className='navbar-icon' onClick={handleHome}>
+                        <div className='mobile-navbar-icon' onClick={handleHome}>
                             <FaHouse />
                             <p>Home</p>
                         </div>
-                        <div className='navbar-icon' onClick={handleChats}>
-                            <FaComment />
-                            <p>Chats</p>
-                            {chatUnreadCount > 0 && <span className="notification-count">{chatUnreadCount}</span>}
-                            <span className='tooltip'>Chats</span>
-                        </div>
-                        <div className='likes navbar-icon' onClick={handleLikes}>
+
+                        {/* <div className='likes mobile-navbar-icon' onClick={handleLikes}>
                             <FaHeart />
                             <p>Likes</p>
                             {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
-                            <span className='tooltip'>Likes</span>
+                        </div> */}
+
+                        <div className='mobile-navbar-icon' onClick={handleForum}>
+                            <FaComments />
+                            <p>Forum</p>
                         </div>
-                        <div className='notifs navbar-icon' onClick={handleNotifs}>
+
+                        <div className='mobile-navbar-icon add-button' >
+                            <FaPlus /> 
+                            <p>Create</p>
+                            <div className='header-dropdown'>
+                                <div className='dropdown-option'>
+                                    <p onClick={handleListing}>New Listing</p>
+                                </div>
+                                <div className='dropdown-option'>
+                                    <p onClick={handleForumPost}>New Forum Post</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='notifs mobile-navbar-icon' onClick={handleNotifs}>
                             <FaBell />
                             <p>Notifications</p>
                             {unreadCount > 0 && <span className="notification-count">{unreadCount}</span>}
-                            <span className='tooltip'>Notifications</span>
                         </div>
-                        <div className='navbar-icon' onClick={handleForum}>
-                            <FaComments />
-                            <p>Forum</p>
-                            <span className='tooltip'>Forum</span>
+                        <div className='mobile-navbar-icon' onClick={handleChats}>
+                            <FaComment />
+                            <p>Chats</p>
+                            {chatUnreadCount > 0 && <span className="notification-count">{chatUnreadCount}</span>}
                         </div>
                     </>
                 ) : (
                     <>
-                        <div className='navbar-icon' onClick={handleHome}>
+                        <div className='mobile-navbar-icon' onClick={handleHome}>
                             <FaHouse />
                             <p>Home</p>
                         </div>
-                        <div className='navbar-icon' onClick={handleForum}>
+                        <div className='mobile-navbar-icon' onClick={handleForum}>
                             <FaComments />
                             <p>Forum</p>
                             <span className='tooltip'>Forum</span>
@@ -104,29 +117,8 @@ function Navbar() {
                     </>
                 )}
             </ul>
-            <div className="resource">
-                <h1>Resources</h1>
-                <ul className='closed'>
-                    <div className='navbar-icon' onClick={handleKeyboardGuide}>
-                        <FaKeyboard />
-                        <p>Keyboard Guide</p>
-                    </div>
-                    <div className='navbar-icon'>
-                        <FaQuestionCircle />
-                        <p>Help</p>
-                    </div>
-                </ul>
-            </div>
-            <div className='footer'>
-                <img 
-                    src={Mechhub_Logo_small}
-                    className='MechHub_logo_footer'
-                />
-                <FaCopyright stroke='black' fill='white' strokeWidth={25} className='copyright'/>
-                <p>2024 MechHub</p>
-            </div>
         </nav>
     );
 }
 
-export default Navbar;
+export default MobileNavbar;

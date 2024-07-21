@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../Auth';
-import { FaUserAlt, FaPlus } from 'react-icons/fa';
+import {  FaBars, FaUserAlt, FaPlus, FaQuestionCircle, FaHeart } from 'react-icons/fa';
+import { FaKeyboard } from 'react-icons/fa6';
+import { useLikes } from '../header/likecounter/LikeCounter';
 
 import SearchBar from '../searchbar/Searchbar';
 import MechHub_Logo from "../../assets/Logo/MechHub_logo.png";
@@ -13,6 +15,8 @@ function Header() {
     const [query, setQuery] = useState('');
     const { currentUser } = useAuth();
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+    const [dropdown, setDropdown] = useState(false);
+    const { likeCount } = useLikes();
 
     useEffect(() => {
         const handleResize = () => {
@@ -46,6 +50,18 @@ function Header() {
         setQuery(value);
     };
 
+    const handleMobileBars = () => {
+        setDropdown(!dropdown);
+    }
+
+    const handleKeyboardGuide = () => {
+        navigate(`/keyboardguide`);
+    };
+
+    const handleLikes = () => {
+        navigate(`/likes/${currentUser.uid}`);
+    };
+
     const trackSearchHistory = async (query) => {
         if (currentUser && query) {
             try {
@@ -74,11 +90,30 @@ function Header() {
                     onClick={handleLogoClick} 
                 />
             ) : (
-                <img 
-                    src={Mechhub_Logo_Mobile} 
-                    className="MechHub_Logo_Mobile"
-                    onClick={handleLogoClick} 
-                />
+                <>
+                    <div onClick={handleMobileBars} style={{ cursor: 'pointer', marginRight: '8px' }}>
+                        <FaBars />
+                    </div>
+                    {dropdown && (
+                        <>
+                            <div className="dropdown-content">
+                                <div className='navbar-icon' onClick={handleKeyboardGuide}>
+                                    <FaKeyboard />
+                                    <p>Keyboard Guide</p>
+                                </div>
+                                <div className='navbar-icon'>
+                                    <FaQuestionCircle />
+                                    <p>Help</p>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                    <img 
+                        src={Mechhub_Logo_Mobile} 
+                        className="MechHub_Logo_Mobile"
+                        onClick={handleLogoClick} 
+                    />
+                </>
             )}
             <div className='header-searchbar'>
                 <SearchBar 
@@ -91,17 +126,26 @@ function Header() {
             </div>
             {currentUser ? (
                 <>
-                    <div className='add-button'>
-                        <span><FaPlus fontWeight={100}/> Create</span>
-                        <div className='header-dropdown'>
-                            <div className='dropdown-option'>
-                                <p onClick={handleListing}>New Listing</p>
+                    {!isMobile ? (
+                        <>
+                            <div className='add-button'>
+                                <span><FaPlus fontWeight={100}/> Create</span>
+                                <div className='header-dropdown'>
+                                    <div className='dropdown-option'>
+                                        <p onClick={handleListing}>New Listing</p>
+                                    </div>
+                                    <div className='dropdown-option'>
+                                        <p onClick={handleForumPost}>New Forum Post</p>
+                                    </div>
+                                </div>
                             </div>
-                            <div className='dropdown-option'>
-                                <p onClick={handleForumPost}>New Forum Post</p>
-                            </div>
+                        </>
+                    ) : (
+                        <div className='likes navbar-icon' onClick={handleLikes}>
+                            <FaHeart />
+                            {likeCount > 0 && <span className="notification-count">{likeCount}</span>}
                         </div>
-                    </div>
+                    )}
                     <div className='header-icon'>
                         <FaUserAlt onClick={handleProfile} cursor="pointer" />
                         <span className='tooltip'>profile</span>

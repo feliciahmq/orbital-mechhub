@@ -39,7 +39,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        width: 100vw;
+        /* width: 100vw; */
         height: calc(100vh + 100px);
         padding: 20px;
         top: 40px;
@@ -177,7 +177,7 @@
         }
         .form-group input, .form-group textarea {
             font-size: 20px;
-            width: calc(100% - 220px);
+            width: 900px;
             min-width: 320px;
             height: 40px;
             padding: 8px;

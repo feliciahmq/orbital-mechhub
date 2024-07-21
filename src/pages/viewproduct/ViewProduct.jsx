@@ -14,6 +14,8 @@ import "slick-carousel/slick/slick-theme.css";
 import Format from '../../components/format/Format';
 import OfferPopup from './offerPopup/offerPopup';
 import ViewOffers from './viewOffers/viewOffers';
+import SellerDashboard from '../../components/sellerDashboard/sellerDashboard';
+import SimilarProducts from '../../components/recommendation/similarProducts/similarProductsRec';
 import './ViewProduct.css';
 
 function timeSincePost(postDate) {
@@ -56,10 +58,10 @@ function ProductPage() {
     const [listingSold, setListingSold] = useState(false);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [offers, setOffers] = useState([]);
-    const [selectedOffer, setSelectedOffer] = useState(null);
     const [viewOffersPopupOpen, setViewOffersPopupOpen] = useState(false);
     const [offerAccepted, setOfferAccepted] = useState(false);
 
+    //fetch user/ listing details
     useEffect(() => {
         const fetchListing = async () => {
             const listingDocRef = doc(db, 'listings', listingID);
@@ -142,14 +144,7 @@ function ProductPage() {
         fetchOffers();
     }, [listingID, currentUser]);
 
-    const handleUsernameClick = () => {
-        navigate(`/profile/${listing.userID}`);
-    };
-
-    const handleEditClick = () => {
-        navigate(`/listing/${listingID}`);
-    };
-
+    //handle like and unlike
     const handleLike = async (e) => {
         e.stopPropagation();
 
@@ -206,16 +201,14 @@ function ProductPage() {
         }
     };
 
-    const handleOptionsClick = () => {
-        setDropdownOpen(!dropdownOpen);
-    };
-
+    //sell listing, delete listing
     const handleListingSold = async (e) => {
         e.preventDefault();
 
         try {
             await updateDoc(doc(db, 'listings', listingID), {
-                status: 'sold'
+                status: 'sold',
+                soldDate: new Date.toISOString()
             });
             setListingSold(true);
 
@@ -273,6 +266,7 @@ function ProductPage() {
         }
     };
 
+    // user profile stars
     const shownStars = (score) => {
         const stars = [];
         let i;
@@ -332,6 +326,7 @@ function ProductPage() {
 		}
     };
 
+    // useState changes
     const handleOpenPopup = () => {
         setIsPopupOpen(true);
     };
@@ -361,10 +356,24 @@ function ProductPage() {
         setIsPopupOpen(false);
     };
 
+    const handleOptionsClick = () => {
+        setDropdownOpen(!dropdownOpen);
+    };
+
+    // navigation
     const handleReviewUser = () => {
         navigate(`/review/${listingID}`);
     };
 
+    const handleUsernameClick = () => {
+        navigate(`/profile/${listing.userID}`);
+    };
+
+    const handleEditClick = () => {
+        navigate(`/listing/${listingID}`);
+    };
+
+    // slick carousel
     const settings = {
         dots: true,
         infinite: true,
@@ -458,7 +467,9 @@ function ProductPage() {
                         />
                         <h4 onClick={handleUsernameClick}>{user.username}</h4>
                         {currentUser?.uid !== listing?.userID && (
-                            <FaComment onClick={handleStartChat} className="chat-icon" />
+                            <button onClick={handleStartChat} className='start-chat' style={{ marginLeft: '16px' }}>
+                                <FaComment className="chat-icon" /> Start Chat
+                            </button>
                         )}
                     </div>
                     <div className="user-reviews">
@@ -469,7 +480,6 @@ function ProductPage() {
                     </div>
                 </div>
             )}
-
             {viewOffersPopupOpen && (
                 <ViewOffers
                     onClose={handleCloseViewOffers}
@@ -479,6 +489,13 @@ function ProductPage() {
                     onOfferReject={handleRejectOffer}
                 />
             )}
+            <div className='viewproduct-footer'>
+            {currentUser?.uid === listing?.userID ? (
+                <SellerDashboard listingID={listingID}/>
+            ) : (
+                <SimilarProducts listingID={listingID} />
+            )}
+            </div>
         </div>
         } />
     );

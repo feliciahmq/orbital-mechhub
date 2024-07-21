@@ -25,7 +25,7 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
         try {
             await addDoc(collection(db, 'listings', listingID, 'offers'), {
                 userID: currentUser.uid,
-                offerPrice: parseFloat(offerData.offerPrice).toFixed(2), // Ensure offerPrice is a valid decimal
+                offerPrice: parseFloat(offerData.offerPrice).toFixed(2), 
                 comments: offerData.comments,
                 accepted: '',
                 timestamp: new Date()
