@@ -5,7 +5,7 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 import { BoxPlotController, BoxAndWiskers } from '@sgratzl/chartjs-chart-boxplot';
 import { Chart, Bar, Scatter, Line } from "react-chartjs-2";
 
-import './sellerDashboard.css';
+import './SellerDashboard.css';
 import SimilarProducts from '../recommendation/similarProducts/similarProductsRec';
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Title, Tooltip, Legend, BoxPlotController, BoxAndWiskers);
