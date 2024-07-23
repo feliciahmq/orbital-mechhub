@@ -14,7 +14,7 @@ import "slick-carousel/slick/slick-theme.css";
 import Format from '../../components/format/Format';
 import OfferPopup from './offerPopup/offerPopup';
 import ViewOffers from './viewOffers/viewOffers';
-import SellerDashboard from '../../components/sellerDashboard/SellerDashboard';
+import SellerDashboard from '../../components/sellerDashboard/sellerDashboard';
 import SimilarProducts from '../../components/recommendation/similarProducts/similarProductsRec';
 import './ViewProduct.css';
 import timeSincePost from "../../components/timeSincePost/timeSincePost";
