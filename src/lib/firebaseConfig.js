@@ -3,14 +3,16 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+console.log(import.meta.env.VITE_API_KEY);
+
 const firebaseConfig = {
-  apiKey: "AIzaSyDHGTNVbJZlm3XADrOrVc2Yyuo1mve39XU",
-  authDomain: "orbital-mechhub.firebaseapp.com",
-  projectId: "orbital-mechhub",
-  storageBucket: "orbital-mechhub.appspot.com",
-  messagingSenderId: "474236612145",
-  appId: "1:474236612145:web:1081c9ed758f1e32a8ef10",
-  measurementId: "G-ZNS909ZKGD"
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

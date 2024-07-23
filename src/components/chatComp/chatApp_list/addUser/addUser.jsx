@@ -6,7 +6,7 @@ import { useUserStore } from "../../../../lib/userStore";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
-const addUser = ({ closePopup }) => {
+const AddUser = ({ closePopup }) => {
 	const [user, setUser] = useState(null);
 	const [error, setError] = useState("");
 	const { currentUser } = useUserStore();
@@ -49,7 +49,7 @@ const addUser = ({ closePopup }) => {
 				toast.error("A chat with this user already exists.");
 				navigate(`/chat/${currentUser.id}/${existingChat.id}`);
 				return; 
-      		} 
+      } 
 
 			const newChatRef = await addDoc(chatRef, {
 				createdAt: new Date(),
@@ -78,11 +78,11 @@ const addUser = ({ closePopup }) => {
 				}),
 			});
 
-    		closePopup();
+      closePopup();
 			navigate(`/chat/${currentUser.id}/${newChatRef.id}`);
 
 		} catch (err) {
-		  console.log(err);
+      console.log(err);
 		}
 	};
 
@@ -106,11 +106,11 @@ const addUser = ({ closePopup }) => {
 		) : (
 			error && 
 			<div className="error">
-			  {error}
+        {error}
 			</div>
 		)}
 		</div>
 	);
 };
 
-export default addUser;
+export default AddUser;
