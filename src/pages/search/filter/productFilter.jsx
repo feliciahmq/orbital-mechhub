@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './productFilter.css';
 
-function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
+function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange, showForYou }) {
     const [type, setType] = useState('');
     const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
     const [sortOrder, setSortOrder] = useState('');
@@ -91,6 +91,7 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange }) {
                     <option value="featured">Featured</option>
                     <option value="low-to-high">Price: Low to High</option>
                     <option value="high-to-low">Price: High to Low</option>
+                    {showForYou && <option value="for-you">For You</option>}
                 </select>
             </div>
         </div>
