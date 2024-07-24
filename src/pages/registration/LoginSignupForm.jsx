@@ -168,10 +168,10 @@ function LoginSignupForm() {
                                     <input type="text" placeholder="Username"
                                         value={username} onChange={(e) => setUsername(e.target.value)} required data-testid="signup-username" />
                                     <input type="email" placeholder="Email"
-                                        value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required data-testid="signup-email" />
+                                        value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required data-testid="signup-email" data-testid="signup-email" />
                                     <div className="password">
                                         <input type={signUpVisible ? "text" : "password"} placeholder="Password"
-                                            value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required data-testid="signup-password" />
+                                            value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required data-testid="signup-password" data-testid="signup-password" />
                                         <p onClick={toggleSignUpPassword}>
                                             {signUpVisible ? <FaEyeSlash /> : <FaEye />}
                                         </p>
@@ -183,7 +183,7 @@ function LoginSignupForm() {
                                             {confirmPWVisible ? <FaEyeSlash /> : <FaEye />}
                                         </p>
                                     </div>
-                                    <button type="submit" data-testid="sign-up-submit">Sign up</button>
+                                    <button type="submit" data-testid="sign-up-submit" data-testid="sign-up-submit">Sign up</button>
                                 </form>
                             </div>
                             <div className="form-container log-in-container">
@@ -197,15 +197,15 @@ function LoginSignupForm() {
                                     </div>
                                     <span>or use your email</span>
                                     <input type="email" placeholder="Email"
-                                        value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} data-testid="login-email" />
+                                        value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} data-testid="login-email" data-testid="login-email" />
                                     <div className="password">
                                         <input type={loginVisible ? "text" : "password"} placeholder="Password"
-                                            value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} data-testid="login-password" />
+                                            value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} data-testid="login-password" data-testid="login-password" />
                                         <p onClick={toggleLoginPassword}>
                                             {loginVisible ? <FaEyeSlash /> : <FaEye />}
                                         </p>
                                     </div>
-                                    <button type="submit" data-testid="login-submit">Log in</button>
+                                    <button type="submit" data-testid="login-submit" data-testid="login-submit">Log in</button>
                                 </form>
                             </div>
                             <div className="overlay-container">
