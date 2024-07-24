@@ -53,9 +53,14 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
                 <button className="close-button" onClick={onClose}>X</button>
                 <form onSubmit={handleOfferSubmit} className='offer-form'>
                     <div className="offer-popup-group">
-                        <label>Offer Price:</label>
+                        <label htmlFor="offerPrice">Offer Price:</label>
                         <input 
+                            id="offerPrice"
+<<<<<<< HEAD
                             type="text" 
+=======
+                            type="number" 
+>>>>>>> 5b017cff0662ddc947173a261e949fbcbd733f11
                             name="offerPrice"
                             value={offerData.offerPrice} 
                             onChange={handleChange} 
@@ -65,8 +70,9 @@ function OfferPopup({ onClose, onSubmit, listingID, currentUser, userID }) {
                         />
                     </div>
                     <div className="offer-popup-group">
-                        <label>Comments:</label>
+                        <label htmlFor="comments">Comments:</label>
                         <textarea 
+                            id="comments"
                             name="comments"
                             value={offerData.comments} 
                             onChange={handleChange}

@@ -358,9 +358,9 @@ function ForumCards({ forumDetail, descriptionLength = 100 }) {
                 <div className="footer-left">
                     <div className="forum-card-like forum-card-icon">
                         {isLiked ? (
-                            <FaHeart onClick={handleUnlike} color="red" /> 
+                            <FaHeart onClick={handleUnlike} color="red" data-testid="like-button"/> 
                         ) : (
-                            <FaRegHeart onClick={handleLike} fill="grey"/> 
+                            <FaRegHeart onClick={handleLike} fill="grey" data-testid="like-button"/> 
                         )}
                         <span>{likeCount}</span>
                         <span className="tooltip">Like Post</span>

@@ -13,7 +13,7 @@ import Format from '../../components/format/Format';
 import './LoginSignupForm.css';
 import Header from '../../components/header/Header';
 
-function LoginSignUpForm() {
+function LoginSignupForm() {
     const [rightPanelActive, setRightPanelActive] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
     const [showLogin, setShowLogin] = useState(true);
@@ -132,11 +132,13 @@ function LoginSignUpForm() {
             toast.success("Login successfully.");
             navigate(`/profile/${user.uid}`);
         } catch (error) {
-            let errorMessage = 'An error occurred.';
+            let errorMessage = "You have entered an invalid username or password.";
             console.log("Firebase Login Error: ", error.code, error.message);
 
-            if (error.code === 'auth/invalid-credential') {
-                errorMessage = 'You have entered an invalid username or password';
+            if (error.code === "auth/wrong-username") {
+                errorMessage = "You have entered an invalid username.";
+            } else if (error.code === "auth/wrong-password") {
+                errorMessage = "You have entered an invalid password.";
             }
             toast.error(errorMessage);
         }
@@ -154,7 +156,7 @@ function LoginSignUpForm() {
                     {!isMobile && (
                         <>
                             <div className="form-container sign-up-container">
-                                <form onSubmit={handleSignup}>
+                                <form onSubmit={handleSignup} data-testid="signup-form">
                                     <h1>Create Account</h1>
                                     <div className="social-container">
                                         <a onClick={signInWithGoogle} className="google-btn">
@@ -164,12 +166,12 @@ function LoginSignUpForm() {
                                     </div>
                                     <span>or use your email to register</span>
                                     <input type="text" placeholder="Username"
-                                        value={username} onChange={(e) => setUsername(e.target.value)} required />
+                                        value={username} onChange={(e) => setUsername(e.target.value)} required data-testid="signup-username" />
                                     <input type="email" placeholder="Email"
-                                        value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required />
+                                        value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required data-testid="signup-email" />
                                     <div className="password">
                                         <input type={signUpVisible ? "text" : "password"} placeholder="Password"
-                                            value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required />
+                                            value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required data-testid="signup-password" />
                                         <p onClick={toggleSignUpPassword}>
                                             {signUpVisible ? <FaEyeSlash /> : <FaEye />}
                                         </p>
@@ -181,7 +183,7 @@ function LoginSignUpForm() {
                                             {confirmPWVisible ? <FaEyeSlash /> : <FaEye />}
                                         </p>
                                     </div>
-                                    <button type="submit">Sign up</button>
+                                    <button type="submit" data-testid="sign-up-submit">Sign up</button>
                                 </form>
                             </div>
                             <div className="form-container log-in-container">
@@ -195,15 +197,15 @@ function LoginSignUpForm() {
                                     </div>
                                     <span>or use your email</span>
                                     <input type="email" placeholder="Email"
-                                        value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} />
+                                        value={loginEmail} onChange={(e) => setLoginEmail(e.target.value)} data-testid="login-email" />
                                     <div className="password">
                                         <input type={loginVisible ? "text" : "password"} placeholder="Password"
-                                            value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} />
+                                            value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)} data-testid="login-password" />
                                         <p onClick={toggleLoginPassword}>
                                             {loginVisible ? <FaEyeSlash /> : <FaEye />}
                                         </p>
                                     </div>
-                                    <button type="submit">Log in</button>
+                                    <button type="submit" data-testid="login-submit">Log in</button>
                                 </form>
                             </div>
                             <div className="overlay-container">
@@ -211,12 +213,12 @@ function LoginSignUpForm() {
                                     <div className="overlay-panel overlay-left">
                                         <h1>Already have an account?</h1>
                                         <p>Keep connected with us!</p>
-                                        <button className="ghost" id="login" onClick={() => setRightPanelActive(false)}>Log In</button>
+                                        <button className="ghost" id="login" data-testid="login-toggle" onClick={() => setRightPanelActive(false)}>Log In</button>
                                     </div>
                                     <div className="overlay-panel overlay-right">
                                         <h1>Don't have an account yet?</h1>
                                         <p>Start your journey with us!</p>
-                                        <button className="ghost" id="signup" onClick={() => setRightPanelActive(true)}>Sign Up</button>
+                                        <button className="ghost" id="signup" data-testid="sign-up-toggle"onClick={() => setRightPanelActive(true)}>Sign Up</button>
                                     </div>
                                 </div>
                             </div>
@@ -279,4 +281,4 @@ function LoginSignUpForm() {
     );
 }
 
-export default LoginSignUpForm;
+export default LoginSignupForm;

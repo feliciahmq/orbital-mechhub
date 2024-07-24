@@ -369,7 +369,7 @@ function ProductPage() {
                     <div className='listing-options'>
                         {currentUser?.uid === listing?.userID ? (
                             <>
-                                <FaEllipsisVertical className='listing-ellipsis' onClick={handleOptionsClick} cursor='pointer' />
+                                <FaEllipsisVertical data-testid="options-button" className='listing-ellipsis' onClick={handleOptionsClick} cursor='pointer' />
                                 {dropdownOpen && (
                                     <div className="dropdown-content">
                                         {!listingSold && 
@@ -419,9 +419,9 @@ function ProductPage() {
                             <h1>{listing.title}</h1>
                             <div className='like-button'>
                                 {isLiked ? (
-                                    <FaHeart onClick={handleUnLike} color="red" />
+                                    <FaHeart data-testid="unlike-button" onClick={handleUnLike} color="red" />
                                 ) : (
-                                    <FaRegHeart onClick={handleLike} />
+                                    <FaRegHeart data-testid="like-button" onClick={handleLike} />
                                 )}
                             </div>
                             <h2>${listing.price}</h2>

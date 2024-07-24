@@ -166,7 +166,7 @@ function ReviewPage() {
                     <div className='review-stars'>
                         <h5>rate your experience:</h5>
                         <div className='stars'>
-                            {Array(5).fill(0).map((_, index) => (
+                        {Array(5).fill(0).map((_, index) => (
                             <FaStar
                                 key={index}
                                 size={24}
@@ -178,8 +178,9 @@ function ReviewPage() {
                                 marginRight: 10,
                                 cursor: "pointer"
                                 }}
-                            />
-                            ))}
+                                data-testid={`star-icon-${index + 1}`} 
+                    />
+                        ))}
                         </div>
                     </div>
                     <textarea

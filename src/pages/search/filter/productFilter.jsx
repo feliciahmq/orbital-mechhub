@@ -40,8 +40,8 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange, showF
     return (
         <div className="filter-container">
             <div className="filter-group">
-                <label>Product Type:</label>
-                <select value={type} onChange={handleTypeChange}>
+                <label htmlFor="productType">Product Type:</label>
+                <select id="productType" value={type} onChange={handleTypeChange}>
                     <option value="">All</option>
                     <option value='fullBuilds'>Full Builds</option>
                     <option value='keycaps'>Keycaps</option>
@@ -54,7 +54,7 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange, showF
                 </select>
             </div>
             <div className="filter-group">
-                <label>Price Range:</label>
+                <label htmlFor="filterGroup">Price Range:</label>
                 <div className="slider-container">
                     <div className="slider">
                         <div className="inside" style={{
@@ -84,8 +84,8 @@ function ProductFilter({ minPrice, maxPrice, onFilterChange, onSortChange, showF
                 </div>
             </div>
             <div className="filter-group">
-                <label>Sort By:</label>
-                <select value={sortOrder} onChange={handleSortChange}>
+                <label htmlFor="sortBy">Sort By:</label>
+                <select id="sortBy" value={sortOrder} onChange={handleSortChange}>
                     <option value="">None</option>
                     <option value="best-match">Best Match</option>
                     <option value="featured">Featured</option>

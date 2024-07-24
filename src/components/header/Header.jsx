@@ -19,6 +19,21 @@ function Header() {
     const { likeCount } = useLikes();
 
     useEffect(() => {
+      const fetchUnreadNotifications = async () => {
+        if (currentUser) {
+          const notificationsQuery = query(
+            collection(db, 'Notifications'),
+            where('recipientID', '==', currentUser.uid),
+            where('read', '==', false)
+          );
+          const notificationsSnapshot = await getDocs(notificationsQuery);
+          setUnreadCount(0);
+        }
+      };
+      fetchUnreadNotifications();
+    }, [currentUser]);
+
+    useEffect(() => {
         const handleResize = () => {
             setIsMobile(window.innerWidth <= 768);
         };
