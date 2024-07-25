@@ -6,8 +6,8 @@ import { useLocation } from 'react-router-dom';
 
 import Format from '../../components/format/Format';
 import ProductList from '../../components/productcards/ProductList';
-import ListingButton from '../../components/listingpopup/Button';
 import ProductFilter from './filter/productFilter';
+import ForYou from '../../components/recommendation/forYou/forYou';
 import './SearchPage.css';
 
 function SearchPage() {
@@ -15,6 +15,7 @@ function SearchPage() {
     const [products, setProducts] = useState([]);
     const [filteredProducts, setFilteredProducts] = useState([]);
     const [sortOrder, setSortOrder] = useState('');
+    const [recommendations, setRecommendations] = useState([]);
 
     const [minPrice, setMinPrice] = useState(0);
     const [maxPrice, setMaxPrice] = useState(0);
@@ -22,6 +23,8 @@ function SearchPage() {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const searchQuery = searchParams.get('query') || '';
+
+    // fetch data
 
     const fetchListings = async () => {
         try {
@@ -76,8 +79,12 @@ function SearchPage() {
 
     useEffect(() => {
         fetchListings();
-    }, []);
+        if (currentUser) {
+            getRecommendations();
+        }
+    }, [currentUser]);
 
+    // filter and sort products on page
     const filterProducts = (type, priceRange) => {
         let filtered = products;
 
@@ -104,10 +111,15 @@ function SearchPage() {
             sorted = sorted.sort((a, b) => calculateRelevance(b, query) - calculateRelevance(a, query));
         } else if (order === 'featured') {
             sorted.sort((a, b) => calculateFeaturedScore(b) - calculateFeaturedScore(a));
+        } else if (order === 'for-you') {
+            const recommendationOrder = new Map(recommendations.map((product, index) => [product.id, index]));
+            sorted.sort((a, b) => (recommendationOrder.get(a.id) || Infinity) - (recommendationOrder.get(b.id) || Infinity));
         }
 
         return sorted;
     };
+
+    // calculation for sort and filters
 
     const calculateRelevance = (product, query) => {
         const lowerCaseQuery = query.toLowerCase();
@@ -123,6 +135,13 @@ function SearchPage() {
     const calculateFeaturedScore = (product) => {
         const { weeklyClicks, likes, offers } = product;
         return (weeklyClicks * 0.5) + (likes * 0.3) + (offers * 0.2);
+    };
+
+    // For You recommendation
+    const getRecommendations = async () => {
+        const forYou = new ForYou(currentUser.uid);
+        const recommendedProducts = await forYou.getRecommendations();
+        setRecommendations(recommendedProducts);
     };
 
     useEffect(() => {
@@ -151,18 +170,18 @@ function SearchPage() {
     return (
         <Format content={
             <div>
-                    <div className='product-filter'>
-                        <ProductFilter 
-                            minPrice={minPrice} 
-                            maxPrice={maxPrice} 
-                            onFilterChange={filterProducts} 
-                            onSortChange={setSortOrder} 
-                        />
-                    </div>
-                    <div className='listing'>
-                        <ProductList heading="Products" products={filteredProducts} />
-                    </div>
-
+                <div className='product-filter'>
+                    <ProductFilter 
+                        minPrice={minPrice} 
+                        maxPrice={maxPrice} 
+                        onFilterChange={filterProducts} 
+                        onSortChange={setSortOrder} 
+                        showForYou={!!currentUser} 
+                    />
+                </div>
+                <div className='listing'>
+                    <ProductList heading="Products" products={filteredProducts} />
+                </div>
             </div>
         } />
     );
