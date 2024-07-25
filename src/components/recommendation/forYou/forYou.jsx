@@ -6,9 +6,9 @@ class ForYou {
     constructor(userId) {
         this.userId = userId;
         this.userHistory = {
-          likeHistory: [],
-          searchHistory: [],
-          reviewHistory: []
+            likeHistory: [],
+            searchHistory: [],
+            reviewHistory: []
         };
         this.products = null;
         this.productFeatures = null;
@@ -44,17 +44,17 @@ class ForYou {
     
     prepareProductFeatures() {
         this.productFeatures = this.products.map(product => [
-          Number(product.price) || 0,
-          Number(product.weeklyClicks) || 0,
-          Number(product.likes) || 0,
-          Number(product.offers) || 0,
+            Number(product.price) || 0,
+            Number(product.weeklyClicks) || 0,
+            Number(product.likes) || 0,
+            Number(product.offers) || 0,
         ]);
     }
     
     ensureNumeric(arr) {
         return arr.map(val => {
-          const num = Number(val);
-          return isNaN(num) ? 0 : num;
+            const num = Number(val);
+            return isNaN(num) ? 0 : num;
         });
     }
     
@@ -74,13 +74,13 @@ class ForYou {
     
     async getRecommendations() {
         if (!this.userHistory || !this.products || !this.productFeatures) {
-          await this.initialize();
+            await this.initialize();
         }
     
         const userVector = this.createUserVector();
         const similarities = this.productFeatures.map((features, index) => ({
-          product: this.products[index],
-          similarity: this.calculateCosineSimilarity(userVector, features).dataSync()[0]
+            product: this.products[index],
+            similarity: this.calculateCosineSimilarity(userVector, features).dataSync()[0]
         }));
     
         similarities.sort((a, b) => b.similarity - a.similarity);
@@ -91,23 +91,23 @@ class ForYou {
         const vector = [0, 0, 0, 0]; 
     
         if (this.userHistory.likeHistory.length > 0) {
-          this.userHistory.likeHistory.forEach(like => {
-            const likedProduct = this.products.find(p => p.id === like.listingID);
-            if (likedProduct) {
-              vector[0] += Number(likedProduct.price) || 0;
-              vector[2] += 1; 
-            }
-          });
+            this.userHistory.likeHistory.forEach(like => {
+                const likedProduct = this.products.find(p => p.id === like.listingID);
+                if (likedProduct) {
+                vector[0] += Number(likedProduct.price) || 0;
+                vector[2] += 1; 
+                }
+            });
         }
     
         if (this.userHistory.reviewHistory.length > 0) {
-          this.userHistory.reviewHistory.forEach(review => {
-            const reviewedProduct = this.products.find(p => p.title === review.listing);
-            if (reviewedProduct) {
-              vector[0] += Number(reviewedProduct.price) || 0;
-              vector[3] += 1; 
-            }
-          });
+            this.userHistory.reviewHistory.forEach(review => {
+                const reviewedProduct = this.products.find(p => p.title === review.listing);
+                if (reviewedProduct) {
+                vector[0] += Number(reviewedProduct.price) || 0;
+                vector[3] += 1; 
+                }
+            });
         }
 
         const sum = vector.reduce((a, b) => a + b, 0);
