@@ -52,6 +52,13 @@ function SearchPage() {
         }
     };
 
+    const getWeekStart = () => {
+        const now = new Date();
+        const dayOfWeek = now.getDay();
+        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
+        return new Date(now.setDate(diff)).setHours(0, 0, 0, 0);
+    };
+
     const getWeeklyClicks = async (listingId) => {
         const weekStart = getWeekStart();
         const clickCountDoc = await getDoc(doc(db, 'listings', listingId, 'clickCount', weekStart.toString()));
@@ -70,11 +77,9 @@ function SearchPage() {
         return offersSnapshot.size;
     };
 
-    const getWeekStart = () => {
-        const now = new Date();
-        const dayOfWeek = now.getDay();
-        const diff = now.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
-        return new Date(now.setDate(diff)).setHours(0, 0, 0, 0);
+    const calculateFeaturedScore = (product) => {
+        const { weeklyClicks, likes, offers } = product;
+        return (weeklyClicks * 0.5) + (likes * 0.3) + (offers * 0.2);
     };
 
     useEffect(() => {
@@ -132,10 +137,7 @@ function SearchPage() {
         return relevance;
     };
 
-    const calculateFeaturedScore = (product) => {
-        const { weeklyClicks, likes, offers } = product;
-        return (weeklyClicks * 0.5) + (likes * 0.3) + (offers * 0.2);
-    };
+
 
     // For You recommendation
     const getRecommendations = async () => {
