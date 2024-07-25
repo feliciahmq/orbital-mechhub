@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    background:  #ff9282;
+    background: url("../../../assets/banner-bg.png");
     position: absolute;
 
     .button-go-brr {
