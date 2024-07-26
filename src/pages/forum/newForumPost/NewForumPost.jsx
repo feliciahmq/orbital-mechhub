@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../../Auth';
 import { db } from '../../../lib/firebaseConfig';
-import { collection, addDoc, doc, getDoc, getDocs, query } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, getDocs, query, updateDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import Slider from "react-slick";
@@ -181,31 +181,38 @@ function NewForumPost() {
             dataToSubmit.userID = currentUser.uid;
             dataToSubmit.postDate = new Date().toISOString();
 
-            const docRef = await addDoc(collection(db, 'Forum'), dataToSubmit);
-            const newPostID = docRef.id;
+            if (postID) {
+                const postDocRef = doc(db, 'Forum', postID);
+                await updateDoc(postDocRef, dataToSubmit);
+                toast.success('Forum Post Successfully Updated!');
+            } else {
+                const docRef = await addDoc(collection(db, 'Forum'), dataToSubmit);
+                const newPostID = docRef.id;
 
-            const followersQuery = query(collection(db, 'Users', currentUser.uid, 'followers'));
-            const followersSnap = await getDocs(followersQuery);
+                const followersQuery = query(collection(db, 'Users', currentUser.uid, 'followers'));
+                const followersSnap = await getDocs(followersQuery);
 
-            const notifications = followersSnap.docs.map((followerDoc) => {
-                const followerData = followerDoc.data();
-                if (followerData) {
-                    return addDoc(collection(db, 'Notifications'), {
-                        recipientID: followerData.followerID,
-                        senderID: currentUser.uid,
-                        postID: newPostID,
-                        type: 'forum',
-                        read: false,
-                        timestamp: new Date()
-                    });
-                } else {
-                    console.error('Follower document missing userID:', followerDoc.id);
-                    return null;
-                }
-            });
+                const notifications = followersSnap.docs.map((followerDoc) => {
+                    const followerData = followerDoc.data();
+                    if (followerData) {
+                        return addDoc(collection(db, 'Notifications'), {
+                            recipientID: followerData.followerID,
+                            senderID: currentUser.uid,
+                            postID: newPostID,
+                            type: 'forum',
+                            read: false,
+                            timestamp: new Date()
+                        });
+                    } else {
+                        console.error('Follower document missing userID:', followerDoc.id);
+                        return null;
+                    }
+                });
 
-            await Promise.all(notifications.filter(notification => notification !== null));
-            toast.success('Forum Post Successfully Created!');
+                await Promise.all(notifications.filter(notification => notification !== null));
+                toast.success('Forum Post Successfully Created!');
+            }
+            
             saveFormData({}, false); 
             setFormData({
                 title: '',
