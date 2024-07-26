@@ -348,6 +348,7 @@ function ForumPostPage() {
 
         try {
             await deleteDoc(doc(db, 'Forum', postID));
+            navigate('/');
         } catch (err) {
             console.log(err.message);
         }
