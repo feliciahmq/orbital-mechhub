@@ -15,7 +15,7 @@
     line-height: 60px;
 }
 
-.notifications-container h2::after {
+/* .notifications-container h2::after {
     content: " ";
     background: #d55200;
     width: 80px;
@@ -24,7 +24,7 @@
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-}
+} */
 
 .notifications-container ul {
     list-style: none;

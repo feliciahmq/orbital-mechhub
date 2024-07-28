@@ -13,7 +13,7 @@
 	line-height: 60px;
 }
 
-.liked-products h2::after {
+/* .liked-products h2::after {
 	content: " ";
 	background: #d55200;
 	width: 80px;
@@ -22,7 +22,7 @@
 	position: absolute;
 	left: 50%;
 	transform: translate(-50%);
-}
+} */
 
 @media screen and (max-width: 768px) {
 	.liked-products {

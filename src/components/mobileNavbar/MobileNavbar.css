@@ -11,7 +11,7 @@
     padding: 0 24px;
     background-color: white;
     height: 100px;
-    width: 100vw;
+    width:  100%;
     border-top: 1px solid rgb(240, 240, 240);
 
     ul {
@@ -45,6 +45,10 @@
         align-items: center;
         position: relative;
         /* gap: 10px; */
+
+        p {
+            font-size:8px;
+        }
     }
     
     .header-dropdown {

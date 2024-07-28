@@ -25,7 +25,7 @@
         position: relative;
         line-height: 60px;
     }
-
+/* 
     h2::after {
         content: " ";
         background: #d55200;
@@ -35,7 +35,7 @@
         position: absolute;
         left: 50%;
         transform: translate(-50%);
-    }
+    } */
     .landing-featured {
         .forum-list {
             justify-content: center;
@@ -92,5 +92,10 @@
         align-items: center;
         display: flex;
         flex-direction: column;
+        width: 100vw;
+
+        .forum-card {
+            min-width: 80%;
+        }
     }
 }

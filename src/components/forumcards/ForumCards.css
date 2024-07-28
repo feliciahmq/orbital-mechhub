@@ -1,194 +1,205 @@
 .forum-card {
-    min-width: 540px;
+    min-width: 300px;
+    width: 100%;
+    max-width: 540px;
     display: grid;
-    margin: 8px 8px 8px 8px;
+    margin: 8px;
     border: 1px solid #eee;
     padding: 12px;
     cursor: pointer;
     border-radius: 15px;
     transition: 0.5s all ease-out;
-
-    .forum-info {
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-    }
-
-    .forum-profile {
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 16px;
-
-        .profile-pic {
-            position: relative;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            bottom: 4px;
-        }
-    }
-
-    .forum-header {
-        h1 {
-            font-size: 24px;
-            font-weight: 300;
-            margin: 8px 0;
-        }
-
-        .forum-tags {
-            gap: 4px;
-        }
-
-        .forum-tag {
-            border: none;
-            border-radius: 20px;
-            padding: 4px 10px;
-            margin-right: 8px;
-        }
-    }
-
-    .forum-media {
-        padding: 12px 0 0;
-        img {max-height: 400px;
-            max-width: 400px;}
-    }
-
-    .forum-poll {
-        padding: 8px;
-        border: 1px solid rgb(240, 240, 240);
-        border-radius: 5px;
-        
-        .poll-title {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 4px;
-            
-            h3 {
-                margin: 0;
-                font-size: 20px;
-                font-weight: 200;
-            }
-        }
-
-        .poll-option {
-            p {
-                margin: 4px 0;
-            }
-    
-            button {
-                cursor: pointer;
-                text-align: left;
-                width: 400px;
-                position: relative;
-                overflow: hidden;
-                padding: 8px;
-                border: 1px solid #ddd;
-                background-color: transparent;
-                margin-bottom: 8px;
-            }
-
-            button:disabled {
-                cursor: default;
-            }
-    
-            .poll-results-bar {
-                position: absolute;
-                top: 0;
-                left: 0;
-                height: 100%;
-                background-color: #FD634C; 
-                z-index: 0;
-                transition: width 0.3s ease;
-            }
-    
-            .poll-results-text {
-                color: rgb(40, 40, 40);
-                position: relative;
-                z-index: 1;
-            }
-        }
-    }
-
-    .forum-content {
-        max-width: 100%;
-        word-break: break-word; 
-    }
-    
-    .forum-content p {
-        max-width: 100%;
-        word-break: break-word;
-    }
-
-    .forum-footer {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-        
-        .footer-left {
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .forum-card-icon {
-            position: relative;
-            display: inline-block;
-        }
-
-        .forum-card-like, .forum-card-comment {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-        }
-
-        .tooltip {
-            visibility: hidden;
-            position: absolute;
-            z-index: 2;
-            width: 100px;
-            color: white;
-            font-size: 12px;
-            background-color: black;
-            border-radius: 2px;
-            padding: 8px;
-            bottom: -40px; 
-            left: 50%;
-            transform: translateX(-50%); 
-            text-align: center;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .forum-card-icon:hover .tooltip {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .tooltip::before {
-            content: "";
-            position: absolute;
-            top: -10px; 
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: transparent transparent black transparent; 
-        }
-    }
 }
+
+.forum-info {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.forum-profile {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+}
+
+.forum-profile .profile-pic {
+    position: relative;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    bottom: 4px;
+}
+
+.forum-header h1 {
+    font-size: 24px;
+    font-weight: 300;
+    margin: 8px 0;
+}
+
+.forum-header .forum-tags {
+    gap: 4px;
+}
+
+.forum-header .forum-tag {
+    border: none;
+    border-radius: 20px;
+    padding: 4px 10px;
+    margin-right: 8px;
+}
+
+.forum-media {
+    padding: 12px 0 0;
+}
+
+.forum-media img {
+    max-height: 400px;
+    max-width: 100%;
+}
+
+.forum-poll {
+    padding: 8px;
+    border: 1px solid rgb(240, 240, 240);
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.forum-poll .poll-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 4px;
+}
+
+.forum-poll .poll-title h3 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 200;
+}
+
+.forum-poll .poll-option p {
+    margin: 4px 0;
+}
+
+.forum-poll .poll-option button {
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    overflow: hidden;
+    padding: 8px;
+    border: 1px solid #ddd;
+    background-color: transparent;
+    margin-bottom: 8px;
+}
+
+.forum-poll .poll-option button:disabled {
+    cursor: default;
+}
+
+.forum-poll .poll-option .poll-results-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #FD634C; 
+    z-index: 0;
+    transition: width 0.3s ease;
+}
+
+.forum-poll .poll-option .poll-results-text {
+    color: rgb(40, 40, 40);
+    position: relative;
+    z-index: 1;
+}
+
+.forum-content {
+    max-width: 100%;
+    word-break: break-word; 
+}
+
+.forum-content p {
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.forum-footer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.forum-footer .footer-left {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+}
+
+.forum-footer .forum-card-icon {
+    position: relative;
+    display: inline-block;
+}
+
+.forum-footer .forum-card-like,
+.forum-footer .forum-card-comment {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.forum-footer .tooltip {
+    visibility: hidden;
+    position: absolute;
+    z-index: 2;
+    width: 100px;
+    color: white;
+    font-size: 12px;
+    background-color: black;
+    border-radius: 2px;
+    padding: 8px;
+    bottom: -40px; 
+    left: 50%;
+    transform: translateX(-50%); 
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.forum-footer .forum-card-icon:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.forum-footer .tooltip::before {
+    content: "";
+    position: absolute;
+    top: -10px; 
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent; 
+}
+
 .forum-card:hover {
     transform: translateY(-5px);
     box-shadow: 5px 5px 10px #ddd;
 }
 
-@media screen and (max-width: 996px) {
+@media screen and (max-width: 540px) {
     .forum-card {
-        min-width: 80%;
+        min-width: unset;
+        width: calc(100% - 24px);
+    }
+
+    .forum-poll .poll-option button {
+        max-width: none;
     }
 }

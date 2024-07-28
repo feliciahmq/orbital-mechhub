@@ -12,3 +12,13 @@
         line-height: 60px;
     }
 }
+
+@media screen and (max-width: 768px) {
+    .forum-list {
+        width: 100vw;
+
+        .forum-card {
+            min-width: 80%;
+        }
+    }
+}

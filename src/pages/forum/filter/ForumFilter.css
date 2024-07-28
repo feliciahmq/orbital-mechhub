@@ -2,6 +2,7 @@
     align-items: center;
     display: flex;
     flex-direction: column;
+    width: 100%;
     padding: 12px;
     border-bottom: 1px solid rgb(240, 240, 240)
 }
@@ -55,13 +56,23 @@
     background-color: #FF9800;
 }
 
-.forum-searchbar {
+/* .forum-searchbar {
     display: flex;
     flex-wrap: wrap;
     align-content: center;
     max-width: 800px;
     min-width: 400px;
     flex: 1;
-    justify-content: center;
+    justify-content: center; */
+/* } */
 
+@media screen and (max-width: 768px) {
+    .forum-searchbar {
+        max-width: 360px;
+
+        .search-bar-container {
+            width: calc(100vw - 40px);
+            margin: 0;
+        }
+    }
 }
