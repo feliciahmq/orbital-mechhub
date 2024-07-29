@@ -1,13 +1,13 @@
 .banner {
-    left: 0;
-    padding: 24px 12px;
-    width: 100%;
-    height: 400px;
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    background: url("../../../assets/banner-bg.png");
-    position: absolute;
+  right: 20px;
+  padding: 24px 12px;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: url("../../../assets/banner-bg.png");
+  position: absolute; 
 
     .button-go-brr {
         border-radius: 20px;
