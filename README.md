@@ -2,7 +2,7 @@
 
 Created By **Felicia Hwang** & **Vanessa Lai**
 
-![Landing Page](/orbital-mechhub/public/Project.png)
+![Landing Page](/public/Project.png)
 
 Check out our website here : https://orbital-mechhub.web.app/
 
@@ -113,7 +113,7 @@ As a buyer, I want to receive personalised product recommendations based on my l
 
 The authentication features include registering, logging in, and signing out of user accounts linked to a Firebase backend database. A new user can register for an account with their user details: Username, Email and Password. The Firebase will keep a record of the unique UserID, username and email.
 
-![alt text](/orbital-mechhub/public/image.png)
+![alt text](/public/image.png)
 
 Toast error notifications will be shown when users violate these rules in the Sign Up form:
 
@@ -124,7 +124,7 @@ Toast error notifications will be shown when users violate these rules in the Si
 
 Users can then log in to their account using their email and password. Additionally, the addition of the Google OAuth API allows users to use their Google accounts to register and log in.
 
-![alt text](/orbital-mechhub/public/image-1.png)
+![alt text](/public/image-1.png)
 
 Toast error notifications will be shown when users violate these rules in the Log In form:
 
@@ -134,31 +134,31 @@ Toast error notifications will be shown when users violate these rules in the Lo
 
 Once logged in, users can edit their profile picture, username, and email on the Profile Page.
 
-![alt text](/orbital-mechhub/public/image-2.png)
+![alt text](/public/image-2.png)
 
-![user-auth](/orbital-mechhub/public/user-auth-diagram.png)
+![user-auth](/public/user-auth-diagram.png)
 
 ## Product Listing
 
 The product listing feature allows users to CRUD and is linked to Firebase. Users can create new listings by clicking the new listing button in the header.
 
-![alt text](/orbital-mechhub/public/image-4.png)
+![alt text](/public/image-4.png)
 
 Users are required to fill in five fields: product image, title, product type, and description, which provides information on the listing to other users and allows us to filter the products on the search page further on.
 
-![alt text](/orbital-mechhub/public/image-5.png)
+![alt text](/public/image-5.png)
 
 Users will also be allowed to update and delete listings they have posted in the past, they will access these options when they view the listing.
 
-![alt text](/orbital-mechhub/public/image-6.png)
+![alt text](/public/image-6.png)
 
 The lister's user ID will also be updated in the listing so that the users can display their listings on their profile pages. When a user creates a new listing, a notification is sent to all their followers, informing them of it.
 
 They will also be able to accept and receive offers from interested users for their listings. Users can mark their listings as sold, removing them from the search page but still making them visible on their profile pages.
 
-![alt text](/orbital-mechhub/public/image-7.png)
+![alt text](/public/image-7.png)
 
-![listing](/orbital-mechhub/public/listing-diagram.png)
+![listing](/public/listing-diagram.png)
 
 ## Reviews of Products & Sellers
 
@@ -168,15 +168,15 @@ Users can only leave reviews for one another after an interested party makes an 
 
 This will thus enable users to make a more informed choice when dealing with different users, increasing the transparency of our site, and providing an incentive for good behaviour on the site, as users who receive better reviews are more likely to be interacted with.
 
-![review](/orbital-mechhub/public/review-diagram.png)
+![review](/public/review-diagram.png)
 
 ## Chat System
 
 Buyers can use Chat System to communicate with sellers to further inquire about their listings.
 
-![alt text](/orbital-mechhub/public/image-8.png)
+![alt text](/public/image-8.png)
 
-![chat](/orbital-mechhub/public/chat-system-diagram.png)
+![chat](/public/chat-system-diagram.png)
 
 Every user has a chat page. Users can search for other users by their username and start a chat. All chat history will be logged. The chat system allows users to send texts and images. Key features include :
 
@@ -193,7 +193,7 @@ The search page allows users to search for and filter listings. It uses the sear
 
 For each product in the database, the title, productType, description, and the lister's username are converted into lowercase and checked to see if the search query is a substring of any of these fields.
 
-![alt text](/orbital-mechhub/public/image-9.png)
+![alt text](/public/image-9.png)
 
 The user can filter the products by price and product type in the filter and sort the listings. The options to sort are as follows:
 
@@ -206,7 +206,7 @@ The user can filter the products by price and product type in the filter and sor
 ## Following
 
 The user-following feature on MechHub enables users to engage with the community by allowing them to follow other users whose posts they find interesting. When a user decides to follow another user, the system creates reciprocal relationships in the database, ensuring both users are aware of the connection. Followers will be automatically notified within their account whenever the user they are following posts a new listing or forum post. This notification system ensures that followers stay up-to-date with the latest posts, promoting active engagement and facilitating the discovery of desirable listings.
-![alt text](/orbital-mechhub/public/image-10.png)
+![alt text](/public/image-10.png)
 
 Using Firebase Firestore, we can provide real-time updates for the following notifications, and users get instant feedback when they follow someone or when new notifications are available.\
 Users are also able to view the number of followers and following they have through their profile page. A future extension of this feature would be to send out emails notifying the users that the notification is received through EmailJS.
@@ -229,11 +229,11 @@ The forum aims to be a place where fellow keyboard enthusiasts can exchange info
 
 We are also able to create poll questions in the poll. There is also a sort and search function in the poll page using the same components and sorting algorithm as the listing search page to facilitate easy filtering of forum posts.In post creation, users can add a title, content, tags, media (images or videos), and optionally include a poll. Users can like, comment on, and share posts. The like and comment counts are displayed on each post.
 
-![alt text](/orbital-mechhub/public/image-11.png)
+![alt text](/public/image-11.png)
 
 Users are also allowed to comment and like forum posts. Comments are stored in a nested structure, allowing a hierarchical display of comments and replies and supporting multiple levels of comments.
 
-![alt text](/orbital-mechhub/public/image-12.png)
+![alt text](/public/image-12.png)
 
 Like the search page, users can sort and filter forum posts to find content that interests them.
 
@@ -243,19 +243,19 @@ The sales dashboard provides sellers with detailed analytics about their listed 
 
 1. **Price**\
    The listing price is compared to the average, median, upper, and lower quartiles of the same product type. It is displayed as a box-and-whisker diagram for easy comparison.
-   ![alt text](/orbital-mechhub/public/image-13.png)
+   ![alt text](/public/image-13.png)
 
 2. **Click Count**\
    Click count is compared weekly to the number of clicks received by other products of the same type in a particular week.
-   ![alt text](/orbital-mechhub/public/image-14.png)
+   ![alt text](/public/image-14.png)
 
 3. **Time On Market**
    Time on market is displayed as a scatter graph, showing the time other available listings of the same product type have been on the market and the time it takes for sold listings. It maps them against price.
-   ![alt text](/orbital-mechhub/public/image-15.png)
+   ![alt text](/public/image-15.png)
 
 4. **Number of Offers** \
    It will be represented as a line chart and show the seller the price users have offered for their listings compared to the listing price of the product.
-   ![alt text](/orbital-mechhub/public/image-16.png)
+   ![alt text](/public/image-16.png)
 
 We have also included the Similar Products recommendation to allow them to view products similar to theirs. The dashboard aims to give sellers a more accurate sense of market prices.
 
@@ -282,11 +282,11 @@ GitHub
 
 ## Entity-Relation Diagram
 
-![erd](/orbital-mechhub/public/erd.png)
+![erd](/public/erd.png)
 
 ## MVC Diagram
 
-![alt text](/orbital-mechhub/public/image-17.png)
+![alt text](/public/image-17.png)
 
 # Software Engineering Practices
 
