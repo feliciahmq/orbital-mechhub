@@ -136,6 +136,8 @@ Once logged in, users can edit their profile picture, username, and email on the
 
 ![alt text](/public/image-2.png)
 
+**User Case Diagram for User Authentication**
+
 ![user-auth](/public/user-auth-diagram.png)
 
 ## Product Listing
@@ -158,6 +160,8 @@ They will also be able to accept and receive offers from interested users for th
 
 ![alt text](/public/image-7.png)
 
+**User Case Diagram for Product Listing**
+
 ![listing](/public/listing-diagram.png)
 
 ## Reviews of Products & Sellers
@@ -175,6 +179,8 @@ This will thus enable users to make a more informed choice when dealing with dif
 Buyers can use Chat System to communicate with sellers to further inquire about their listings.
 
 ![alt text](/public/image-8.png)
+
+**User Case Diagram for Chat System**
 
 ![chat](/public/chat-system-diagram.png)
 
@@ -206,6 +212,7 @@ The user can filter the products by price and product type in the filter and sor
 ## Following
 
 The user-following feature on MechHub enables users to engage with the community by allowing them to follow other users whose posts they find interesting. When a user decides to follow another user, the system creates reciprocal relationships in the database, ensuring both users are aware of the connection. Followers will be automatically notified within their account whenever the user they are following posts a new listing or forum post. This notification system ensures that followers stay up-to-date with the latest posts, promoting active engagement and facilitating the discovery of desirable listings.
+
 ![alt text](/public/image-10.png)
 
 Using Firebase Firestore, we can provide real-time updates for the following notifications, and users get instant feedback when they follow someone or when new notifications are available.\
