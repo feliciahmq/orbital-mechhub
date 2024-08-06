@@ -9,9 +9,10 @@ import ForumList from '../../components/forumcards/ForumList';
 import './Forum.css';
 
 function ForumPage() {
-    const { currentUser } = useAuth();
     const [forumPosts, setForumPosts] = useState([]);
     const [filteredPosts, setFilteredPosts] = useState([]);
+    const [sortOrder, setSortOrder] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchForumPosts = async () => {
         try {
@@ -59,20 +60,25 @@ function ForumPage() {
         return new Date(now.setDate(diff)).setHours(0, 0, 0, 0);
     };
 
-    const handleFilterChange = useCallback(({ tags, sortOrder, searchQuery }) => {
+    const calculateFeaturedScore = (product) => {
+        const { weeklyClicks, likes, comments } = product;
+        return (weeklyClicks * 0.5) + (likes * 0.3) + (comments * 0.2);
+    };
+
+    const filterAndSortPosts = useCallback(({ tags, sortOrder, searchQuery }) => {
         let filtered = forumPosts;
 
-        if (tags.length > 0) {
+        if (tags && tags.length > 0) {
             filtered = filtered.filter(post =>
                 tags.some(tag => post.tags.includes(tag))
             );
         }
 
         if (searchQuery) {
-            const lowerCaseQuery = searchQuery.toLowerCase();
+            const lowerQuery = searchQuery.toLowerCase();
             filtered = filtered.filter(post =>
-                post.title.toLowerCase().includes(lowerCaseQuery) ||
-                post.description.toLowerCase().includes(lowerCaseQuery)
+                post.title.toLowerCase().includes(lowerQuery) ||
+                post.description.toLowerCase().includes(lowerQuery)
             );
         }
 
@@ -83,17 +89,17 @@ function ForumPage() {
         }
 
         setFilteredPosts(filtered);
+        setSortOrder(sortOrder);
+        setSearchQuery(searchQuery);
     }, [forumPosts]);
-
-    const calculateFeaturedScore = (product) => {
-        const { weeklyClicks, likes, comments } = product;
-        return (weeklyClicks * 0.5) + (likes * 0.3) + (comments * 0.2);
-    };
 
     return (
         <Format content={
             <div className='forum'>
-                <ForumFilter onFilterChange={handleFilterChange} />
+                <ForumFilter 
+                    onFilterChange={filterAndSortPosts}
+                    onSortChange={(order) => filterAndSortPosts({ tags: [], sortOrder: order, searchQuery })}
+                />
                 <div className='forum-main'>
                     <ForumList heading="Forum" forums={filteredPosts} />
                 </div>
