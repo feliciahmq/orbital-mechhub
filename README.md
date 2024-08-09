@@ -269,20 +269,20 @@ We have also included the Similar Products recommendation to allow them to view 
 # Tech Stack
 
 **Languages** \
-HTML
-CSS
+HTML\
+CSS\
 JavaScript
 
 **Frameworks/Libraries** \
-React JS
-Bootstrap
-Zustand (State Management)
+React JS\
+Bootstrap\
+Zustand (State Management)\
 GraphJS
 
 **Tools/Services** \
-Firebase Database
-Firebase Hosting
-Git
+Firebase Database\
+Firebase Hosting\
+Git\
 GitHub
 
 # Concept Diagrams
@@ -398,6 +398,6 @@ Feel free to explore our project further:
 Thank you for your interest in our project!
 
 Happy coding,\
-Felicia Hwang and Vanessa Lai
+Felicia Hwang and Vanessa Lai \
 Orbital 2024
 
