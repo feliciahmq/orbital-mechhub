@@ -1,10 +1,13 @@
 # NUS Orbital Project 2024 - MechHub
-
 Created By **Felicia Hwang** & **Vanessa Lai**
 
 ![Landing Page](/public/Project.png)
 
 Check out our website here : https://orbital-mechhub.web.app/
+
+## Project Overview
+![poster](/public/6182.png)
+
 
 # Table of Contents
 
@@ -54,9 +57,9 @@ Explore our project further!
 
 **Website**: Visit our [site](https://orbital-mechhub.web.app/)
 
-**Project Poster**: View our [poster](https://drive.google.com/file/d/1nJ3dZHPHSQIxNye3UhkiCMgPqB7uT1KR/view?usp=sharing)
+**Project Poster**: View our [poster](https://drive.google.com/file/d/1HwuoLjCmgk5mX_og48B_XuYisx8P1BUZ/view?usp=sharing)
 
-**Project Video**: Watch the [demo](https://drive.google.com/file/d/1EjKPeQ4hy6Oa3fL2S8FbQIlRBi4Bxx93/view?usp=sharing)
+**Project Video**: Watch the [demo](https://drive.google.com/file/d/1i8LdTik2sQtGYfhm3wfv7jl4BkbwjrxU/view?usp=sharing)
 
 # Introduction
 
@@ -391,8 +394,8 @@ We would like to thank everyone who has contributed to our project, offered supp
 
 Feel free to explore our project further:
 - **Website**: Visit our [site](https://orbital-mechhub.web.app/)
-- **Project Poster**: View our [poster](https://drive.google.com/file/d/1nJ3dZHPHSQIxNye3UhkiCMgPqB7uT1KR/view?usp=sharing)
-- **Project Demo Video**: Watch our [demo video](https://drive.google.com/file/d/1EjKPeQ4hy6Oa3fL2S8FbQIlRBi4Bxx93/view?usp=sharing)
+- **Project Poster**: View our [poster](https://drive.google.com/file/d/1HwuoLjCmgk5mX_og48B_XuYisx8P1BUZ/view?usp=sharing)
+- **Project Demo Video**: Watch our [demo video](https://drive.google.com/file/d/1i8LdTik2sQtGYfhm3wfv7jl4BkbwjrxU/view?usp=sharing)
 - **Project Log**: View our [Project Log](https://docs.google.com/spreadsheets/d/1U6BihLqkvpjTwPoX4rgfyp6Z4rTzJAucRT9hYzpYO1w/edit?gid=0#gid=0)
 
 Thank you for your interest in our project!
